@@ -1,6 +1,6 @@
 import { publicClient } from "../clients";
 import { ERC20_ABI } from "../constants";
-import { USDC_ADDRESS } from "../constants";
+import { USDC_ADDRESS } from "../chains";
 
 export async function getAllowance(
   owner: `0x${string}`,

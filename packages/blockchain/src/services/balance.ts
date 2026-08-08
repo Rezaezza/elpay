@@ -2,7 +2,7 @@ import { formatUnits } from "viem";
 
 import { publicClient } from "../clients";
 import { ERC20_ABI } from "../constants";
-import { USDC_ADDRESS } from "../constants";
+import { USDC_ADDRESS } from "../chains";
 
 export async function getUSDCBalance(address: `0x${string}`) {
   const balance = await publicClient.readContract({

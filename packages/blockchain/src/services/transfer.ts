@@ -1,7 +1,7 @@
 import { parseUnits } from "viem";
 
 import { ERC20_ABI } from "../constants";
-import { USDC_ADDRESS } from "../constants";
+import { USDC_ADDRESS } from "../chains";
 import { getWalletClient } from "../clients";
 
 export async function transferUSDC(
