@@ -1,0 +1,3 @@
+export const CONTRACTS = {
+  usdc: "0x3600000000000000000000000000000000000000",
+} as const;

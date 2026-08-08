@@ -1,0 +1,28 @@
+{
+  "name": "@elpay/blockchain",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@elpay/config": "workspace:*",
+    "@elpay/types": "workspace:*",
+    "@elpay/utils": "workspace:*",
+    "@reown/appkit": "^1.8.23",
+    "@tanstack/react-query": "^5.101.4",
+    "viem": "^2.55.11",
+    "wagmi": "^3.7.6"
+  }
+}

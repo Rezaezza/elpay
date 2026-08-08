@@ -1,0 +1,49 @@
+# Dependencies
+node_modules
+
+# Build
+dist
+.next
+out
+coverage
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Turbo
+.turbo
+
+# TypeScript
+*.tsbuildinfo
+
+# VS Code
+.vscode
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# Prisma
+prisma/dev.db
+prisma/dev.db-journal
+
+# Hardhat
+artifacts
+cache
+typechain-types
+
+# Generated
+generated
+
+# Local uploads
+uploads
