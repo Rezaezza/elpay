@@ -1,23 +1,18 @@
 import { verifyMessage } from "viem";
 
 export class SignatureService {
-
-  verify(
-    address: `0x${string}`,
+  async verify(
+    address: string,
     message: string,
-    signature: `0x${string}`,
+    signature: string
   ) {
-
     return verifyMessage({
-
-      address,
-
+      address: address as `0x${string}`,
       message,
-
-      signature,
-
+      signature: signature as `0x${string}`,
     });
-
   }
-
 }
+
+export const signatureService =
+  new SignatureService();
