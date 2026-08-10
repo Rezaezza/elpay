@@ -3,142 +3,351 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum UserRole {
+  USER
+  MERCHANT
+  ADMIN
 }
 
 enum MerchantStatus {
+  PENDING
   ACTIVE
-  DISABLED
+  SUSPENDED
+}
+
+enum WalletType {
+  EOA
+  SMART
+}
+
+enum ChainNetwork {
+  ARC_TESTNET
+}
+
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  SUCCESS
+  FAILED
+  CANCELLED
+  REFUNDED
 }
 
 enum InvoiceStatus {
-  PENDING
+  DRAFT
+  OPEN
   PAID
   EXPIRED
   CANCELLED
 }
 
-enum PaymentStatus {
+enum TransactionType {
+  PAYMENT
+  REFUND
+  DEPOSIT
+  WITHDRAW
+}
+
+enum TransactionStatus {
   PENDING
   SUCCESS
   FAILED
 }
 
-model User {
-  id          String      @id @default(cuid())
+enum ApiKeyStatus {
+  ACTIVE
+  REVOKED
+}
 
-  wallet      String      @unique
-  email       String?     @unique
+model User {
+
+  id          String @id @default(uuid())
+
+  email       String? @unique
+
   username    String?
+
   avatar      String?
+
+  role        UserRole @default(USER)
 
   merchants   Merchant[]
 
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  wallets     Wallet[]
+
+  sessions    Session[]
+
+  apiKeys     ApiKey[]
+
+  auditLogs   AuditLog[]
+
+  createdAt   DateTime @default(now())
+
+  updatedAt   DateTime @updatedAt
+
+  deletedAt   DateTime?
+
+  @@index([email])
+
+}
+
+model Wallet {
+
+  id          String @id @default(uuid())
+
+  address     String @unique
+
+  network     ChainNetwork
+
+  walletType  WalletType
+
+  userId      String
+
+  user        User @relation(fields: [userId], references: [id])
+
+  createdAt   DateTime @default(now())
+
+  updatedAt   DateTime @updatedAt
+
+  @@index([address])
+
 }
 
 model Merchant {
 
-  id          String      @id @default(cuid())
+  id            String @id @default(uuid())
 
-  ownerId     String
-  owner       User        @relation(fields: [ownerId], references: [id])
+  ownerId       String
 
-  name        String
-  slug        String      @unique
+  owner         User @relation(fields: [ownerId], references: [id])
 
-  logo        String?
+  name          String
 
-  status      MerchantStatus @default(ACTIVE)
+  slug          String @unique
 
-  invoices    Invoice[]
+  logo          String?
 
-  apiKeys     ApiKey[]
+  description   String?
 
-  webhooks    Webhook[]
+  webhookUrl    String?
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  status        MerchantStatus @default(PENDING)
+
+  invoices      Invoice[]
+
+  payments      Payment[]
+
+  apiKeys       ApiKey[]
+
+  webhooks      Webhook[]
+
+  webhookEvents WebhookEvent[]
+
+  createdAt     DateTime @default(now())
+
+  updatedAt     DateTime @updatedAt
+
 }
 
 model Invoice {
 
-  id          String      @id @default(cuid())
+  id              String @id @default(uuid())
 
-  merchantId  String
-  merchant    Merchant @relation(fields: [merchantId], references: [id])
+  invoiceNumber   String @unique
 
-  amount      Decimal
+  merchantId      String
 
-  currency    String      @default("USDC")
+  merchant        Merchant @relation(fields: [merchantId], references: [id])
 
-  memo        String?
+  amount          Decimal @db.Decimal(20,6)
 
-  status      InvoiceStatus @default(PENDING)
+  currency        String @default("USDC")
 
-  expiresAt   DateTime?
+  memo            String?
 
-  paidAt      DateTime?
+  status          InvoiceStatus @default(DRAFT)
 
-  payment     Payment?
+  expiresAt       DateTime?
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  paidAt          DateTime?
+
+  payment         Payment?
+
+  createdAt       DateTime @default(now())
+
+  updatedAt       DateTime @updatedAt
+
+  @@index([invoiceNumber])
+
 }
 
 model Payment {
 
-  id          String      @id @default(cuid())
+  id              String @id @default(uuid())
 
-  invoiceId   String      @unique
+  invoiceId       String @unique
 
-  invoice     Invoice @relation(fields: [invoiceId], references: [id])
+  invoice         Invoice @relation(fields: [invoiceId], references: [id])
 
-  payer       String
+  merchantId      String
 
-  txHash      String      @unique
+  merchant        Merchant @relation(fields: [merchantId], references: [id])
 
-  network     String
+  payerAddress    String
 
-  token       String
+  txHash          String? @unique
 
-  amount      Decimal
+  blockNumber     BigInt?
 
-  status      PaymentStatus @default(PENDING)
+  confirmations   Int @default(0)
 
-  createdAt   DateTime @default(now())
+  network         ChainNetwork
+
+  tokenAddress    String
+
+  amount          Decimal @db.Decimal(20,6)
+
+  status          PaymentStatus @default(PENDING)
+
+  paidAt          DateTime?
+
+  transactions    Transaction[]
+
+  createdAt       DateTime @default(now())
+
+  updatedAt       DateTime @updatedAt
+
+  @@index([txHash])
+
+}
+
+model Transaction {
+
+  id              String @id @default(uuid())
+
+  paymentId       String
+
+  payment         Payment @relation(fields: [paymentId], references: [id])
+
+  txHash          String @unique
+
+  fromAddress     String
+
+  toAddress       String
+
+  amount          Decimal @db.Decimal(20,6)
+
+  type            TransactionType
+
+  status          TransactionStatus @default(PENDING)
+
+  createdAt       DateTime @default(now())
+
+  updatedAt       DateTime @updatedAt
+
 }
 
 model ApiKey {
 
-  id          String      @id @default(cuid())
+  id            String @id @default(uuid())
 
-  merchantId  String
+  merchantId    String
 
-  merchant    Merchant @relation(fields: [merchantId], references: [id])
+  merchant      Merchant @relation(fields: [merchantId], references: [id])
 
-  name        String
+  name          String
 
-  secret      String      @unique
+  keyId         String @unique
+
+  secretHash    String
+
+  status        ApiKeyStatus @default(ACTIVE)
+
+  userId        String?
+
+  user          User? @relation(fields: [userId], references: [id])
+
+  createdAt     DateTime @default(now())
+
+}
+
+model Session {
+
+  id          String @id @default(uuid())
+
+  token       String @unique
+
+  userId      String
+
+  user        User @relation(fields: [userId], references: [id])
+
+  expiresAt   DateTime
 
   createdAt   DateTime @default(now())
+
+}
+
+model AuditLog {
+
+  id          String @id @default(uuid())
+
+  userId      String
+
+  user        User @relation(fields: [userId], references: [id])
+
+  action      String
+
+  resource    String
+
+  metadata    Json?
+
+  createdAt   DateTime @default(now())
+
 }
 
 model Webhook {
 
-  id          String      @id @default(cuid())
+  id                String @id @default(uuid())
 
-  merchantId  String
+  merchantId        String
 
-  merchant    Merchant @relation(fields: [merchantId], references: [id])
+  merchant          Merchant @relation(fields: [merchantId], references: [id])
 
-  url         String
+  url               String
 
-  secret      String
+  secretHash        String
 
-  enabled     Boolean @default(true)
+  enabled           Boolean @default(true)
 
-  createdAt   DateTime @default(now())
+  failureCount      Int @default(0)
+
+  lastTriggeredAt   DateTime?
+
+  createdAt         DateTime @default(now())
+
+}
+
+model WebhookEvent {
+
+  id            String @id @default(uuid())
+
+  merchantId    String
+
+  merchant      Merchant @relation(fields: [merchantId], references: [id])
+
+  event         String
+
+  payload       Json
+
+  delivered     Boolean @default(false)
+
+  deliveredAt   DateTime?
+
+  createdAt     DateTime @default(now())
+
 }

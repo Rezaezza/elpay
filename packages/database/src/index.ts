@@ -1,15 +1,7 @@
 export * from "./client";
 
-export * from "./users";
+export * from "@prisma/client";
 
-export * from "./payments";
-
-export * from "./invoices";
-
-export * from "./merchants";
-
-export * from "./paymentRequests";
-
-export * from "./history";
-
-export * from "./activity";
+export * from "./repositories";
+export * from "./services";
+export * from "./utils";
