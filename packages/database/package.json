@@ -21,9 +21,14 @@
     "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
-    "@prisma/client": "^6.19.3"
+    "@prisma/client": "^6.19.3",
+    "bcrypt": "^6.0.0",
+    "jose": "^6.2.8",
+    "uuid": "^14.0.1",
+    "viem": "^2.55.11"
   },
   "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
     "@types/node": "^24.3.0",
     "prisma": "^6.19.3",
     "tsup": "^8.5.1",

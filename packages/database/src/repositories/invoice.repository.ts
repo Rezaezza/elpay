@@ -1,7 +1,8 @@
+import { Prisma } from "@prisma/client";
 import { prisma } from "../client";
 
 export class InvoiceRepository {
-  create(data: any) {
+  create(data: Prisma.InvoiceCreateInput) {
     return prisma.invoice.create({
       data,
     });

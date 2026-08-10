@@ -1,67 +1,84 @@
 import { prisma } from "../client";
 
+import {
+  UserRole,
+  Prisma,
+} from "@prisma/client";
+
 export class UserRepository {
-  findById(id: string) {
+
+  async findById(id: string) {
     return prisma.user.findUnique({
-      where: { id },
+      where: {
+        id,
+      },
       include: {
         wallets: true,
       },
     });
   }
 
-  findByEmail(email: string) {
+  async findByEmail(email: string) {
     return prisma.user.findUnique({
-      where: { email },
+      where: {
+        email,
+      },
       include: {
         wallets: true,
       },
     });
   }
 
-  create(data: {
+  async findByWallet(address: string) {
+    return prisma.user.findFirst({
+      where: {
+        wallets: {
+          some: {
+            address,
+          },
+        },
+      },
+      include: {
+        wallets: true,
+      },
+    });
+  }
+
+  async create(data: {
     email?: string;
     username?: string;
     avatar?: string;
+    role?: UserRole;
   }) {
     return prisma.user.create({
       data,
+      include: {
+        wallets: true,
+      },
     });
   }
 
-  update(
+  async update(
     id: string,
-    data: {
-      email?: string;
-      username?: string;
-      avatar?: string;
-    }
+    data: Prisma.UserUpdateInput
   ) {
     return prisma.user.update({
-      where: { id },
-      data,
-    });
-  }
-
-  delete(id: string) {
-    return prisma.user.delete({
-      where: { id },
-    });
-  }
-
-  findByWallet(address: string) {
-  return prisma.user.findFirst({
-    where: {
-      wallets: {
-        some: {
-          address,
-        },
+      where: {
+        id,
       },
-    },
-    include: {
-      wallets: true,
-    },
-  });
-}
+      data,
+      include: {
+        wallets: true,
+      },
+    });
+  }
+
+  async delete(id: string) {
+    return prisma.user.delete({
+      where: {
+        id,
+      },
+    });
+  }
 
 }

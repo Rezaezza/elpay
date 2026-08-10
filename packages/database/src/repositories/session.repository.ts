@@ -1,15 +1,15 @@
-import { PrismaClient, Prisma } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { Prisma } from "@prisma/client";
+import { prisma } from "../client";
 
 export class SessionRepository {
-  async create(data: Prisma.SessionCreateInput) {
+
+  create(data: Prisma.SessionCreateInput) {
     return prisma.session.create({
       data,
     });
   }
 
-  async findByToken(token: string) {
+  findByToken(token: string) {
     return prisma.session.findUnique({
       where: {
         token,
@@ -17,7 +17,7 @@ export class SessionRepository {
     });
   }
 
-  async findByUser(userId: string) {
+  findByUser(userId: string) {
     return prisma.session.findMany({
       where: {
         userId,
@@ -28,7 +28,7 @@ export class SessionRepository {
     });
   }
 
-  async delete(token: string) {
+  delete(token: string) {
     return prisma.session.delete({
       where: {
         token,
@@ -36,7 +36,7 @@ export class SessionRepository {
     });
   }
 
-  async deleteExpired(date: Date) {
+  deleteExpired(date: Date) {
     return prisma.session.deleteMany({
       where: {
         expiresAt: {
@@ -45,4 +45,5 @@ export class SessionRepository {
       },
     });
   }
+
 }

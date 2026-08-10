@@ -1,7 +1,8 @@
+import { Prisma } from "@prisma/client";
 import { prisma } from "../client";
 
 export class PaymentRepository {
-  create(data: any) {
+  create(data: Prisma.PaymentCreateInput) {
     return prisma.payment.create({
       data,
     });

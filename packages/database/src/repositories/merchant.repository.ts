@@ -1,7 +1,8 @@
+import { Prisma } from "@prisma/client";
 import { prisma } from "../client";
 
 export class MerchantRepository {
-  create(data: any) {
+  create(data: Prisma.MerchantCreateInput) {
     return prisma.merchant.create({
       data,
     });
@@ -27,7 +28,10 @@ export class MerchantRepository {
     });
   }
 
-  update(id: string, data: any) {
+  update(
+  id: string,
+  data: Prisma.MerchantUpdateInput
+) {
   return prisma.merchant.update({
     where: {
       id,

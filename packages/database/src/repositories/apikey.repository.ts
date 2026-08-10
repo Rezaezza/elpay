@@ -1,13 +1,8 @@
+import { Prisma } from "@prisma/client";
 import { prisma } from "../client";
 
 export class ApiKeyRepository {
-  create(data: {
-    merchantId: string;
-    name: string;
-    keyId: string;
-    secretHash: string;
-    userId?: string;
-  }) {
+  create(data: Prisma.ApiKeyCreateInput) {
     return prisma.apiKey.create({
       data,
     });

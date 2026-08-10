@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { prisma } from "../client";
 
 export class WebhookRepository {
@@ -20,12 +21,9 @@ export class WebhookRepository {
   }
 
   update(
-    id: string,
-    data: {
-      url?: string;
-      enabled?: boolean;
-    }
-  ) {
+  id: string,
+  data: Prisma.WebhookUpdateInput
+) {
     return prisma.webhook.update({
       where: {
         id,
