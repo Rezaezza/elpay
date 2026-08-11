@@ -124,4 +124,30 @@ async verifySignature(
 
 }
 
+async verify(
+  address: `0x${string}`,
+  message: string,
+  signature: `0x${string}`,
+) {
+  const valid = await this.signature.verify(
+    address,
+    message,
+    signature,
+  );
+
+  if (!valid) {
+    throw new Error("Invalid signature");
+  }
+
+  return this.login(address);
+}
+
+async logout(token: string) {
+  await this.sessions.delete(token);
+
+  return {
+    success: true,
+  };
+}
+
 }

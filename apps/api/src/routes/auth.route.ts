@@ -2,10 +2,11 @@ import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
 
 import { authController } from "../controllers/auth.controller";
+import { authMiddleware } from "../middleware/auth.middleware";
 
 import {
   createMessageSchema,
-  verifySignatureSchema,
+  verifySchema,
 } from "../validators/auth.validator";
 
 export const authRoute = new Hono();
@@ -20,7 +21,8 @@ authRoute.post(
   async (c) => {
     const body = c.req.valid("json");
 
-    const nonce = authController.nonce().nonce;
+    const nonce =
+      authController.nonce().nonce;
 
     return c.json(
       authController.message({
@@ -33,16 +35,34 @@ authRoute.post(
 
 authRoute.post(
   "/verify",
-  zValidator("json", verifySignatureSchema),
+  zValidator("json", verifySchema),
   async (c) => {
     const body = c.req.valid("json");
 
-    const result = await authController.verify({
-      address: body.address as `0x${string}`,
-      message: body.message,
-      signature: body.signature as `0x${string}`,
-    });
+    const result =
+      await authController.verify({
+        address: body.address as `0x${string}`,
+        message: body.message,
+        signature:
+          body.signature as `0x${string}`,
+      });
 
     return c.json(result);
+  },
+);
+
+authRoute.post(
+  "/logout",
+  authMiddleware,
+  async (c) => {
+    const authorization =
+      c.req.header("Authorization")!;
+
+    const token =
+      authorization.replace("Bearer ", "");
+
+    return c.json(
+      await authController.logout(token),
+    );
   },
 );

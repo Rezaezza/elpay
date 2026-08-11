@@ -23,13 +23,19 @@ export class AuthController {
     };
   }
 
-  async verify(body: {
-    address: `0x${string}`;
-    message: string;
-    signature: `0x${string}`;
-  }) {
-    return authService.verify(body);
-  }
+ async verify(body: {
+  address: `0x${string}`;
+  message: string;
+  signature: `0x${string}`;
+}) {
+  return authService.verify(body);
 }
 
-export const authController = new AuthController();
+async logout(token: string) {
+  return authService.logout(token);
+ }
+
+}
+
+export const authController =
+  new AuthController();
