@@ -1,0 +1,31 @@
+"use client";
+
+import {
+  createContext,
+  useContext,
+} from "react";
+
+import { useAuth } from "../hooks/useAuth";
+
+const AuthContext =
+  createContext({
+    authenticated: false,
+  });
+
+export function AuthProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const auth = useAuth();
+
+  return (
+    <AuthContext.Provider value={auth}>
+      {children}
+    </AuthContext.Provider>
+  );
+}
+
+export function useAuthContext() {
+  return useContext(AuthContext);
+}
