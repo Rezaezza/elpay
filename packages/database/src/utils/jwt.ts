@@ -1,11 +1,25 @@
-import { JWTPayload, SignJWT, jwtVerify } from "jose";
+import {
+  type JWTPayload,
+  SignJWT,
+  jwtVerify,
+} from "jose";
 
-const secret = new TextEncoder().encode(
-  process.env.JWT_SECRET!,
-);
+const JWT_SECRET =
+  process.env.JWT_SECRET;
+
+if (!JWT_SECRET) {
+  throw new Error(
+    "JWT_SECRET environment variable is not configured",
+  );
+}
+
+const secret =
+  new TextEncoder().encode(
+    JWT_SECRET,
+  );
 
 export async function signJwt(
-  payload: JWTPayload
+  payload: JWTPayload,
 ) {
   return new SignJWT(payload)
     .setProtectedHeader({
@@ -16,8 +30,14 @@ export async function signJwt(
     .sign(secret);
 }
 
-export async function verifyJwt(token: string) {
-  const result = await jwtVerify(token, secret);
+export async function verifyJwt(
+  token: string,
+) {
+  const result =
+    await jwtVerify(
+      token,
+      secret,
+    );
 
   return result.payload;
 }

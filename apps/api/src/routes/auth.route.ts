@@ -11,38 +11,76 @@ import {
 
 export const authRoute = new Hono();
 
+/**
+ * GET /auth/nonce
+ *
+ * Generate nonce untuk SIWE login.
+ */
 authRoute.get("/nonce", (c) => {
-  return c.json(authController.nonce());
+  return c.json(
+    authController.nonce(),
+  );
 });
 
+/**
+ * POST /auth/message
+ *
+ * Membuat SIWE message menggunakan
+ * nonce yang sudah diberikan kepada client.
+ *
+ * IMPORTANT:
+ * Jangan membuat nonce baru di sini.
+ */
 authRoute.post(
   "/message",
-  zValidator("json", createMessageSchema),
+  zValidator(
+    "json",
+    createMessageSchema,
+  ),
   async (c) => {
-    const body = c.req.valid("json");
+    const body =
+      c.req.valid("json");
 
-    const nonce =
-      authController.nonce().nonce;
-
-    return c.json(
+    const result =
       authController.message({
-        address: body.address as `0x${string}`,
-        nonce,
-      }),
-    );
+        address:
+          body.address as `0x${string}`,
+
+        nonce: body.nonce,
+      });
+
+    return c.json(result);
   },
 );
 
+/**
+ * POST /auth/verify
+ *
+ * Verify signature SIWE dari wallet.
+ *
+ * Jika valid:
+ * - user dicari/dibuat
+ * - session dibuat
+ * - JWT dibuat
+ */
 authRoute.post(
   "/verify",
-  zValidator("json", verifySchema),
+  zValidator(
+    "json",
+    verifySchema,
+  ),
   async (c) => {
-    const body = c.req.valid("json");
+    const body =
+      c.req.valid("json");
 
     const result =
       await authController.verify({
-        address: body.address as `0x${string}`,
-        message: body.message,
+        address:
+          body.address as `0x${string}`,
+
+        message:
+          body.message,
+
         signature:
           body.signature as `0x${string}`,
       });
@@ -51,18 +89,66 @@ authRoute.post(
   },
 );
 
+/**
+ * POST /auth/logout
+ *
+ * Membutuhkan JWT:
+ *
+ * Authorization: Bearer <token>
+ */
 authRoute.post(
   "/logout",
   authMiddleware,
   async (c) => {
     const authorization =
-      c.req.header("Authorization")!;
+      c.req.header(
+        "Authorization",
+      );
+
+    if (!authorization) {
+      return c.json(
+        {
+          error:
+            "Missing Authorization header",
+        },
+        401,
+      );
+    }
+
+    if (
+      !authorization.startsWith(
+        "Bearer ",
+      )
+    ) {
+      return c.json(
+        {
+          error:
+            "Invalid Authorization header",
+        },
+        401,
+      );
+    }
 
     const token =
-      authorization.replace("Bearer ", "");
+      authorization.slice(
+        "Bearer ".length,
+      );
 
-    return c.json(
-      await authController.logout(token),
-    );
+    if (!token) {
+      return c.json(
+        {
+          error:
+            "Missing access token",
+        },
+        401,
+      );
+    }
+
+    const result =
+      await authController.logout(
+        token,
+      );
+
+    return c.json(result);
   },
 );

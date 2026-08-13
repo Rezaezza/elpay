@@ -87,6 +87,9 @@ importers:
       '@elpay/utils':
         specifier: workspace:*
         version: link:../../packages/utils
+      '@reown/appkit':
+        specifier: ^1.8.23
+        version: 1.8.23(@types/react@19.2.18)(react@19.2.8)(typescript@5.9.3)(use-sync-external-store@1.4.0(react@19.2.8))(zod@4.4.3)
       '@reown/appkit-adapter-wagmi':
         specifier: ^1.8.23
         version: 1.8.23(2999725b5ca87b3e0cd284e629f991c4)
@@ -111,6 +114,9 @@ importers:
       viem:
         specifier: ^2.55.11
         version: 2.55.11(typescript@5.9.3)(zod@4.4.3)
+      wagmi:
+        specifier: 3.7.6
+        version: 3.7.6(@coinbase/wallet-sdk@4.3.6(@types/react@19.2.18)(react@19.2.8)(typescript@5.9.3)(use-sync-external-store@1.4.0(react@19.2.8))(zod@4.4.3))(@safe-global/safe-apps-provider@0.18.6(typescript@5.9.3)(zod@4.4.3))(@safe-global/safe-apps-sdk@9.1.0(typescript@5.9.3)(zod@4.4.3))(@tanstack/query-core@5.101.4)(@tanstack/react-query@5.101.4(react@19.2.8))(@types/react@19.2.18)(react@19.2.8)(typescript@5.9.3)(viem@2.55.11(typescript@5.9.3)(zod@4.4.3))
       zod:
         specifier: ^4.4.3
         version: 4.4.3
@@ -151,9 +157,6 @@ importers:
       '@elpay/utils':
         specifier: workspace:*
         version: link:../utils
-      '@reown/appkit':
-        specifier: ^1.8.23
-        version: 1.8.23(@types/react@19.2.18)(react@19.2.8)(typescript@5.9.3)(use-sync-external-store@1.4.0(react@19.2.8))(zod@4.4.3)
       '@tanstack/react-query':
         specifier: ^5.101.4
         version: 5.101.4(react@19.2.8)

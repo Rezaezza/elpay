@@ -1,17 +1,18 @@
 "use client";
 
-import { QueryClient } from "@tanstack/react-query";
-import { QueryClientProvider } from "@tanstack/react-query";
-
 import { WagmiProvider } from "wagmi";
 
 import {
-  wagmiConfig,
-  BlockchainProvider,
-} from "@elpay/blockchain";
+  QueryClientProvider,
+} from "@tanstack/react-query";
 
-const queryClient =
-  new QueryClient();
+import {
+  wagmiAdapter,
+} from "../lib/reown";
+
+import {
+  queryClient,
+} from "../lib/query-client";
 
 export function Providers({
   children,
@@ -19,16 +20,14 @@ export function Providers({
   children: React.ReactNode;
 }) {
   return (
-    <QueryClientProvider
-      client={queryClient}
+    <WagmiProvider
+      config={wagmiAdapter.wagmiConfig}
     >
-      <WagmiProvider
-        config={wagmiConfig}
+      <QueryClientProvider
+        client={queryClient}
       >
-        <BlockchainProvider>
-          {children}
-        </BlockchainProvider>
-      </WagmiProvider>
-    </QueryClientProvider>
+        {children}
+      </QueryClientProvider>
+    </WagmiProvider>
   );
 }

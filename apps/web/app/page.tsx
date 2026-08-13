@@ -1,9 +1,12 @@
 import { ConnectWalletButton } from "../src/components/ConnectWalletButton";
+import { LoginButton } from "../src/components/LoginButton";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen items-center justify-center">
-      <ConnectWalletButton />
-    </main>
+ <div className="flex flex-col gap-4">
+  <ConnectWalletButton />
+
+  <LoginButton />
+</div>
   );
 }

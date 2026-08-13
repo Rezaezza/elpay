@@ -1,68 +1,101 @@
 "use client";
 
-import { useState } from "react";
-
+import { useCallback, useState } from "react";
 import {
   useAccount,
   useSignMessage,
 } from "wagmi";
 
-import {
-  getNonce,
-  getMessage,
-  verifySignature,
-} from "../services/auth";
-
+import { api } from "../lib/api";
 import { saveToken } from "../lib/auth";
 
 export function useSiweLogin() {
-  const { address } = useAccount();
+  const { address, isConnected } =
+    useAccount();
 
   const {
     signMessageAsync,
   } = useSignMessage();
 
-  const [loading, setLoading] =
+  const [isLoggingIn, setIsLoggingIn] =
     useState(false);
 
-  async function login() {
-    if (!address) return;
+  const [error, setError] =
+    useState<string | null>(null);
 
-    setLoading(true);
+  const [isAuthenticated, setIsAuthenticated] =
+    useState(false);
 
-    try {
-      const nonce =
-        await getNonce();
-
-      const message =
-        await getMessage(
-          address,
-          nonce.nonce,
+  const login = useCallback(
+    async () => {
+      if (!isConnected || !address) {
+        throw new Error(
+          "Wallet belum terhubung",
         );
+      }
 
-      const signature =
-        await signMessageAsync({
-          message: message.message,
+      setIsLoggingIn(true);
+      setError(null);
+
+      try {
+        // 1. Get nonce
+        const {
+          nonce,
+        } = await api.auth.nonce();
+
+        // 2. Create SIWE message
+        const {
+          message,
+        } = await api.auth.message({
+          address,
+          nonce,
         });
 
-      const session =
-        await verifySignature(
-          address,
-          message.message,
-          signature,
-        );
+        // 3. Ask wallet to sign SIWE message
+        const signature =
+          await signMessageAsync({
+            message,
+          });
 
-      saveToken(session.jwt);
+        // 4. Verify signature on backend
+        const result =
+          await api.auth.verify({
+            address,
+            message,
+            signature,
+          });
 
-      return session;
+        // 5. Store JWT
+        saveToken(result.jwt);
 
-    } finally {
-      setLoading(false);
-    }
-  }
+        setIsAuthenticated(true);
+
+        return result;
+      } catch (err) {
+        const message =
+          err instanceof Error
+            ? err.message
+            : "Login gagal";
+
+        setError(message);
+
+        throw err;
+      } finally {
+        setIsLoggingIn(false);
+      }
+    },
+    [
+      address,
+      isConnected,
+      signMessageAsync,
+    ],
+  );
 
   return {
-    loading,
     login,
+    isLoggingIn,
+    isAuthenticated,
+    error,
+    address,
   };
 }

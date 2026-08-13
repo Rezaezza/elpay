@@ -14,9 +14,9 @@ export class AuthController {
   }) {
     return {
       message: siweService.createMessage({
-        domain: "localhost:3001",
+        domain: "localhost:3000",
         address: body.address,
-        uri: "http://localhost:3001",
+        uri: "http://localhost:3000",
         chainId: 5042002,
         nonce: body.nonce,
       }),
