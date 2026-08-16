@@ -7,6 +7,7 @@ import { authRoute } from "./routes/auth.route";
 import { meRoute } from "./routes/me.route";
 import { userRoute } from "./routes/user.route";
 import { protectedRoute } from "./routes/protected.route";
+import { checkoutRoute } from "./routes/checkout.route";
 
 export const app = new Hono();
 
@@ -93,6 +94,8 @@ app.get("/", (c) => {
  */
 app.route("/auth", authRoute);
 
+app.route("/checkout", checkoutRoute);
+
 /**
  * Current authenticated user
  */
@@ -107,3 +110,4 @@ app.route("/user", userRoute);
  * Protected routes
  */
 app.route("/protected", protectedRoute);
+

@@ -9,6 +9,8 @@ import {
   CheckoutFooter,
 } from "@/components/checkout";
 
+import { getCheckoutSession } from "@/services/checkout";
+
 export default async function CheckoutPage({
   params,
 }: {
@@ -18,29 +20,32 @@ export default async function CheckoutPage({
 }) {
   const { sessionId } = await params;
 
+  const session =
+    await getCheckoutSession(sessionId);
+
   return (
     <CheckoutLayout>
 
       <CheckoutHeader
-        merchant="ElPay Demo"
+        merchant={session.merchantName}
       />
 
       <CheckoutSummary
-        amount="10.00"
-        token="USDC"
-        description={sessionId}
+        amount={session.amount}
+        token={session.token}
+        description={session.description}
       />
 
       <CheckoutWallet />
 
       <CheckoutApprove
-        approved={false}
+        approved={session.approved}
       />
 
       <CheckoutPayButton />
 
       <CheckoutStatus
-        status="Waiting Payment"
+        status={session.status}
       />
 
       <CheckoutFooter />

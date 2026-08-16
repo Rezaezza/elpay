@@ -1,14 +1,12 @@
 "use client";
 
-import { createAppKit } from "@reown/appkit/react";
+import { createAppKit } from "@reown/appkit-core";
 import { WagmiAdapter } from "@reown/appkit-adapter-wagmi";
 
 import {
   defineChain,
   type AppKitNetwork,
 } from "@reown/appkit/networks";
-
-
 
 const projectId =
   process.env.NEXT_PUBLIC_REOWN_PROJECT_ID;
@@ -21,7 +19,9 @@ if (!projectId) {
 
 export const arcTestnet = defineChain({
   id: 5042002,
+
   caipNetworkId: "eip155:5042002",
+
   chainNamespace: "eip155",
 
   name: "Arc Testnet",
@@ -38,6 +38,7 @@ export const arcTestnet = defineChain({
         "https://rpc.testnet.arc.network",
       ],
     },
+
     public: {
       http: [
         "https://rpc.testnet.arc.network",
@@ -67,26 +68,28 @@ export const wagmiAdapter =
     ssr: true,
   });
 
-export const appKit = createAppKit({
-  adapters: [wagmiAdapter],
+export const appKit =
+  createAppKit({
+    projectId,
 
-  projectId,
+    adapters: [wagmiAdapter],
 
-  networks,
+    networks,
 
-  defaultNetwork: arcTestnet,
+    defaultNetwork: arcTestnet,
 
-  metadata: {
-    name: "ElPay",
-    description:
-      "ElPay Web3 Payment Infrastructure",
+    metadata: {
+      name: "ElPay",
 
-    url: "http://localhost:3000",
+      description:
+        "ElPay Web3 Payment Infrastructure",
 
-    icons: [],
-  },
+      url: "http://localhost:3000",
 
-  features: {
-    analytics: false,
-  },
-});
+      icons: [],
+    },
+
+    features: {
+      analytics: false,
+    },
+  });
