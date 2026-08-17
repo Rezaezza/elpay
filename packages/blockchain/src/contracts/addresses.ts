@@ -1,11 +1,35 @@
-import { USDC_ADDRESS } from "../chains";
+// packages/blockchain/src/contracts/addresses.ts
 
-export const CONTRACTS = {
-  USDC: USDC_ADDRESS,
+import { ARC_TESTNET_ADDRESSES } from "../addresses";
 
-  PAYMENT: "" as `0x${string}`,
+export const contracts = {
+  factory: ARC_TESTNET_ADDRESSES.factory,
 
-  INVOICE: "" as `0x${string}`,
+  registry: ARC_TESTNET_ADDRESSES.merchantRegistry,
 
-  MERCHANT: "" as `0x${string}`,
+  processor: ARC_TESTNET_ADDRESSES.paymentProcessor,
+
+  escrow: ARC_TESTNET_ADDRESSES.escrow,
 } as const;
+
+/**
+ * Return contract address by key
+ */
+export function getContractAddress(
+  contract: keyof typeof contracts,
+): `0x${string}` {
+  return contracts[contract];
+}
+
+/**
+ * Individual exports
+ */
+export const factoryAddress = contracts.factory;
+
+export const registryAddress = contracts.registry;
+
+export const processorAddress = contracts.processor;
+
+export const escrowAddress = contracts.escrow;
+
+export default contracts;

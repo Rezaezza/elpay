@@ -1,26 +1,71 @@
-import { parseUnits } from "viem";
+import { Address } from "viem";
+import {
+  writeContract,
+  waitForTransactionReceipt,
+} from "@wagmi/core";
 
-import { ERC20_ABI } from "../constants";
-import { USDC_ADDRESS } from "../chains";
-import { getWalletClient } from "../clients";
+import { wagmiConfig } from "../wagmi/config";
+import { PaymentProcessorAddress } from "../contracts";
 
-export async function approveUSDC(
-  spender: `0x${string}`,
-  amount: string,
-) {
-  const wallet = getWalletClient();
-
-  const [account] = await wallet.getAddresses();
-
-  return wallet.writeContract({
-    account,
-    address: USDC_ADDRESS as `0x${string}`,
-    abi: ERC20_ABI,
-    functionName: "approve",
-    args: [
-      spender,
-      parseUnits(amount, 6),
+const erc20Abi = [
+  {
+    type: "function",
+    stateMutability: "nonpayable",
+    name: "approve",
+    inputs: [
+      {
+        name: "spender",
+        type: "address",
+      },
+      {
+        name: "amount",
+        type: "uint256",
+      },
     ],
-    chain: wallet.chain,
+    outputs: [
+      {
+        name: "",
+        type: "bool",
+      },
+    ],
+  },
+] as const;
+
+/**
+ * Approve ERC20 token for PaymentProcessor.
+ */
+export async function approveToken(
+  token: Address,
+  amount: bigint,
+  spender: Address = PaymentProcessorAddress
+) {
+  const hash = await writeContract(wagmiConfig, {
+    address: token,
+    abi: erc20Abi,
+    functionName: "approve",
+    args: [spender, amount],
+  });
+
+  return waitForTransactionReceipt(wagmiConfig, {
+    hash,
   });
 }
+
+/**
+ * Unlimited approval.
+ */
+export async function approveMax(
+  token: Address,
+  spender: Address = PaymentProcessorAddress
+) {
+  return approveToken(
+    token,
+    0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffn,
+    spender
+  );
+}
+
+/**
+ * Alias
+ */
+export const approve = approveToken;

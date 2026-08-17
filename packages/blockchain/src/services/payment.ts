@@ -1,8 +1,104 @@
-import { transferUSDC } from "./transfer";
+import { Address, Hash } from "viem";
 
-export async function sendPayment(
-  receiver: `0x${string}`,
-  amount: string,
-) {
-  return transferUSDC(receiver, amount);
+import {
+  createPayment,
+  approvePayment,
+  executePayment,
+  refundPayment,
+  releaseEscrow,
+  getPayment,
+} from "../contracts/payment";
+
+//////////////////////////////////////////////////////////////
+// CREATE
+//////////////////////////////////////////////////////////////
+
+export async function createPaymentService(
+  payer: Address,
+  token: Address,
+  amount: bigint
+): Promise<Hash> {
+  return createPayment(payer, token, amount);
 }
+
+//////////////////////////////////////////////////////////////
+// APPROVE
+//////////////////////////////////////////////////////////////
+
+export async function approvePaymentService(
+  paymentId: Hash
+) {
+  return approvePayment(paymentId);
+}
+
+//////////////////////////////////////////////////////////////
+// EXECUTE
+//////////////////////////////////////////////////////////////
+
+export async function executePaymentService(
+  paymentId: Hash
+) {
+  return executePayment(paymentId);
+}
+
+//////////////////////////////////////////////////////////////
+// REFUND
+//////////////////////////////////////////////////////////////
+
+export async function refundPaymentService(
+  paymentId: Hash
+) {
+  return refundPayment(paymentId);
+}
+
+//////////////////////////////////////////////////////////////
+// RELEASE ESCROW
+//////////////////////////////////////////////////////////////
+
+export async function releaseEscrowService(
+  paymentId: Hash
+) {
+  return releaseEscrow(paymentId);
+}
+
+//////////////////////////////////////////////////////////////
+// GET PAYMENT
+//////////////////////////////////////////////////////////////
+
+export async function getPaymentService(
+  paymentId: Hash
+) {
+  return getPayment(paymentId);
+}
+
+//////////////////////////////////////////////////////////////
+// PAYMENT FLOW
+//////////////////////////////////////////////////////////////
+
+export async function processPayment(
+  payer: Address,
+  token: Address,
+  amount: bigint
+) {
+  const paymentId = await createPaymentService(
+    payer,
+    token,
+    amount
+  );
+
+  return paymentId;
+}
+
+//////////////////////////////////////////////////////////////
+// EXPORT ALIAS
+//////////////////////////////////////////////////////////////
+
+export const paymentService = {
+  create: createPaymentService,
+  approve: approvePaymentService,
+  execute: executePaymentService,
+ refund: refundPaymentService,
+ release: releaseEscrowService,
+ get: getPaymentService,
+ process: processPayment,
+};

@@ -1,16 +1,57 @@
-import { formatUnits } from "viem";
+import { Address } from "viem";
+import { readContract } from "@wagmi/core";
 
-import { publicClient } from "../clients";
-import { ERC20_ABI } from "../constants";
-import { USDC_ADDRESS } from "../chains";
+import { wagmiConfig } from "../wagmi/config";
 
-export async function getUSDCBalance(address: `0x${string}`) {
-  const balance = await publicClient.readContract({
-    address: USDC_ADDRESS as `0x${string}`,
-    abi: ERC20_ABI,
+const erc20Abi = [
+  {
+    type: "function",
+    stateMutability: "view",
+    name: "balanceOf",
+    inputs: [
+      {
+        name: "owner",
+        type: "address",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+      },
+    ],
+  },
+] as const;
+
+/**
+ * Get ERC20 token balance
+ */
+export async function getTokenBalance(
+  token: Address,
+  owner: Address
+): Promise<bigint> {
+  return await readContract(wagmiConfig, {
+    address: token,
+    abi: erc20Abi,
     functionName: "balanceOf",
-    args: [address],
+    args: [owner],
   });
+}
 
-  return formatUnits(balance, 6);
+/**
+ * Alias
+ */
+export const balanceOf = getTokenBalance;
+
+/**
+ * Check whether account has enough balance
+ */
+export async function hasEnoughBalance(
+  token: Address,
+  owner: Address,
+  amount: bigint
+): Promise<boolean> {
+  const balance = await getTokenBalance(token, owner);
+
+  return balance >= amount;
 }

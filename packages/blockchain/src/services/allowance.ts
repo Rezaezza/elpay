@@ -1,15 +1,68 @@
-import { publicClient } from "../clients";
-import { ERC20_ABI } from "../constants";
-import { USDC_ADDRESS } from "../chains";
+import { Address } from "viem";
+import { readContract } from "@wagmi/core";
 
+import { wagmiConfig } from "../wagmi/config";
+import { PaymentProcessorAddress } from "../contracts";
+
+const erc20Abi = [
+  {
+    type: "function",
+    stateMutability: "view",
+    name: "allowance",
+    inputs: [
+      {
+        name: "owner",
+        type: "address",
+      },
+      {
+        name: "spender",
+        type: "address",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+      },
+    ],
+  },
+] as const;
+
+/**
+ * Get ERC20 allowance.
+ */
 export async function getAllowance(
-  owner: `0x${string}`,
-  spender: `0x${string}`,
-) {
-  return publicClient.readContract({
-    address: USDC_ADDRESS as `0x${string}`,
-    abi: ERC20_ABI,
+  token: Address,
+  owner: Address,
+  spender: Address = PaymentProcessorAddress
+): Promise<bigint> {
+  return await readContract(wagmiConfig, {
+    address: token,
+    abi: erc20Abi,
     functionName: "allowance",
     args: [owner, spender],
   });
+}
+
+/**
+ * Alias
+ */
+export const allowanceOf = getAllowance;
+
+/**
+ * Check allowance.
+ */
+export async function hasEnoughAllowance(
+  token: Address,
+  owner: Address,
+  amount: bigint,
+  spender: Address = PaymentProcessorAddress
+): Promise<boolean> {
+  const allowance = await getAllowance(
+    token,
+    owner,
+    spender
+  );
+
+  return allowance >= amount;
 }

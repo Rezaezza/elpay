@@ -11,6 +11,12 @@
       "DOM"
     ],
 
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+
+    "declaration": true,
+    "declarationMap": true,
+
     "types": [
       "node",
       "react"

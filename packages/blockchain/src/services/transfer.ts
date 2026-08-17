@@ -1,26 +1,86 @@
-import { parseUnits } from "viem";
+import { Address } from "viem";
+import {
+  writeContract,
+  waitForTransactionReceipt,
+} from "@wagmi/core";
 
-import { ERC20_ABI } from "../constants";
-import { USDC_ADDRESS } from "../chains";
-import { getWalletClient } from "../clients";
+import { wagmiConfig } from "../wagmi/config";
 
-export async function transferUSDC(
-  to: `0x${string}`,
-  amount: string,
-) {
-  const wallet = getWalletClient();
-
-  const [account] = await wallet.getAddresses();
-
-  return wallet.writeContract({
-    account,
-    address: USDC_ADDRESS as `0x${string}`,
-    abi: ERC20_ABI,
-    functionName: "transfer",
-    args: [
-      to,
-      parseUnits(amount, 6),
+const erc20Abi = [
+  {
+    type: "function",
+    stateMutability: "nonpayable",
+    name: "transfer",
+    inputs: [
+      {
+        name: "to",
+        type: "address",
+      },
+      {
+        name: "amount",
+        type: "uint256",
+      },
     ],
-    chain: wallet.chain,
+    outputs: [
+      {
+        name: "",
+        type: "bool",
+      },
+    ],
+  },
+] as const;
+
+//////////////////////////////////////////////////////////////
+// TRANSFER ERC20
+//////////////////////////////////////////////////////////////
+
+export async function transferToken(
+  token: Address,
+  to: Address,
+  amount: bigint
+) {
+  const hash = await writeContract(wagmiConfig, {
+    address: token,
+    abi: erc20Abi,
+    functionName: "transfer",
+    args: [to, amount],
   });
+
+  return waitForTransactionReceipt(wagmiConfig, {
+    hash,
+  });
+}
+
+//////////////////////////////////////////////////////////////
+// ALIAS
+//////////////////////////////////////////////////////////////
+
+export const transfer = transferToken;
+
+//////////////////////////////////////////////////////////////
+// BULK TRANSFER
+//////////////////////////////////////////////////////////////
+
+export async function batchTransfer(
+  token: Address,
+  recipients: readonly Address[],
+  amounts: readonly bigint[]
+) {
+  if (recipients.length !== amounts.length) {
+    throw new Error("Recipients and amounts length mismatch");
+  }
+
+  const receipts = [];
+
+  for (let i = 0; i < recipients.length; i++) {
+    const receipt = await transferToken(
+      token,
+      recipients[i],
+      amounts[i]
+    );
+
+    receipts.push(receipt);
+  }
+
+  return receipts;
 }
