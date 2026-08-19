@@ -1,14 +1,17 @@
-import { Address } from "viem";
+import type { Address } from "viem";
 import { readContract } from "@wagmi/core";
 
-import { wagmiConfig } from "../wagmi/config";
-import { PaymentProcessorAddress } from "../contracts";
+import { wagmiConfig } from "../wagmi";
+import { CONTRACT_ADDRESSES } from "../addresses";
+
+const PaymentProcessorAddress =
+  CONTRACT_ADDRESSES.arcTestnet.paymentProcessor;
 
 const erc20Abi = [
   {
     type: "function",
-    stateMutability: "view",
     name: "allowance",
+    stateMutability: "view",
     inputs: [
       {
         name: "owner",
@@ -21,22 +24,18 @@ const erc20Abi = [
     ],
     outputs: [
       {
-        name: "",
         type: "uint256",
       },
     ],
   },
 ] as const;
 
-/**
- * Get ERC20 allowance.
- */
 export async function getAllowance(
   token: Address,
   owner: Address,
   spender: Address = PaymentProcessorAddress
 ): Promise<bigint> {
-  return await readContract(wagmiConfig, {
+  return readContract(wagmiConfig, {
     address: token,
     abi: erc20Abi,
     functionName: "allowance",
@@ -44,14 +43,8 @@ export async function getAllowance(
   });
 }
 
-/**
- * Alias
- */
 export const allowanceOf = getAllowance;
 
-/**
- * Check allowance.
- */
 export async function hasEnoughAllowance(
   token: Address,
   owner: Address,

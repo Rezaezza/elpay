@@ -1,16 +1,25 @@
 import { useMutation } from "@tanstack/react-query";
+import type { Address } from "viem";
 
-import { sendPayment } from "../services";
+import { createPaymentService } from "../services";
 
 export function useSendPayment() {
   return useMutation({
-    mutationFn: ({
-      receiver,
-      amount,
-    }: {
-      receiver: `0x${string}`;
-      amount: string;
-    }) =>
-      sendPayment(receiver, amount),
+    mutationFn: (
+      {
+        payer,
+        token,
+        amount,
+      }: {
+        payer: Address;
+        token: Address;
+        amount: bigint;
+      }
+    ) =>
+      createPaymentService(
+        payer,
+        token,
+        amount
+      ),
   });
 }

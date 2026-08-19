@@ -1,4 +1,8 @@
 export const merchantRegistryAbi = [
+  /* -------------------------------------------------------------------------- */
+  /*                                Write                                       */
+  /* -------------------------------------------------------------------------- */
+
   {
     type: "function",
     name: "registerMerchant",
@@ -51,6 +55,35 @@ export const merchantRegistryAbi = [
 
   {
     type: "function",
+    name: "disableMerchant",
+    stateMutability: "nonpayable",
+    inputs: [
+      {
+        name: "merchant",
+        type: "address",
+      },
+    ],
+    outputs: [],
+  },
+
+  /* -------------------------------------------------------------------------- */
+  /*                                  Read                                      */
+  /* -------------------------------------------------------------------------- */
+
+  {
+    type: "function",
+    name: "owner",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [
+      {
+        type: "address",
+      },
+    ],
+  },
+
+  {
+    type: "function",
     name: "isActive",
     stateMutability: "view",
     inputs: [
@@ -80,7 +113,7 @@ export const merchantRegistryAbi = [
       {
         components: [
           {
-            name: "merchant",
+            name: "owner",
             type: "address",
           },
           {
@@ -92,15 +125,76 @@ export const merchantRegistryAbi = [
             type: "string",
           },
           {
-            name: "active",
-            type: "bool",
+            name: "status",
+            type: "uint8",
           },
           {
-            name: "registeredAt",
+            name: "createdAt",
             type: "uint64",
           },
         ],
         type: "tuple",
+      },
+    ],
+  },
+
+  /* -------------------------------------------------------------------------- */
+  /*                                  Events                                    */
+  /* -------------------------------------------------------------------------- */
+
+  {
+    type: "event",
+    name: "MerchantRegistered",
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        name: "merchant",
+        type: "address",
+      },
+      {
+        indexed: false,
+        name: "name",
+        type: "string",
+      },
+    ],
+  },
+
+  {
+    type: "event",
+    name: "MerchantUpdated",
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        name: "merchant",
+        type: "address",
+      },
+    ],
+  },
+
+  {
+    type: "event",
+    name: "MerchantPaused",
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        name: "merchant",
+        type: "address",
+      },
+    ],
+  },
+
+  {
+    type: "event",
+    name: "MerchantActivated",
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        name: "merchant",
+        type: "address",
       },
     ],
   },

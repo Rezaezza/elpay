@@ -1,14 +1,14 @@
 import type { Address, Hash } from "viem";
 import { readContract, writeContract } from "wagmi/actions";
 
-import { PAYMENT_PROCESSOR_ABI } from "../abi";
+import { paymentProcessorAbi } from "../abi";
 import { CONTRACT_ADDRESSES } from "../addresses";
 import { wagmiConfig } from "../wagmi";
 
-const address = CONTRACT_ADDRESSES.paymentProcessor;
+const address = CONTRACT_ADDRESSES.arcTestnet.paymentProcessor;
 
 /* -------------------------------------------------------------------------- */
-/*                               Write Functions                              */
+/*                                   WRITE                                    */
 /* -------------------------------------------------------------------------- */
 
 export async function createPayment(
@@ -18,7 +18,7 @@ export async function createPayment(
 ): Promise<Hash> {
   return writeContract(wagmiConfig, {
     address,
-    abi: PAYMENT_PROCESSOR_ABI,
+    abi: paymentProcessorAbi,
     functionName: "createPayment",
     args: [payer, token, amount],
   });
@@ -29,7 +29,7 @@ export async function approvePayment(
 ): Promise<Hash> {
   return writeContract(wagmiConfig, {
     address,
-    abi: PAYMENT_PROCESSOR_ABI,
+    abi: paymentProcessorAbi,
     functionName: "approvePayment",
     args: [paymentId],
   });
@@ -40,7 +40,7 @@ export async function cancelPayment(
 ): Promise<Hash> {
   return writeContract(wagmiConfig, {
     address,
-    abi: PAYMENT_PROCESSOR_ABI,
+    abi: paymentProcessorAbi,
     functionName: "cancelPayment",
     args: [paymentId],
   });
@@ -51,7 +51,7 @@ export async function executePayment(
 ): Promise<Hash> {
   return writeContract(wagmiConfig, {
     address,
-    abi: PAYMENT_PROCESSOR_ABI,
+    abi: paymentProcessorAbi,
     functionName: "executePayment",
     args: [paymentId],
   });
@@ -62,7 +62,7 @@ export async function refundPayment(
 ): Promise<Hash> {
   return writeContract(wagmiConfig, {
     address,
-    abi: PAYMENT_PROCESSOR_ABI,
+    abi: paymentProcessorAbi,
     functionName: "refundPayment",
     args: [paymentId],
   });
@@ -73,14 +73,14 @@ export async function releaseEscrow(
 ): Promise<Hash> {
   return writeContract(wagmiConfig, {
     address,
-    abi: PAYMENT_PROCESSOR_ABI,
+    abi: paymentProcessorAbi,
     functionName: "releaseEscrow",
     args: [paymentId],
   });
 }
 
 /* -------------------------------------------------------------------------- */
-/*                                Read Functions                              */
+/*                                    READ                                    */
 /* -------------------------------------------------------------------------- */
 
 export async function getPayment(
@@ -88,7 +88,7 @@ export async function getPayment(
 ) {
   return readContract(wagmiConfig, {
     address,
-    abi: PAYMENT_PROCESSOR_ABI,
+    abi: paymentProcessorAbi,
     functionName: "getPayment",
     args: [paymentId],
   });
@@ -99,14 +99,14 @@ export async function paymentExists(
 ) {
   return readContract(wagmiConfig, {
     address,
-    abi: PAYMENT_PROCESSOR_ABI,
+    abi: paymentProcessorAbi,
     functionName: "paymentExistsView",
     args: [paymentId],
   });
 }
 
 /* -------------------------------------------------------------------------- */
-/*                                   Export                                   */
+/*                                   EXPORT                                   */
 /* -------------------------------------------------------------------------- */
 
 export const payment = {

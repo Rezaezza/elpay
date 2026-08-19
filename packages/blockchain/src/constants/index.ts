@@ -1,1 +1,1 @@
-export * from "./abi";
+export {};

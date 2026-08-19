@@ -1,4 +1,8 @@
 export const elPayEscrowAbi = [
+  /* -------------------------------------------------------------------------- */
+  /*                               Write Functions                              */
+  /* -------------------------------------------------------------------------- */
+
   {
     type: "function",
     name: "deposit",
@@ -19,6 +23,7 @@ export const elPayEscrowAbi = [
     ],
     outputs: [],
   },
+
   {
     type: "function",
     name: "release",
@@ -31,6 +36,24 @@ export const elPayEscrowAbi = [
     ],
     outputs: [],
   },
+
+  {
+    type: "function",
+    name: "setPaymentProcessor",
+    stateMutability: "nonpayable",
+    inputs: [
+      {
+        name: "processor",
+        type: "address",
+      },
+    ],
+    outputs: [],
+  },
+
+  /* -------------------------------------------------------------------------- */
+  /*                                View Functions                              */
+  /* -------------------------------------------------------------------------- */
+
   {
     type: "function",
     name: "escrowExists",
@@ -47,6 +70,7 @@ export const elPayEscrowAbi = [
       },
     ],
   },
+
   {
     type: "function",
     name: "getEscrow",
@@ -81,6 +105,7 @@ export const elPayEscrowAbi = [
       },
     ],
   },
+
   {
     type: "function",
     name: "isReleased",
@@ -97,6 +122,7 @@ export const elPayEscrowAbi = [
       },
     ],
   },
+
   {
     type: "function",
     name: "canRelease",
@@ -113,6 +139,7 @@ export const elPayEscrowAbi = [
       },
     ],
   },
+
   {
     type: "function",
     name: "paymentProcessor",
@@ -121,6 +148,71 @@ export const elPayEscrowAbi = [
     outputs: [
       {
         type: "address",
+      },
+    ],
+  },
+
+  {
+    type: "function",
+    name: "owner",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [
+      {
+        type: "address",
+      },
+    ],
+  },
+
+  /* -------------------------------------------------------------------------- */
+  /*                                   Events                                   */
+  /* -------------------------------------------------------------------------- */
+
+  {
+    type: "event",
+    name: "EscrowCreated",
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        name: "paymentId",
+        type: "bytes32",
+      },
+      {
+        indexed: true,
+        name: "token",
+        type: "address",
+      },
+      {
+        indexed: false,
+        name: "amount",
+        type: "uint256",
+      },
+    ],
+  },
+
+  {
+    type: "event",
+    name: "EscrowReleaseStarted",
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        name: "paymentId",
+        type: "bytes32",
+      },
+    ],
+  },
+
+  {
+    type: "event",
+    name: "EscrowReleased",
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        name: "paymentId",
+        type: "bytes32",
       },
     ],
   },

@@ -1,20 +1,60 @@
 export const elPayFactoryAbi = [
+  /* -------------------------------------------------------------------------- */
+  /*                           Public Immutable Getter                          */
+  /* -------------------------------------------------------------------------- */
+
   {
     type: "function",
-    name: "registerMerchant",
-    stateMutability: "nonpayable",
-    inputs: [
+    name: "registry",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [
       {
-        name: "name",
-        type: "string",
+        type: "address",
       },
+    ],
+  },
+
+  {
+    type: "function",
+    name: "processor",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [
       {
-        name: "metadataURI",
+        type: "address",
+      },
+    ],
+  },
+
+  {
+    type: "function",
+    name: "escrow",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [
+      {
+        type: "address",
+      },
+    ],
+  },
+
+  {
+    type: "function",
+    name: "VERSION",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [
+      {
         type: "string",
       },
     ],
-    outputs: [],
   },
+
+  /* -------------------------------------------------------------------------- */
+  /*                               View Functions                               */
+  /* -------------------------------------------------------------------------- */
+
   {
     type: "function",
     name: "version",
@@ -26,6 +66,7 @@ export const elPayFactoryAbi = [
       },
     ],
   },
+
   {
     type: "function",
     name: "registryAddress",
@@ -37,6 +78,7 @@ export const elPayFactoryAbi = [
       },
     ],
   },
+
   {
     type: "function",
     name: "processorAddress",
@@ -48,6 +90,7 @@ export const elPayFactoryAbi = [
       },
     ],
   },
+
   {
     type: "function",
     name: "escrowAddress",

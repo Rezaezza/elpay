@@ -71,23 +71,7 @@ export async function getPaymentService(
   return getPayment(paymentId);
 }
 
-//////////////////////////////////////////////////////////////
-// PAYMENT FLOW
-//////////////////////////////////////////////////////////////
 
-export async function processPayment(
-  payer: Address,
-  token: Address,
-  amount: bigint
-) {
-  const paymentId = await createPaymentService(
-    payer,
-    token,
-    amount
-  );
-
-  return paymentId;
-}
 
 //////////////////////////////////////////////////////////////
 // EXPORT ALIAS
@@ -100,5 +84,5 @@ export const paymentService = {
  refund: refundPaymentService,
  release: releaseEscrowService,
  get: getPaymentService,
- process: processPayment,
+ 
 };

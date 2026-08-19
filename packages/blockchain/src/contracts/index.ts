@@ -1,6 +1,6 @@
-export * from "./addresses";
 export * from "./payment";
-export * from "./invoice";
 export * from "./merchant";
-export * from "./events";
+export * from "./escrow";
+export * from "./factory";
+export * from "./erc20";
 

@@ -1,14 +1,14 @@
 import type { Address, Hash } from "viem";
 import { readContract, writeContract } from "wagmi/actions";
 
-import { MERCHANT_REGISTRY_ABI } from "../abi";
+import { merchantRegistryAbi } from "../abi";
 import { CONTRACT_ADDRESSES } from "../addresses";
 import { wagmiConfig } from "../wagmi";
 
-const address = CONTRACT_ADDRESSES.merchantRegistry;
+const address = CONTRACT_ADDRESSES.arcTestnet.merchantRegistry;
 
 /* -------------------------------------------------------------------------- */
-/*                               Write Functions                              */
+/*                               WRITE FUNCTIONS                              */
 /* -------------------------------------------------------------------------- */
 
 export async function registerMerchant(
@@ -17,7 +17,7 @@ export async function registerMerchant(
 ): Promise<Hash> {
   return writeContract(wagmiConfig, {
     address,
-    abi: MERCHANT_REGISTRY_ABI,
+    abi: merchantRegistryAbi,
     functionName: "registerMerchant",
     args: [name, metadataURI],
   });
@@ -29,7 +29,7 @@ export async function updateMerchant(
 ): Promise<Hash> {
   return writeContract(wagmiConfig, {
     address,
-    abi: MERCHANT_REGISTRY_ABI,
+    abi: merchantRegistryAbi,
     functionName: "updateMerchant",
     args: [name, metadataURI],
   });
@@ -38,7 +38,7 @@ export async function updateMerchant(
 export async function pauseMerchant(): Promise<Hash> {
   return writeContract(wagmiConfig, {
     address,
-    abi: MERCHANT_REGISTRY_ABI,
+    abi: merchantRegistryAbi,
     functionName: "pauseMerchant",
   });
 }
@@ -46,7 +46,7 @@ export async function pauseMerchant(): Promise<Hash> {
 export async function activateMerchant(): Promise<Hash> {
   return writeContract(wagmiConfig, {
     address,
-    abi: MERCHANT_REGISTRY_ABI,
+    abi: merchantRegistryAbi,
     functionName: "activateMerchant",
   });
 }
@@ -56,14 +56,14 @@ export async function disableMerchant(
 ): Promise<Hash> {
   return writeContract(wagmiConfig, {
     address,
-    abi: MERCHANT_REGISTRY_ABI,
+    abi: merchantRegistryAbi,
     functionName: "disableMerchant",
     args: [merchant],
   });
 }
 
 /* -------------------------------------------------------------------------- */
-/*                                Read Functions                              */
+/*                                READ FUNCTIONS                              */
 /* -------------------------------------------------------------------------- */
 
 export async function getMerchant(
@@ -71,25 +71,25 @@ export async function getMerchant(
 ) {
   return readContract(wagmiConfig, {
     address,
-    abi: MERCHANT_REGISTRY_ABI,
+    abi: merchantRegistryAbi,
     functionName: "getMerchant",
     args: [merchant],
   });
 }
 
-export async function isMerchantActive(
+export async function isActive(
   merchant: Address
 ) {
   return readContract(wagmiConfig, {
     address,
-    abi: MERCHANT_REGISTRY_ABI,
+    abi: merchantRegistryAbi,
     functionName: "isActive",
     args: [merchant],
   });
 }
 
 /* -------------------------------------------------------------------------- */
-/*                                   Export                                   */
+/*                                   EXPORT                                   */
 /* -------------------------------------------------------------------------- */
 
 export const merchant = {
@@ -99,5 +99,5 @@ export const merchant = {
   activateMerchant,
   disableMerchant,
   getMerchant,
-  isMerchantActive,
+  isActive,
 };

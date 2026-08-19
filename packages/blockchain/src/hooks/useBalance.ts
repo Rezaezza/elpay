@@ -1,13 +1,21 @@
 import { useQuery } from "@tanstack/react-query";
+import type { Address } from "viem";
 
-import { getUSDCBalance } from "../services";
+import { getTokenBalance } from "../services";
 
-export function useBalance(address?: `0x${string}`) {
+export function useBalance(
+  token?: Address,
+  owner?: Address
+) {
   return useQuery({
-    queryKey: ["balance", address],
+    queryKey: ["balance", token, owner],
 
-    enabled: !!address,
+    enabled: !!token && !!owner,
 
-    queryFn: () => getUSDCBalance(address!),
+    queryFn: () =>
+      getTokenBalance(
+        token!,
+        owner!
+      ),
   });
 }

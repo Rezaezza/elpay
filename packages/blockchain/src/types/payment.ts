@@ -1,11 +1,43 @@
-export interface PaymentInput {
-  receiver: `0x${string}`;
+import type { Address } from "viem";
 
-  amount: string;
+import type {
+  PaymentId,
+  Timestamp,
+} from "./common";
 
-  memo?: string;
+/* -------------------------------------------------------------------------- */
+/*                               Payment Status                               */
+/* -------------------------------------------------------------------------- */
+
+export enum PaymentStatus {
+  Created = 0,
+  Approved = 1,
+  Processing = 2,
+  Paid = 3,
+  Cancelled = 4,
+  Refunded = 5,
 }
 
-export interface PaymentResult {
-  hash: `0x${string}`;
+/* -------------------------------------------------------------------------- */
+/*                                  Payment                                   */
+/* -------------------------------------------------------------------------- */
+
+export interface Payment {
+  id: PaymentId;
+
+  payer: Address;
+
+  merchant: Address;
+
+  token: Address;
+
+  amount: bigint;
+
+  status: PaymentStatus;
+
+  createdAt: Timestamp;
+
+  expiresAt: Timestamp;
+
+  description: string;
 }

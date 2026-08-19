@@ -1,16 +1,18 @@
 import { useMutation } from "@tanstack/react-query";
+import type { Address } from "viem";
 
-import { approveUSDC } from "../services";
+import { approveToken } from "../services";
 
 export function useApprove() {
   return useMutation({
-    mutationFn: ({
-      spender,
-      amount,
-    }: {
-      spender: `0x${string}`;
-      amount: string;
-    }) =>
-      approveUSDC(spender, amount),
+    mutationFn: (
+      {
+        token,
+        amount,
+      }: {
+        token: Address;
+        amount: bigint;
+      }
+    ) => approveToken(token, amount),
   });
 }

@@ -1,4 +1,27 @@
 export const paymentProcessorAbi = [
+  /* -------------------------------------------------------------------------- */
+  /*                               Constructor                                  */
+  /* -------------------------------------------------------------------------- */
+
+  {
+    type: "constructor",
+    inputs: [
+      {
+        name: "registryAddress",
+        type: "address",
+      },
+      {
+        name: "escrowAddress",
+        type: "address",
+      },
+    ],
+    stateMutability: "nonpayable",
+  },
+
+  /* -------------------------------------------------------------------------- */
+  /*                              Write Functions                               */
+  /* -------------------------------------------------------------------------- */
+
   {
     type: "function",
     name: "createPayment",
@@ -90,6 +113,10 @@ export const paymentProcessorAbi = [
     outputs: [],
   },
 
+  /* -------------------------------------------------------------------------- */
+  /*                                View Functions                              */
+  /* -------------------------------------------------------------------------- */
+
   {
     type: "function",
     name: "getPayment",
@@ -102,6 +129,7 @@ export const paymentProcessorAbi = [
     ],
     outputs: [
       {
+        type: "tuple",
         components: [
           {
             name: "id",
@@ -140,7 +168,6 @@ export const paymentProcessorAbi = [
             type: "string",
           },
         ],
-        type: "tuple",
       },
     ],
   },
@@ -162,272 +189,277 @@ export const paymentProcessorAbi = [
     ],
   },
 
- /* -------------------------------------------------------------------------- */
-/*                                   Events                                   */
-/* -------------------------------------------------------------------------- */
+  {
+    type: "function",
+    name: "paymentCount",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [
+      {
+        type: "uint256",
+      },
+    ],
+  },
 
-{
-  type: "event",
-  name: "PaymentCreated",
-  anonymous: false,
-  inputs: [
-    {
-      indexed: true,
-      name: "paymentId",
-      type: "bytes32",
-    },
-    {
-      indexed: true,
-      name: "payer",
-      type: "address",
-    },
-    {
-      indexed: true,
-      name: "merchant",
-      type: "address",
-    },
-    {
-      indexed: false,
-      name: "amount",
-      type: "uint256",
-    },
-  ],
-},
+  {
+    type: "function",
+    name: "registry",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [
+      {
+        type: "address",
+      },
+    ],
+  },
 
-{
-  type: "event",
-  name: "PaymentApproved",
-  anonymous: false,
-  inputs: [
-    {
-      indexed: true,
-      name: "paymentId",
-      type: "bytes32",
-    },
-  ],
-},
+  {
+    type: "function",
+    name: "escrow",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [
+      {
+        type: "address",
+      },
+    ],
+  },
 
-{
-  type: "event",
-  name: "PaymentProcessing",
-  anonymous: false,
-  inputs: [
-    {
-      indexed: true,
-      name: "paymentId",
-      type: "bytes32",
-    },
-  ],
-},
+    /* -------------------------------------------------------------------------- */
+  /*                                   Events                                   */
+  /* -------------------------------------------------------------------------- */
 
-{
-  type: "event",
-  name: "PaymentCompleted",
-  anonymous: false,
-  inputs: [
-    {
-      indexed: true,
-      name: "paymentId",
-      type: "bytes32",
-    },
-  ],
-},
+  {
+    type: "event",
+    name: "PaymentCreated",
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        name: "paymentId",
+        type: "bytes32",
+      },
+      {
+        indexed: true,
+        name: "payer",
+        type: "address",
+      },
+      {
+        indexed: true,
+        name: "merchant",
+        type: "address",
+      },
+      {
+        indexed: false,
+        name: "amount",
+        type: "uint256",
+      },
+    ],
+  },
 
-{
-  type: "event",
-  name: "PaymentPaid",
-  anonymous: false,
-  inputs: [
-    {
-      indexed: true,
-      name: "paymentId",
-      type: "bytes32",
-    },
-  ],
-},
+  {
+    type: "event",
+    name: "PaymentApproved",
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        name: "paymentId",
+        type: "bytes32",
+      },
+    ],
+  },
 
-{
-  type: "event",
-  name: "PaymentCancelled",
-  anonymous: false,
-  inputs: [
-    {
-      indexed: true,
-      name: "paymentId",
-      type: "bytes32",
-    },
-  ],
-},
+  {
+    type: "event",
+    name: "PaymentCancelled",
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        name: "paymentId",
+        type: "bytes32",
+      },
+    ],
+  },
 
-{
-  type: "event",
-  name: "PaymentRefunded",
-  anonymous: false,
-  inputs: [
-    {
-      indexed: true,
-      name: "paymentId",
-      type: "bytes32",
-    },
-  ],
-},
+  {
+    type: "event",
+    name: "PaymentProcessing",
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        name: "paymentId",
+        type: "bytes32",
+      },
+    ],
+  },
 
-/* -------------------------------------------------------------------------- */
-/*                                   Events                                   */
-/* -------------------------------------------------------------------------- */
+  {
+    type: "event",
+    name: "PaymentCompleted",
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        name: "paymentId",
+        type: "bytes32",
+      },
+    ],
+  },
 
-{
-  type: "event",
-  name: "MerchantRegistered",
-  anonymous: false,
-  inputs: [
-    {
-      indexed: true,
-      name: "merchant",
-      type: "address",
-    },
-    {
-      indexed: false,
-      name: "name",
-      type: "string",
-    },
-  ],
-},
+  {
+    type: "event",
+    name: "PaymentPaid",
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        name: "paymentId",
+        type: "bytes32",
+      },
+    ],
+  },
 
-{
-  type: "event",
-  name: "MerchantUpdated",
-  anonymous: false,
-  inputs: [
-    {
-      indexed: true,
-      name: "merchant",
-      type: "address",
-    },
-  ],
-},
+  {
+    type: "event",
+    name: "PaymentRefunded",
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        name: "paymentId",
+        type: "bytes32",
+      },
+    ],
+  },
 
-{
-  type: "event",
-  name: "MerchantPaused",
-  anonymous: false,
-  inputs: [
-    {
-      indexed: true,
-      name: "merchant",
-      type: "address",
-    },
-  ],
-},
+  /* -------------------------------------------------------------------------- */
+  /*                             Merchant Events                                */
+  /* -------------------------------------------------------------------------- */
 
-{
-  type: "event",
-  name: "MerchantActivated",
-  anonymous: false,
-  inputs: [
-    {
-      indexed: true,
-      name: "merchant",
-      type: "address",
-    },
-  ],
-},
+  {
+    type: "event",
+    name: "MerchantRegistered",
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        name: "merchant",
+        type: "address",
+      },
+      {
+        indexed: false,
+        name: "name",
+        type: "string",
+      },
+    ],
+  },
 
-{
-  type: "event",
-  name: "EscrowCreated",
-  anonymous: false,
-  inputs: [
-    {
-      indexed: true,
-      name: "paymentId",
-      type: "bytes32",
-    },
-    {
-      indexed: true,
-      name: "token",
-      type: "address",
-    },
-    {
-      indexed: false,
-      name: "amount",
-      type: "uint256",
-    },
-  ],
-},
+  {
+    type: "event",
+    name: "MerchantUpdated",
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        name: "merchant",
+        type: "address",
+      },
+    ],
+  },
 
-{
-  type: "event",
-  name: "EscrowReleaseStarted",
-  anonymous: false,
-  inputs: [
-    {
-      indexed: true,
-      name: "paymentId",
-      type: "bytes32",
-    },
-  ],
-},
+  {
+    type: "event",
+    name: "MerchantPaused",
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        name: "merchant",
+        type: "address",
+      },
+    ],
+  },
 
-{
-  type: "event",
-  name: "EscrowReleased",
-  anonymous: false,
-  inputs: [
-    {
-      indexed: true,
-      name: "paymentId",
-      type: "bytes32",
-    },
-  ],
-},
+  {
+    type: "event",
+    name: "MerchantActivated",
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        name: "merchant",
+        type: "address",
+      },
+    ],
+  },
 
-{
-  type: "event",
-  name: "EscrowRefunded",
-  anonymous: false,
-  inputs: [
-    {
-      indexed: true,
-      name: "paymentId",
-      type: "bytes32",
-    },
-  ],
-},
+  /* -------------------------------------------------------------------------- */
+  /*                              Escrow Events                                 */
+  /* -------------------------------------------------------------------------- */
 
-{
-  type: "function",
-  name: "registry",
-  stateMutability: "view",
-  inputs: [],
-  outputs: [
-    {
-      type: "address",
-    },
-  ],
-},
+  {
+    type: "event",
+    name: "EscrowCreated",
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        name: "paymentId",
+        type: "bytes32",
+      },
+      {
+        indexed: true,
+        name: "token",
+        type: "address",
+      },
+      {
+        indexed: false,
+        name: "amount",
+        type: "uint256",
+      },
+    ],
+  },
 
-{
-  type: "function",
-  name: "escrow",
-  stateMutability: "view",
-  inputs: [],
-  outputs: [
-    {
-      type: "address",
-    },
-  ],
-},
+  {
+    type: "event",
+    name: "EscrowReleaseStarted",
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        name: "paymentId",
+        type: "bytes32",
+      },
+    ],
+  },
 
-{
-  type: "function",
-  name: "paymentCount",
-  stateMutability: "view",
-  inputs: [],
-  outputs: [
-    {
-      type: "uint256",
-    },
-  ],
-},
+  {
+    type: "event",
+    name: "EscrowReleased",
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        name: "paymentId",
+        type: "bytes32",
+      },
+    ],
+  },
+
+  {
+    type: "event",
+    name: "EscrowRefunded",
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        name: "paymentId",
+        type: "bytes32",
+      },
+    ],
+  },
+
 ] as const;

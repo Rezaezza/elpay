@@ -1,16 +1,17 @@
-import { Address } from "viem";
+import type { Address } from "viem";
+
 import {
   writeContract,
   waitForTransactionReceipt,
 } from "@wagmi/core";
 
-import { wagmiConfig } from "../wagmi/config";
+import { wagmiConfig } from "../wagmi";
 
 const erc20Abi = [
   {
     type: "function",
-    stateMutability: "nonpayable",
     name: "transfer",
+    stateMutability: "nonpayable",
     inputs: [
       {
         name: "to",
@@ -23,16 +24,11 @@ const erc20Abi = [
     ],
     outputs: [
       {
-        name: "",
         type: "bool",
       },
     ],
   },
 ] as const;
-
-//////////////////////////////////////////////////////////////
-// TRANSFER ERC20
-//////////////////////////////////////////////////////////////
 
 export async function transferToken(
   token: Address,
@@ -51,20 +47,12 @@ export async function transferToken(
   });
 }
 
-//////////////////////////////////////////////////////////////
-// ALIAS
-//////////////////////////////////////////////////////////////
-
 export const transfer = transferToken;
-
-//////////////////////////////////////////////////////////////
-// BULK TRANSFER
-//////////////////////////////////////////////////////////////
 
 export async function batchTransfer(
   token: Address,
-  recipients: readonly Address[],
-  amounts: readonly bigint[]
+  recipients: Address[],
+  amounts: bigint[]
 ) {
   if (recipients.length !== amounts.length) {
     throw new Error("Recipients and amounts length mismatch");
@@ -73,13 +61,13 @@ export async function batchTransfer(
   const receipts = [];
 
   for (let i = 0; i < recipients.length; i++) {
-    const receipt = await transferToken(
-      token,
-      recipients[i],
-      amounts[i]
+    receipts.push(
+      await transferToken(
+        token,
+        recipients[i],
+        amounts[i]
+      )
     );
-
-    receipts.push(receipt);
   }
 
   return receipts;

@@ -1,17 +1,21 @@
-import { Address } from "viem";
+import type { Address } from "viem";
+
 import {
   writeContract,
   waitForTransactionReceipt,
 } from "@wagmi/core";
 
-import { wagmiConfig } from "../wagmi/config";
-import { PaymentProcessorAddress } from "../contracts";
+import { wagmiConfig } from "../wagmi";
+import { CONTRACT_ADDRESSES } from "../addresses";
+
+const PaymentProcessorAddress =
+  CONTRACT_ADDRESSES.arcTestnet.paymentProcessor;
 
 const erc20Abi = [
   {
     type: "function",
-    stateMutability: "nonpayable",
     name: "approve",
+    stateMutability: "nonpayable",
     inputs: [
       {
         name: "spender",
@@ -24,16 +28,12 @@ const erc20Abi = [
     ],
     outputs: [
       {
-        name: "",
         type: "bool",
       },
     ],
   },
 ] as const;
 
-/**
- * Approve ERC20 token for PaymentProcessor.
- */
 export async function approveToken(
   token: Address,
   amount: bigint,
@@ -51,21 +51,15 @@ export async function approveToken(
   });
 }
 
-/**
- * Unlimited approval.
- */
 export async function approveMax(
   token: Address,
   spender: Address = PaymentProcessorAddress
 ) {
   return approveToken(
     token,
-    0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffn,
+    2n ** 256n - 1n,
     spender
   );
 }
 
-/**
- * Alias
- */
 export const approve = approveToken;
