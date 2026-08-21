@@ -1,6 +1,6 @@
 "use client";
 
-import { useSiweLogin } from "../hooks/useSiweLogin";
+import { useSiweLogin } from "@/hooks/auth/useSiweLogin";
 
 export function LoginButton() {
   const {

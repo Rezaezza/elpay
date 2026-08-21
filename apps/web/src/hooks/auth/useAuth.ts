@@ -2,9 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import {
-  getToken,
-} from "../lib/auth";
+import { getToken } from "@/lib/auth";
 
 export function useAuth() {
   const [authenticated, setAuthenticated] =

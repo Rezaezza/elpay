@@ -8,11 +8,9 @@ import {
 
 import {
   wagmiAdapter,
-} from "../lib/reown";
+} from "@/config/reown";
 
-import {
-  queryClient,
-} from "../lib/query-client";
+import { queryClient } from "@/lib/query/client";
 
 export function Providers({
   children,

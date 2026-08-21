@@ -1,6 +1,6 @@
 "use client";
 
-import { ConnectWalletButton } from "../ConnectWalletButton";
+import { ConnectWalletButton } from "@/components/wallet/ConnectWalletButton";
 
 export function CheckoutWallet() {
   return (

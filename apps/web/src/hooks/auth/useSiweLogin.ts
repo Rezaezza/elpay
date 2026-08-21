@@ -6,8 +6,8 @@ import {
   useSignMessage,
 } from "wagmi";
 
-import { api } from "../lib/api";
-import { saveToken } from "../lib/auth";
+import { api } from "@/lib/api";
+import { saveToken } from "@/lib/auth";
 
 export function useSiweLogin() {
   const { address, isConnected } =
