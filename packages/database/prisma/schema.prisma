@@ -27,6 +27,9 @@ enum WalletType {
 
 enum ChainNetwork {
   ARC_TESTNET
+  ARC_MAINNET
+  BASE_SEPOLIA
+  BASE
 }
 
 enum PaymentStatus {
@@ -64,290 +67,425 @@ enum ApiKeyStatus {
   REVOKED
 }
 
+enum PaymentMethod {
+  WALLET
+  QR
+  PAYMENT_LINK
+  CHECKOUT
+  API
+}
+
+enum PaymentIntentStatus {
+  CREATED
+  PENDING
+  COMPLETED
+  EXPIRED
+  CANCELLED
+}
+
+enum PaymentLinkStatus {
+  ACTIVE
+  PAID
+  EXPIRED
+  CANCELLED
+}
+
 model User {
+  id String @id @default(uuid())
 
-  id          String @id @default(uuid())
+  email String? @unique
 
-  email       String? @unique
+  username String?
 
-  username    String?
+  avatar String?
 
-  avatar      String?
+  role UserRole @default(USER)
 
-  role        UserRole @default(USER)
+  merchants Merchant[]
 
-  merchants   Merchant[]
+  wallets Wallet[]
 
-  wallets     Wallet[]
+  sessions Session[]
 
-  sessions    Session[]
+  apiKeys ApiKey[]
 
-  apiKeys     ApiKey[]
+  auditLogs AuditLog[]
 
-  auditLogs   AuditLog[]
+  createdAt DateTime @default(now())
 
-  createdAt   DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  updatedAt   DateTime @updatedAt
-
-  deletedAt   DateTime?
+  deletedAt DateTime?
 
   @@index([email])
-
 }
 
 model Wallet {
+  id String @id @default(uuid())
 
-  id          String @id @default(uuid())
+  address String @unique
 
-  address     String @unique
+  network ChainNetwork
 
-  network     ChainNetwork
+  walletType WalletType
 
-  walletType  WalletType
+  userId String
 
-  userId      String
+  user User @relation(fields: [userId], references: [id])
 
-  user        User @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
 
-  createdAt   DateTime @default(now())
-
-  updatedAt   DateTime @updatedAt
+  updatedAt DateTime @updatedAt
 
   @@index([address])
-
 }
 
 model Merchant {
+  id String @id @default(uuid())
 
-  id            String @id @default(uuid())
+  ownerId String
 
-  ownerId       String
+  owner User @relation(fields: [ownerId], references: [id])
 
-  owner         User @relation(fields: [ownerId], references: [id])
+  name String
 
-  name          String
+  slug String @unique
 
-  slug          String @unique
+  logo String?
 
-  logo          String?
+  description String?
 
-  description   String?
+  website String?
 
-  webhookUrl    String?
+  supportEmail String?
 
-  status        MerchantStatus @default(PENDING)
+  webhookUrl String?
 
-  invoices      Invoice[]
+  status MerchantStatus @default(PENDING)
 
-  payments      Payment[]
+  invoices Invoice[]
 
-  apiKeys       ApiKey[]
+  payments Payment[]
 
-  webhooks      Webhook[]
+  apiKeys ApiKey[]
+
+  webhooks Webhook[]
 
   webhookEvents WebhookEvent[]
 
-  createdAt     DateTime @default(now())
+  paymentLinks PaymentLink[]
 
-  updatedAt     DateTime @updatedAt
+  createdAt DateTime @default(now())
 
+  updatedAt DateTime @updatedAt
+
+  paymentIntents PaymentIntent[]
+}
+
+model PaymentIntent {
+  id String @id @default(uuid())
+
+  merchantId String
+
+  merchant Merchant @relation(fields: [merchantId], references: [id])
+
+  amount Decimal @db.Decimal(20, 6)
+
+  currency String @default("USDC")
+
+  method PaymentMethod
+
+  status PaymentIntentStatus @default(CREATED)
+
+  description String?
+
+  reference String? @unique
+
+  clientSecret String @unique
+
+  checkoutUrl String?
+
+  metadata Json?
+
+  expiresAt DateTime?
+
+  payments Payment[]
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  @@index([merchantId])
+  @@index([reference])
 }
 
 model Invoice {
+  id String @id @default(uuid())
 
-  id              String @id @default(uuid())
+  invoiceNumber String @unique
 
-  invoiceNumber   String @unique
+  merchantId String
 
-  merchantId      String
+  merchant Merchant @relation(fields: [merchantId], references: [id])
 
-  merchant        Merchant @relation(fields: [merchantId], references: [id])
+  amount Decimal @db.Decimal(20, 6)
 
-  amount          Decimal @db.Decimal(20,6)
+  currency String @default("USDC")
 
-  currency        String @default("USDC")
+  memo String?
 
-  memo            String?
+  status InvoiceStatus @default(DRAFT)
 
-  status          InvoiceStatus @default(DRAFT)
+  expiresAt DateTime?
 
-  expiresAt       DateTime?
+  paidAt DateTime?
 
-  paidAt          DateTime?
+  payments Payment[]
 
-  payment         Payment?
+  createdAt DateTime @default(now())
 
-  createdAt       DateTime @default(now())
-
-  updatedAt       DateTime @updatedAt
+  updatedAt DateTime @updatedAt
 
   @@index([invoiceNumber])
-
 }
 
 model Payment {
+  id String @id @default(uuid())
 
-  id              String @id @default(uuid())
+  invoiceId String?
 
-  invoiceId       String @unique
+  invoice Invoice? @relation(fields: [invoiceId], references: [id])
 
-  invoice         Invoice @relation(fields: [invoiceId], references: [id])
+  merchantId String
 
-  merchantId      String
+  merchant Merchant @relation(fields: [merchantId], references: [id])
 
-  merchant        Merchant @relation(fields: [merchantId], references: [id])
+  paymentIntentId String?
 
-  payerAddress    String
+  paymentIntent PaymentIntent? @relation(fields: [paymentIntentId], references: [id])
 
-  txHash          String? @unique
+  payerAddress String?
 
-  blockNumber     BigInt?
+  receiverAddress String?
 
-  confirmations   Int @default(0)
+  txHash String? @unique
 
-  network         ChainNetwork
+  blockNumber BigInt?
 
-  tokenAddress    String
+  confirmations Int @default(0)
 
-  amount          Decimal @db.Decimal(20,6)
+  network ChainNetwork
 
-  status          PaymentStatus @default(PENDING)
+  tokenAddress String
 
-  paidAt          DateTime?
+  amount Decimal @db.Decimal(20, 6)
 
-  transactions    Transaction[]
+  currency String @default("USDC")
 
-  createdAt       DateTime @default(now())
+  method PaymentMethod
 
-  updatedAt       DateTime @updatedAt
+  status PaymentStatus @default(PENDING)
 
+  reference String? @unique
+
+  failureReason String?
+
+  metadata Json?
+
+  paidAt DateTime?
+
+  transactions Transaction[]
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  @@index([merchantId])
+  @@index([paymentIntentId])
+  @@index([invoiceId])
   @@index([txHash])
-
+  @@index([reference])
+  @@index([status])
+  @@index([merchantId, status])
+  @@index([merchantId, createdAt])
 }
 
 model Transaction {
+  id String @id @default(uuid())
 
-  id              String @id @default(uuid())
+  paymentId String
 
-  paymentId       String
+  payment Payment @relation(fields: [paymentId], references: [id])
 
-  payment         Payment @relation(fields: [paymentId], references: [id])
+  txHash String @unique
 
-  txHash          String @unique
+  fromAddress String
 
-  fromAddress     String
+  toAddress String
 
-  toAddress       String
+  network ChainNetwork
 
-  amount          Decimal @db.Decimal(20,6)
+  tokenAddress String
 
-  type            TransactionType
+  amount Decimal @db.Decimal(20, 6)
 
-  status          TransactionStatus @default(PENDING)
+  gasFee Decimal? @db.Decimal(20, 6)
 
-  createdAt       DateTime @default(now())
+  gasUsed BigInt?
 
-  updatedAt       DateTime @updatedAt
+  confirmations Int @default(0)
 
+  type TransactionType
+
+  status TransactionStatus @default(PENDING)
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  @@index([paymentId])
+  @@index([txHash])
+  @@index([status])
 }
 
 model ApiKey {
+  id String @id @default(uuid())
 
-  id            String @id @default(uuid())
+  merchantId String
 
-  merchantId    String
+  merchant Merchant @relation(fields: [merchantId], references: [id])
 
-  merchant      Merchant @relation(fields: [merchantId], references: [id])
+  name String
 
-  name          String
+  keyId String @unique
 
-  keyId         String @unique
+  secretHash String
 
-  secretHash    String
+  status ApiKeyStatus @default(ACTIVE)
 
-  status        ApiKeyStatus @default(ACTIVE)
+  lastUsedAt DateTime?
 
-  userId        String?
+  expiresAt DateTime?
 
-  user          User? @relation(fields: [userId], references: [id])
+  userId String?
 
-  createdAt     DateTime @default(now())
+  user User? @relation(fields: [userId], references: [id])
 
+  createdAt DateTime @default(now())
 }
 
 model Session {
+  id String @id @default(uuid())
 
-  id          String @id @default(uuid())
+  token String @unique
 
-  token       String @unique
+  userId String
 
-  userId      String
+  user User @relation(fields: [userId], references: [id])
 
-  user        User @relation(fields: [userId], references: [id])
+  expiresAt DateTime
 
-  expiresAt   DateTime
+  ipAddress String?
 
-  createdAt   DateTime @default(now())
+  userAgent String?
 
+  createdAt DateTime @default(now())
 }
 
 model AuditLog {
+  id String @id @default(uuid())
 
-  id          String @id @default(uuid())
+  userId String
 
-  userId      String
+  user User @relation(fields: [userId], references: [id])
 
-  user        User @relation(fields: [userId], references: [id])
+  action String
 
-  action      String
+  resource String
 
-  resource    String
+  metadata Json?
 
-  metadata    Json?
+  ipAddress String?
 
-  createdAt   DateTime @default(now())
+  userAgent String?
 
+  createdAt DateTime @default(now())
 }
 
 model Webhook {
+  id String @id @default(uuid())
 
-  id                String @id @default(uuid())
+  merchantId String
 
-  merchantId        String
+  merchant Merchant @relation(fields: [merchantId], references: [id])
 
-  merchant          Merchant @relation(fields: [merchantId], references: [id])
+  url String
 
-  url               String
+  secretHash String
 
-  secretHash        String
+  enabled Boolean @default(true)
 
-  enabled           Boolean @default(true)
+  failureCount Int @default(0)
 
-  failureCount      Int @default(0)
+  lastTriggeredAt DateTime?
 
-  lastTriggeredAt   DateTime?
+  lastError String?
 
-  createdAt         DateTime @default(now())
+  eventFilter Json?
 
+  createdAt DateTime @default(now())
 }
 
 model WebhookEvent {
+  id String @id @default(uuid())
 
-  id            String @id @default(uuid())
+  merchantId String
 
-  merchantId    String
+  merchant Merchant @relation(fields: [merchantId], references: [id])
 
-  merchant      Merchant @relation(fields: [merchantId], references: [id])
+  event String
 
-  event         String
+  payload Json
 
-  payload       Json
+  response Json?
 
-  delivered     Boolean @default(false)
+  delivered Boolean @default(false)
 
-  deliveredAt   DateTime?
+  deliveredAt DateTime?
 
-  createdAt     DateTime @default(now())
+  attempt Int @default(0)
 
+  createdAt DateTime @default(now())
+
+  @@index([merchantId])
+  @@index([event])
+  @@index([delivered])
+}
+
+
+model PaymentLink {
+  id          String   @id @default(cuid())
+
+  merchantId  String
+  merchant    Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+
+  title       String
+  description String?
+
+  amount      Decimal   @db.Decimal(18,6)
+
+  currency    String     @default("USDC")
+
+  recipient   String
+
+  status      PaymentLinkStatus @default(ACTIVE)
+
+  expiresAt   DateTime?
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([merchantId])
+  @@index([recipient])
+  @@index([status])
 }

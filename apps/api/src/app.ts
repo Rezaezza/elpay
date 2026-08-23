@@ -8,6 +8,7 @@ import { meRoute } from "./routes/me.route";
 import { userRoute } from "./routes/user.route";
 import { protectedRoute } from "./routes/protected.route";
 import { checkoutRoute } from "./routes/checkout.route";
+import { paymentRoute } from "./routes/payment.route";
 
 export const app = new Hono();
 
@@ -110,4 +111,6 @@ app.route("/user", userRoute);
  * Protected routes
  */
 app.route("/protected", protectedRoute);
+
+app.route("/payments", paymentRoute);
 

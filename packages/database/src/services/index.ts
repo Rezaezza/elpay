@@ -2,7 +2,7 @@ export * from "./apikey.service";
 export * from "./audit.service";
 export * from "./invoice.service";
 export * from "./merchant.service";
-export * from "./payment.service";
+export * from "./database-payment.service";
 export * from "./session.service";
 export * from "./transaction.service";
 export * from "./user.service";

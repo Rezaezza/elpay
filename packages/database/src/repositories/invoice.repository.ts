@@ -8,23 +8,81 @@ export class InvoiceRepository {
     });
   }
 
-  findById(id: string) {
-    return prisma.invoice.findUnique({
-      where: { id },
-    });
-  }
+ findById(id: string) {
 
-  list() {
-    return prisma.invoice.findMany({
-      include: {
-        merchant: true,
-        payment: true,
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
-  }
+  return prisma.invoice.findUnique({
+
+    where: { id },
+
+    include: {
+
+      merchant: true,
+
+      payments: true,
+
+    },
+
+  });
+
+}
+
+list() {
+  return prisma.invoice.findMany({
+    include: {
+      merchant: true,
+      payments: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+}
+
+listByMerchant(merchantId: string) {
+
+  return prisma.invoice.findMany({
+
+    where: {
+
+      merchantId,
+
+    },
+
+    include: {
+
+      payments: true,
+
+    },
+
+    orderBy: {
+
+      createdAt: "desc",
+
+    },
+
+  });
+
+}
+
+update(
+  id: string,
+  data: Prisma.InvoiceUpdateInput
+) {
+
+  return prisma.invoice.update({
+
+    where: {
+
+      id,
+
+    },
+
+    data,
+
+  });
+
+}
+
 
   findByInvoiceNumber(invoiceNumber: string) {
   return prisma.invoice.findUnique({
@@ -57,5 +115,22 @@ expire(id: string) {
   });
  }
 
+ delete(id: string) {
+
+  return prisma.invoice.delete({
+
+    where: {
+
+      id,
+
+    },
+
+  });
+
 }
+
+}
+
+export const invoiceRepository =
+  new InvoiceRepository();
 

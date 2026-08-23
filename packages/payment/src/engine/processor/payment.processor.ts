@@ -13,7 +13,26 @@ import {
   transferService,
 } from "../transfer";
 
+import {
+  paymentRepository,
+  invoiceRepository,
+  paymentIntentRepository,
+  PaymentStatus,
+  InvoiceStatus,
+  PaymentIntentStatus,
+} from "@elpay/database";
+
+import {
+  paymentStateService,
+} from "../state";
+
+import {
+  PaymentState,
+} from "../state/payment.state";
+
 export interface ProcessPaymentInput {
+  paymentId: string;
+
   client: PublicClient;
 
   wallet: WalletClient;
@@ -29,6 +48,8 @@ export interface ProcessPaymentInput {
   amount: bigint;
 }
 
+
+
 export interface ProcessPaymentResult {
   approvalTx?: Hash;
 
@@ -42,6 +63,29 @@ export class PaymentProcessor {
   async process(
     input: ProcessPaymentInput,
   ): Promise<ProcessPaymentResult> {
+
+    const payment =
+  await paymentRepository.findById(
+    input.paymentId
+  );
+
+if (!payment) {
+  throw new Error("Payment not found");
+}
+
+await paymentRepository.update(
+  payment.id,
+  {
+    status: PaymentStatus.PROCESSING,
+  }
+);
+
+paymentStateService.transition(
+  PaymentState.CREATED,
+  PaymentState.PROCESSING
+);
+
+try {
 
     const approved =
       await allowanceService.hasAllowance({
@@ -101,16 +145,74 @@ export class PaymentProcessor {
       paymentTx,
     );
 
-    return {
-
-      approvalTx,
-
-      paymentTx,
-
-      approved:
-        approved || !!approvalTx,
-    };
+    await paymentRepository.update(
+  payment.id,
+  {
+    status: PaymentStatus.SUCCESS,
+    txHash: paymentTx,
+    paidAt: new Date(),
   }
+);
+
+if (payment.invoiceId) {
+
+   await invoiceRepository.update(
+      payment.invoiceId,
+      {
+         status: InvoiceStatus.PAID,
+         paidAt: new Date(),
+      }
+   );
+
+}
+
+if (payment.paymentIntentId) {
+
+   await paymentIntentRepository.update(
+      payment.paymentIntentId,
+      {
+         status:
+           PaymentIntentStatus.COMPLETED,
+      }
+   );
+
+}
+
+paymentStateService.transition(
+  PaymentState.PROCESSING,
+  PaymentState.PAID
+);
+
+ return {
+
+  approvalTx,
+
+  paymentTx,
+
+  approved:
+    approved || !!approvalTx,
+};
+
+} catch (error) {
+
+  paymentStateService.transition(
+    PaymentState.PROCESSING,
+    PaymentState.FAILED
+  );
+
+  await paymentRepository.update(
+    payment.id,
+    {
+      status: PaymentStatus.FAILED,
+    }
+  );
+
+  throw error;
+
+}
+
+}
+
 }
 
 export const paymentProcessor =

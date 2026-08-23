@@ -12,7 +12,8 @@
   
   "dependencies": {
     "viem": "^2.55.11",
-    "zod": "^4.1.11"
+    "zod": "^4.1.11",
+    "@elpay/database": "workspace:*"
   },
 
   "devDependencies": {

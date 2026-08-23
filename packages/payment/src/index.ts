@@ -5,3 +5,5 @@ export * from "./intents";
 export * from "./sessions";
 export * from "./checkout";
 export * from "./engine";
+export * from "./errors";
+export * from "./orchestrator";

@@ -8,3 +8,5 @@ export * from "./transaction.repository";
 export * from "./user.repository";
 export * from "./wallet.repository";
 export * from "./webhook.repository";
+export * from "./payment-link.repository";
+export * from "./payment-intent.repository";

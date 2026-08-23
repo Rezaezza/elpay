@@ -8,25 +8,34 @@ export class MerchantRepository {
     });
   }
 
-  findById(id: string) {
-    return prisma.merchant.findUnique({
-      where: { id },
-    });
-  }
+findById(id: string) {
+  return prisma.merchant.findUnique({
+    where: { id },
+    include: {
+      owner: true,
+    },
+  });
+}
 
-  findBySlug(slug: string) {
-    return prisma.merchant.findUnique({
-      where: { slug },
-    });
-  }
+findBySlug(slug: string) {
+  return prisma.merchant.findUnique({
+    where: { slug },
+    include: {
+      owner: true,
+    },
+  });
+}
 
-  list() {
-    return prisma.merchant.findMany({
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
-  }
+ list() {
+  return prisma.merchant.findMany({
+    include: {
+      owner: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+}
 
   update(
   id: string,
@@ -40,5 +49,13 @@ export class MerchantRepository {
   });
 }
 
+delete(id: string) {
+  return prisma.merchant.delete({
+    where: { id },
+  });
 }
+
+}
+
+export const merchantRepository = new MerchantRepository();
 

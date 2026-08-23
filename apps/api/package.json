@@ -13,7 +13,7 @@
     "@elpay/database": "workspace:*",
     "@elpay/payment": "workspace:*",
     "@elpay/utils": "workspace:*",
-
+    "@hono/node-server": "^2.1.1",
     "@hono/zod-validator": "^0.7.4",
     "hono": "^4.9.8",
     "jose": "^6.2.8",

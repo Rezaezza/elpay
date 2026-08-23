@@ -1,17 +1,60 @@
+export type PaymentStatus =
+  | "PENDING"
+  | "PROCESSING"
+  | "SUCCESS"
+  | "FAILED"
+  | "CANCELLED"
+  | "REFUNDED";
+
+export type PaymentMethod =
+  | "API"
+  | "CHECKOUT"
+  | "PAYMENT_LINK"
+  | "QR"
+  | "WALLET";
+
+export type ChainNetwork =
+  | "ARC_TESTNET"
+  | "ARC_MAINNET"
+  | "BASE_SEPOLIA"
+  | "BASE";
+
 export interface CreatePaymentInput {
-  amount: number;
-  currency: string;
   merchantId: string;
-  description?: string;
+
+  invoiceId?: string;
+
+  paymentIntentId?: string;
+
+  payerAddress?: string;
+
+  receiverAddress: string;
+
+  amount: number;
+
+  network: ChainNetwork;
+
+  tokenAddress: string;
+
+  method: PaymentMethod;
+
+  currency?: string;
+
+  reference?: string;
+
+  metadata?: Record<string, unknown>;
 }
 
 export interface PaymentResponse {
   id: string;
-  status:
-    | "pending"
-    | "completed"
-    | "failed";
+
+  merchantId: string;
 
   amount: number;
-  currency: string;
+
+  status: string;
+
+  txHash: string | null;
+
+  createdAt: Date;
 }

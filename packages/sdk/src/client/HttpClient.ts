@@ -1,6 +1,5 @@
 //packages/sdk/src/client/HttpClient.ts
 
-
 import type { SDKConfig } from "../types";
 
 export class HttpClient {
@@ -8,11 +7,28 @@ export class HttpClient {
     protected readonly config: SDKConfig,
   ) {}
 
-  protected get baseUrl() {
-    return this.config.baseUrl;
-  }
+  protected async request<T>(
+    path: string,
+    init?: RequestInit,
+  ): Promise<T> {
+    const response = await fetch(
+      `${this.config.baseUrl}${path}`,
+      {
+        ...init,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${this.config.apiKey}`,
+          ...init?.headers,
+        },
+      },
+    );
 
-  protected get apiKey() {
-    return this.config.apiKey;
+    if (!response.ok) {
+      throw new Error(
+        `Request failed (${response.status})`,
+      );
+    }
+
+    return response.json() as Promise<T>;
   }
 }
