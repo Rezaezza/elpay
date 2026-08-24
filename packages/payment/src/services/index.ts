@@ -3,3 +3,4 @@ export * from "./checkout.service";
 export * from "./merchant.service";
 export * from "./payment-link.service";
 export * from "./invoice.service";
+export * from "./payment-intent.service";

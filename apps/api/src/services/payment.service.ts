@@ -1,18 +1,48 @@
-import type { CreatePaymentInput } from "../validators/payment.validator";
+import {
+  paymentService as paymentCore,
+} from "@elpay/payment";
+
+import type {
+  CreatePaymentInput,
+} from "../validators/payment.validator";
 
 export class PaymentService {
   async create(
     payload: CreatePaymentInput,
   ) {
-    return payload;
+    return paymentCore.createPayment(payload);
   }
 
   async list() {
-    return [];
+    return paymentCore.listPayments();
   }
 
   async get(id: string) {
-    return { id };
+    return paymentCore.getPayment(id);
+  }
+
+  async getByReference(
+    reference: string,
+  ) {
+    return paymentCore.getPaymentByReference(
+      reference,
+    );
+  }
+
+  async listMerchant(
+    merchantId: string,
+  ) {
+    return paymentCore.listMerchantPayments(
+      merchantId,
+    );
+  }
+
+  async cancel(id: string) {
+    return paymentCore.cancel(id);
+  }
+
+  async refund(id: string) {
+    return paymentCore.refund(id);
   }
 }
 

@@ -1,23 +1,20 @@
 import { z } from "zod";
 
-export const createCheckoutSchema =
-  z.object({
-    merchantId: z.string(),
+export const createCheckoutSchema = z.object({
+  merchantId: z.string().min(1),
 
-    amount: z.string(),
+  amount: z.bigint(),
 
-    currency: z.string(),
+  currency: z.string(),
 
-    chainId: z.number(),
+  chainId: z.number(),
 
-    successUrl: z.string().url(),
+  successUrl: z.string().url(),
 
-    cancelUrl: z.string().url(),
+  cancelUrl: z.string().url(),
 
-    metadata: z
-  .record(
-    z.string(),
-    z.string(),
-  )
-  .optional(),
-  });
+  metadata: z.record(z.string(), z.string()).optional(),
+});
+
+export type CreateCheckoutInput =
+  z.infer<typeof createCheckoutSchema>;

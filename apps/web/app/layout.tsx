@@ -1,26 +1,21 @@
-import type { Metadata } from "next";
-
 import "./globals.css";
 
-import { Providers } from "../src/providers/Providers";
-
-export const metadata: Metadata = {
-  title: "ElPay",
-  description:
-    "Web3 Payment Infrastructure",
-};
+import { DashboardLayout } from "@/components/layout/DashboardLayout";
+import { WalletProvider } from "@/providers/WalletProvider";
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
       <body>
-        <Providers>
-          {children}
-        </Providers>
+        <WalletProvider>
+          <DashboardLayout>
+            {children}
+          </DashboardLayout>
+        </WalletProvider>
       </body>
     </html>
   );

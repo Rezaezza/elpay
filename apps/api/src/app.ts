@@ -9,6 +9,13 @@ import { userRoute } from "./routes/user.route";
 import { protectedRoute } from "./routes/protected.route";
 import { checkoutRoute } from "./routes/checkout.route";
 import { paymentRoute } from "./routes/payment.route";
+import { merchantRoute } from "./routes/merchant.route";
+import { invoiceRoute } from "./routes/invoice.route";
+import { paymentIntentRoute } from "./routes/payment-intent.route";
+import {
+  webhookRoute,
+} from "./routes/webhook.route";
+
 
 export const app = new Hono();
 
@@ -113,4 +120,24 @@ app.route("/user", userRoute);
 app.route("/protected", protectedRoute);
 
 app.route("/payments", paymentRoute);
+
+app.route(
+  "/merchants",
+  merchantRoute,
+);
+
+app.route(
+  "/invoices",
+  invoiceRoute,
+);
+
+app.route(
+  "/payment-intents",
+  paymentIntentRoute,
+);
+
+app.route(
+  "/webhooks",
+  webhookRoute,
+);
 

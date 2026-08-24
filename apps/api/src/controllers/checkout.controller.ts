@@ -1,16 +1,37 @@
-import {
-  checkoutService,
-} from "@elpay/payment";
+import { checkoutService }
+  from "../services/checkout.service";
 
-export class CheckoutController {
-  async getSession(
-    sessionId: string,
-  ) {
-    return checkoutService.getCheckoutSession(
-      sessionId,
+export const checkoutController = {
+
+  create: async (c: any) => {
+
+    const body =
+      await c.req.json();
+
+    const session =
+      await checkoutService.create(
+        body,
+      );
+
+    return c.json(
+      session,
+      201,
     );
-  }
-}
 
-export const checkoutController =
-  new CheckoutController();
+  },
+
+  get: async (c: any) => {
+
+    const session = {
+      id: c.req.param("sessionId"),
+    };
+
+    return c.json(
+      await checkoutService.get(
+        session as any,
+      ),
+    );
+
+  },
+
+};

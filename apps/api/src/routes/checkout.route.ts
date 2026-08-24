@@ -7,17 +7,12 @@ import {
 export const checkoutRoute =
   new Hono();
 
+checkoutRoute.post(
+  "/",
+  checkoutController.create,
+);
+
 checkoutRoute.get(
   "/:sessionId",
-  async (c) => {
-    const sessionId =
-      c.req.param("sessionId");
-
-    const session =
-      await checkoutController.getSession(
-        sessionId,
-      );
-
-    return c.json(session);
-  },
+  checkoutController.get,
 );

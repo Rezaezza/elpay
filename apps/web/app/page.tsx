@@ -1,11 +1,23 @@
-import { ConnectWalletButton } from "@/components/wallet/ConnectWalletButton";
-import { LoginButton } from "@/components/wallet/LoginButton";
-export default function Home() {
-  return (
- <div className="flex flex-col gap-4">
-  <ConnectWalletButton />
+export default function Home(){
 
-  <LoginButton />
+return(
+
+<div>
+
+<h1 className="text-5xl font-bold">
+
+Welcome Back 👋
+
+</h1>
+
+<p className="mt-4 text-slate-500">
+
+Manage all USDC payments from one dashboard.
+
+</p>
+
 </div>
-  );
+
+);
+
 }

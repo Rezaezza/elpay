@@ -3,10 +3,7 @@ packages:
   - "packages/*"
   - "contracts"
 
-allowBuilds:
-  '@prisma/client': set this to true or false
-  '@prisma/engines': set this to true or false
-  prisma: set this to true or false
+
 
 onlyBuiltDependencies:
   - "@reown/appkit"

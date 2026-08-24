@@ -1,8 +1,11 @@
 import { Hono } from "hono";
 
-import { paymentController } from "../controllers/payment.controller";
+import {
+  paymentController,
+} from "../controllers/payment.controller";
 
-export const paymentRoute = new Hono();
+export const paymentRoute =
+  new Hono();
 
 paymentRoute.post(
   "/",
@@ -17,4 +20,24 @@ paymentRoute.get(
 paymentRoute.get(
   "/:id",
   paymentController.get,
+);
+
+paymentRoute.get(
+  "/reference/:reference",
+  paymentController.getByReference,
+);
+
+paymentRoute.get(
+  "/merchant/:merchantId",
+  paymentController.merchantPayments,
+);
+
+paymentRoute.post(
+  "/:id/cancel",
+  paymentController.cancel,
+);
+
+paymentRoute.post(
+  "/:id/refund",
+  paymentController.refund,
 );
