@@ -17,17 +17,15 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-  "@elpay/config": "workspace:*",
-  "@elpay/types": "workspace:*",
-  "@elpay/utils": "workspace:*",
-  "@tanstack/react-query": "^5.101.4",
-
-  "@wagmi/core": "^3.6.4",
-
-  "react": "^19.2.0",
-  "viem": "2.55.18",
-  "wagmi": "3.7.6"
-},
+    "@elpay/config": "workspace:*",
+    "@elpay/types": "workspace:*",
+    "@elpay/utils": "workspace:*",
+    "@tanstack/react-query": "^5.101.4",
+    "@wagmi/core": "^3.6.4",
+    "react": "^19.2.0",
+    "viem": "2.55.18",
+    "wagmi": "3.7.6"
+  },
   "devDependencies": {
     "@types/node": "^24.13.3",
     "@types/react": "^19.2.2",

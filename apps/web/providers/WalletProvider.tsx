@@ -16,6 +16,8 @@ import {
   networks,
 } from "@/config/appkit";
 
+import DebugChain from "@/components/DebugChain";
+
 const queryClient = new QueryClient();
 
 createAppKit({
@@ -43,6 +45,7 @@ export function WalletProvider({
       <QueryClientProvider
         client={queryClient}
       >
+        <DebugChain />
         {children}
       </QueryClientProvider>
     </WagmiProvider>

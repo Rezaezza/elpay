@@ -4,6 +4,8 @@ import { Search } from "lucide-react";
 
 import { AppKitButton } from "@reown/appkit/react";
 
+import  DebugChain from "@/components/DebugChain";
+
 export function Topbar(){
 
 return(
@@ -30,11 +32,7 @@ className="pl-12 w-96 h-12 rounded-xl border border-slate-200 bg-slate-50"
 
 <div className="flex items-center gap-4">
 
-<div className="px-4 py-2 rounded-xl bg-green-50 border">
-
-Arc Testnet
-
-</div>
+<DebugChain />
 
 <AppKitButton />
 
