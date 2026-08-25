@@ -1,23 +1,15 @@
-export default function Home(){
+import DashboardHero from "@/components/dashboard/DashboardHero";
+import RecentActivity from "@/components/dashboard/RecentActivity";
+import LatestPayments from "@/components/dashboard/LatestPayments";
 
-return(
+export default function Home() {
+  return (
+    <div className="space-y-8">
+      <DashboardHero />
 
-<div>
+      <RecentActivity />
 
-<h1 className="text-5xl font-bold">
-
-Welcome Back 👋
-
-</h1>
-
-<p className="mt-4 text-slate-500">
-
-Manage all USDC payments from one dashboard.
-
-</p>
-
-</div>
-
-);
-
+      <LatestPayments />
+    </div>
+  );
 }

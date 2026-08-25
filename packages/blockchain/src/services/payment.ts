@@ -16,9 +16,11 @@ import {
 export async function createPaymentService(
   payer: Address,
   token: Address,
-  amount: bigint
+  amount: bigint,
+  description: string,
+  expiresAt: bigint
 ): Promise<Hash> {
-  return createPayment(payer, token, amount);
+  return createPayment(payer, token, amount, description, expiresAt);
 }
 
 //////////////////////////////////////////////////////////////

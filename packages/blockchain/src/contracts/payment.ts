@@ -14,13 +14,15 @@ const address = CONTRACT_ADDRESSES.arcTestnet.paymentProcessor;
 export async function createPayment(
   payer: Address,
   token: Address,
-  amount: bigint
+  amount: bigint,
+  description: string,
+  expiresAt: bigint
 ): Promise<Hash> {
   return writeContract(wagmiConfig, {
     address,
     abi: paymentProcessorAbi,
     functionName: "createPayment",
-    args: [payer, token, amount],
+    args: [payer, token, amount, description, expiresAt,],
   });
 }
 

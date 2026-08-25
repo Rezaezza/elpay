@@ -26,20 +26,28 @@ export const paymentProcessorAbi = [
     type: "function",
     name: "createPayment",
     stateMutability: "nonpayable",
-    inputs: [
-      {
-        name: "payer",
-        type: "address",
-      },
-      {
-        name: "token",
-        type: "address",
-      },
-      {
-        name: "amount",
-        type: "uint256",
-      },
-    ],
+   inputs: [
+  {
+    name: "payer",
+    type: "address",
+  },
+  {
+    name: "token",
+    type: "address",
+  },
+  {
+    name: "amount",
+    type: "uint256",
+  },
+  {
+    name: "description",
+    type: "string",
+  },
+  {
+     name: "expiresAt",
+      type: "uint64",
+    },
+],
     outputs: [
       {
         name: "paymentId",

@@ -10,16 +10,22 @@ export function useSendPayment() {
         payer,
         token,
         amount,
+        description,
+        expiresAt,
       }: {
         payer: Address;
         token: Address;
         amount: bigint;
+        description: string;
+        expiresAt: bigint;
       }
     ) =>
       createPaymentService(
         payer,
         token,
-        amount
+        amount,
+        description,
+        expiresAt
       ),
   });
 }
