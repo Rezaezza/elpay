@@ -10,3 +10,5 @@ export * from "./useApprovePayment";
 export * from "./useExecutePayment";
 export * from "./useRefundPayment";
 export * from "./useReleaseEscrow";
+export * from "./useRegisterMerchant";
+export * from "./useMerchantInfo";
