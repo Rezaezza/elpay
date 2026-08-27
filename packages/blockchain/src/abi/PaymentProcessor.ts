@@ -301,6 +301,40 @@ export const paymentProcessorAbi = [
     ],
   },
 
+  {
+  type: "function",
+  name: "isExpired",
+  stateMutability: "view",
+  inputs: [
+    {
+      name: "paymentId",
+      type: "bytes32",
+    },
+  ],
+  outputs: [
+    {
+      type: "bool",
+    },
+  ],
+},
+
+{
+  type: "function",
+  name: "remainingTime",
+  stateMutability: "view",
+  inputs: [
+    {
+      name: "paymentId",
+      type: "bytes32",
+    },
+  ],
+  outputs: [
+    {
+      type: "uint256",
+    },
+  ],
+},
+
     /* -------------------------------------------------------------------------- */
   /*                                   Events                                   */
   /* -------------------------------------------------------------------------- */
