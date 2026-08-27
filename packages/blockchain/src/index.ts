@@ -12,3 +12,5 @@ export * from "./abi";
 export * from "./events";
 export * from "./utils";
 export * from "./watchers";
+export * from "./dashboard";
+export * from "./resolver";

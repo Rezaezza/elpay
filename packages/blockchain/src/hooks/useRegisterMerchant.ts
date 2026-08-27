@@ -17,9 +17,17 @@ export function useRegisterMerchant() {
         metadataURI
       ),
 
-    onSuccess: () => {
-      queryClient.invalidateQueries({
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
         queryKey: ["merchant"],
+      });
+
+      await queryClient.invalidateQueries({
+        queryKey: ["merchant-info"],
+      });
+
+      await queryClient.invalidateQueries({
+        queryKey: ["dashboard"],
       });
     },
   });

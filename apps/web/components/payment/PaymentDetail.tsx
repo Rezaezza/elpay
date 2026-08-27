@@ -187,36 +187,42 @@ export function PaymentDetail({
 
       </div>
 
-      {/* ---------------- ACTION BUTTONS ---------------- */}
+{/* ---------------- ACTION BUTTONS ---------------- */}
 
-      <div className="mt-8 flex flex-wrap gap-3">
+<div className="mt-8 flex flex-wrap gap-3">
 
-        {data.status === 0 && (
-          <ApprovePaymentButton
-            paymentId={paymentId}
-          />
-        )}
+  {data.status === 0 && (
+    <div className="rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-4">
+      <p className="font-medium text-yellow-400">
+        Waiting Customer Approval
+      </p>
 
-        {data.status === 1 && (
-          <ExecutePaymentButton
-            paymentId={paymentId}
-          />
-        )}
+      <p className="mt-2 text-sm text-slate-400">
+        Share this payment to the customer. The customer must approve the
+        payment before it can be executed.
+      </p>
+    </div>
+  )}
 
-        {data.status === 2 && (
-          <ReleaseEscrowButton
-            paymentId={paymentId}
-          />
-        )}
+  {data.status === 1 && (
+    <ExecutePaymentButton
+      paymentId={paymentId}
+    />
+  )}
 
-        {(data.status === 0 ||
-          data.status === 1) && (
-          <RefundPaymentButton
-            paymentId={paymentId}
-          />
-        )}
+  {data.status === 2 && (
+    <ReleaseEscrowButton
+      paymentId={paymentId}
+    />
+  )}
 
-      </div>
+  {data.status === 1 && (
+    <RefundPaymentButton
+      paymentId={paymentId}
+    />
+  )}
+
+</div>
 
     </div>
   );

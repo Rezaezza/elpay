@@ -1,46 +1,74 @@
 "use client";
 
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { Wallet, TrendingUp } from "lucide-react";
 
-export default function DashboardHero() {
+
+import {
+  useDashboard,
+} from "@elpay/blockchain";
+
+import { StatsGrid } from "./StatsGrid";
+
+export function DashboardHero() {
+ 
+  const {
+  data,
+  isLoading,
+} = useDashboard();
+
   return (
-    <section className="flex items-center justify-between">
+    <section className="space-y-8">
+      <div className="rounded-3xl bg-gradient-to-r from-indigo-600 via-blue-600 to-cyan-600 p-10 text-white shadow-xl">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-indigo-100">
+              Welcome back
+            </p>
 
-      <div>
+            <h1 className="mt-2 text-4xl font-bold">
+              ElPay Dashboard
+            </h1>
 
-        <h1 className="text-4xl font-bold tracking-tight text-slate-900">
-          Welcome back 👋
-        </h1>
+            <p className="mt-4 max-w-2xl text-indigo-100">
+              Monitor your on-chain payments,
+              merchants,
+              escrow,
+              and USDC volume
+              directly from Arc Network.
+            </p>
+          </div>
 
-        <p className="mt-3 max-w-2xl text-lg text-slate-500">
-          Manage all your on-chain USDC payments from one secure dashboard.
-        </p>
-
+          <div className="rounded-3xl bg-white/10 p-6 backdrop-blur">
+            <Wallet size={56} />
+          </div>
+        </div>
       </div>
 
-      <Link
-        href="/payment"
-        className="
-        rounded-xl
-        bg-indigo-600
-        px-6
-        py-3
-        text-white
-        font-semibold
-        inline-flex
-        items-center
-        gap-2
-        hover:bg-indigo-700
-        transition
-        "
-      >
-        New Payment
+      <StatsGrid
+        loading={isLoading}
+        stats={{
+          totalPayments:
+            data?.totalPayments ?? 0,
 
-        <ArrowRight size={18} />
+          totalVolume:
+            data?.totalVolume ?? BigInt(0),
 
-      </Link>
+          paidPayments:
+            data?.paidPayments ?? 0,
 
+          processingPayments:
+            data?.processingPayments ?? 0,
+
+          refundedPayments:
+            data?.refundedPayments ?? 0,
+
+          cancelledPayments:
+            data?.cancelledPayments ?? 0,
+
+          createdPayments:
+            data?.createdPayments ?? 0,
+        }}
+      />
     </section>
   );
 }

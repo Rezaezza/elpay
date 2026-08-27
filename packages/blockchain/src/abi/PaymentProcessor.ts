@@ -210,6 +210,74 @@ export const paymentProcessorAbi = [
   },
 
   {
+  type: "function",
+  name: "getMerchantPayments",
+  stateMutability: "view",
+  inputs: [
+    {
+      name: "merchant",
+      type: "address",
+    },
+  ],
+  outputs: [
+    {
+      type: "bytes32[]",
+    },
+  ],
+},
+
+{
+  type: "function",
+  name: "getPayerPayments",
+  stateMutability: "view",
+  inputs: [
+    {
+      name: "payer",
+      type: "address",
+    },
+  ],
+  outputs: [
+    {
+      type: "bytes32[]",
+    },
+  ],
+},
+
+{
+  type: "function",
+  name: "merchantPaymentCount",
+  stateMutability: "view",
+  inputs: [
+    {
+      name: "merchant",
+      type: "address",
+    },
+  ],
+  outputs: [
+    {
+      type: "uint256",
+    },
+  ],
+},
+
+{
+  type: "function",
+  name: "payerPaymentCount",
+  stateMutability: "view",
+  inputs: [
+    {
+      name: "payer",
+      type: "address",
+    },
+  ],
+  outputs: [
+    {
+      type: "uint256",
+    },
+  ],
+},
+
+  {
     type: "function",
     name: "registry",
     stateMutability: "view",

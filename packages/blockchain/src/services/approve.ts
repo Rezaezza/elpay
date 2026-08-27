@@ -6,10 +6,7 @@ import {
 } from "@wagmi/core";
 
 import { wagmiConfig } from "../wagmi";
-import { CONTRACT_ADDRESSES } from "../addresses";
-
-const PaymentProcessorAddress =
-  CONTRACT_ADDRESSES.arcTestnet.paymentProcessor;
+import { getPaymentProcessorAddress } from "../resolver/contracts";
 
 const erc20Abi = [
   {
@@ -37,13 +34,16 @@ const erc20Abi = [
 export async function approveToken(
   token: Address,
   amount: bigint,
-  spender: Address = PaymentProcessorAddress
+  spender?: Address
 ) {
+  const paymentProcessor =
+    spender ?? getPaymentProcessorAddress();
+
   const hash = await writeContract(wagmiConfig, {
     address: token,
     abi: erc20Abi,
     functionName: "approve",
-    args: [spender, amount],
+    args: [paymentProcessor, amount],
   });
 
   return waitForTransactionReceipt(wagmiConfig, {
@@ -53,7 +53,7 @@ export async function approveToken(
 
 export async function approveMax(
   token: Address,
-  spender: Address = PaymentProcessorAddress
+  spender?: Address
 ) {
   return approveToken(
     token,

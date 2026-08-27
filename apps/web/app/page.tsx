@@ -1,6 +1,8 @@
-import DashboardHero from "@/components/dashboard/DashboardHero";
-import RecentActivity from "@/components/dashboard/RecentActivity";
-import LatestPayments from "@/components/dashboard/LatestPayments";
+import {
+  DashboardHero,
+  RecentActivity,
+  LatestPayments,
+} from "@/components/dashboard";
 
 export default function Home() {
   return (

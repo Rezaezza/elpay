@@ -203,9 +203,10 @@ alert("Payment created!");
         </button>
 
         {txHash && (
-  <PaymentSuccess
-    hash={txHash}
-  />
+<PaymentSuccess
+  hash={txHash}
+  paymentId={paymentId ?? undefined}
+/>
 )}
 
 {paymentId && (

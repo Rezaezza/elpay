@@ -2,10 +2,7 @@ import type { Address } from "viem";
 import { readContract } from "@wagmi/core";
 
 import { wagmiConfig } from "../wagmi";
-import { CONTRACT_ADDRESSES } from "../addresses";
-
-const PaymentProcessorAddress =
-  CONTRACT_ADDRESSES.arcTestnet.paymentProcessor;
+import { getPaymentProcessorAddress } from "../resolver/contracts";
 
 const erc20Abi = [
   {
@@ -33,7 +30,7 @@ const erc20Abi = [
 export async function getAllowance(
   token: Address,
   owner: Address,
-  spender: Address = PaymentProcessorAddress
+  spender: Address = getPaymentProcessorAddress()
 ): Promise<bigint> {
   return readContract(wagmiConfig, {
     address: token,
@@ -49,7 +46,7 @@ export async function hasEnoughAllowance(
   token: Address,
   owner: Address,
   amount: bigint,
-  spender: Address = PaymentProcessorAddress
+  spender: Address = getPaymentProcessorAddress()
 ): Promise<boolean> {
   const allowance = await getAllowance(
     token,

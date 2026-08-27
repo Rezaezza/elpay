@@ -22,8 +22,9 @@ export function MerchantForm() {
     isLoading: merchantLoading,
   } = useMerchant(address);
 
-  const {
+ const {
   data: merchant,
+  refetch,
 } = useMerchantInfo(address);
 
   const {
@@ -59,6 +60,8 @@ export function MerchantForm() {
         name,
         metadataURI,
       });
+
+      await refetch();
 
       setTxHash(hash);
 
