@@ -7,6 +7,10 @@ import {
   refundPayment,
   releaseEscrow,
   getPayment,
+  
+  getMerchantPayments as getMerchantPaymentsContract,
+  getPayerPayments as getPayerPaymentsContract,
+
 } from "../contracts/payment";
 
 //////////////////////////////////////////////////////////////
@@ -73,11 +77,29 @@ export async function getPaymentService(
   return getPayment(paymentId);
 }
 
+//////////////////////////////////////////////////////////////
+// GET MERCHANT PAYMENTS
+//////////////////////////////////////////////////////////////
+
+export async function getMerchantPayments(
+  merchant: Address
+) {
+  return getMerchantPaymentsContract(merchant);
+}
+
+export async function getPayerPayments(
+  payer: Address
+) {
+  return getPayerPaymentsContract(payer);
+}
+
 
 
 //////////////////////////////////////////////////////////////
 // EXPORT ALIAS
 //////////////////////////////////////////////////////////////
+
+
 
 export const paymentService = {
   create: createPaymentService,
@@ -86,5 +108,9 @@ export const paymentService = {
  refund: refundPaymentService,
  release: releaseEscrowService,
  get: getPaymentService,
+
+ getMerchantPayments,
+  getPayerPayments,
+ 
  
 };

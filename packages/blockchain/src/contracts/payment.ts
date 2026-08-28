@@ -107,6 +107,28 @@ export async function paymentExists(
   });
 }
 
+export async function getMerchantPayments(
+  merchant: Address
+) {
+  return readContract(wagmiConfig, {
+    address,
+    abi: paymentProcessorAbi,
+    functionName: "getMerchantPayments",
+    args: [merchant],
+  });
+}
+
+export async function getPayerPayments(
+  payer: Address
+) {
+  return readContract(wagmiConfig, {
+    address,
+    abi: paymentProcessorAbi,
+    functionName: "getPayerPayments",
+    args: [payer],
+  });
+}
+
 /* -------------------------------------------------------------------------- */
 /*                                   EXPORT                                   */
 /* -------------------------------------------------------------------------- */
@@ -120,4 +142,7 @@ export const payment = {
   releaseEscrow,
   getPayment,
   paymentExists,
+
+  getMerchantPayments,
+  getPayerPayments,
 };

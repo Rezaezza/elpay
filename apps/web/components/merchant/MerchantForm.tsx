@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useAccount } from "wagmi";
+import { publicClient } from "@elpay/blockchain";
 
 import {
   useMerchant,
@@ -25,7 +26,11 @@ export function MerchantForm() {
  const {
   data: merchant,
   refetch,
+  isFetching,
 } = useMerchantInfo(address);
+
+const isRegistered =
+  merchant?.status === 1;
 
   const {
     mutateAsync,
@@ -56,16 +61,30 @@ export function MerchantForm() {
         description,
       });
 
-      const hash = await mutateAsync({
-        name,
-        metadataURI,
-      });
+ const hash = await mutateAsync({
+  name,
+  metadataURI,
+});
 
-      await refetch();
+/* tunggu block mined */
 
-      setTxHash(hash);
+await publicClient.waitForTransactionReceipt({
+  hash,
+});
 
-      alert("Merchant registered successfully.");
+/* baru refresh */
+
+await refetch();
+
+setTxHash(hash);
+
+/* reset form */
+
+setName("");
+setWebsite("");
+setDescription("");
+
+alert("Merchant registered successfully.");
 
     } catch (err) {
       console.error(err);
@@ -165,43 +184,44 @@ export function MerchantForm() {
 
         <div>
 
-          {merchantLoading ? (
+ {merchantLoading || isFetching ? (
 
-            <span className="text-yellow-600">
-              Checking merchant...
-            </span>
+  <span className="text-yellow-600">
+    Checking merchant...
+  </span>
 
-          ) : merchantActive ? (
+) : isRegistered ? (
 
-            <span className="text-green-600">
-              Merchant Verified
-            </span>
+  <span className="text-green-600">
+    Merchant Verified
+  </span>
 
-          ) : (
+) : (
 
-            <span className="text-red-600">
-              Merchant Not Registered
-            </span>
+  <span className="text-red-600">
+    Merchant Not Registered
+  </span>
 
-          )}
+)}
 
         </div>
 
         <button
           type="submit"
-          disabled={
-            !isConnected ||
-            merchantActive ||
-            isPending
-          }
+  disabled={
+  !isConnected ||
+  isRegistered ||
+  isPending ||
+  isFetching
+}
           className="w-full rounded-lg bg-blue-600 py-3 text-white disabled:opacity-50"
         >
 
-          {merchantActive
-            ? "Merchant Registered"
-            : isPending
-            ? "Registering..."
-            : "Register Merchant"}
+ {isRegistered
+  ? "Merchant Registered"
+  : isPending
+  ? "Registering..."
+  : "Register Merchant"}
 
         </button>
 

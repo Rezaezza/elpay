@@ -6,7 +6,7 @@ import { publicClient } from "@elpay/blockchain";
 import { getPaymentCreatedId } from "@elpay/blockchain";
 import { useSendPayment } from "@elpay/blockchain";
 
-import { parseUnits } from "viem";
+import { parseUnits, isAddress } from "viem";
 import { useAccount } from "wagmi";
 import { useState } from "react";
 import { PaymentDetail } from "./PaymentDetail";
@@ -32,6 +32,49 @@ export function PaymentForm() {
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
 
+const tomorrow = new Date();
+tomorrow.setDate(tomorrow.getDate() + 1);
+
+const [expirationDate, setExpirationDate] = useState(
+  tomorrow.toISOString().split("T")[0]
+);
+
+const [expirationTime, setExpirationTime] = useState("12:00");
+
+const [selectedPreset, setSelectedPreset] = useState<number | null>(1440);
+
+function applyPreset(minutes: number) {
+  const date = new Date();
+
+  date.setMinutes(date.getMinutes() + minutes);
+
+  setExpirationDate(
+    date.toISOString().split("T")[0]
+  );
+
+  setExpirationTime(
+    date.toTimeString().slice(0, 5)
+  );
+
+  setSelectedPreset(minutes);
+}
+
+function resetExpiration() {
+  const tomorrow = new Date();
+
+  tomorrow.setDate(
+    tomorrow.getDate() + 1
+  );
+
+  setExpirationDate(
+    tomorrow.toISOString().split("T")[0]
+  );
+
+  setExpirationTime("12:00");
+
+  setSelectedPreset(1440);
+}
+
   async function handleSubmit(
     e: React.FormEvent<HTMLFormElement>
   ) {
@@ -47,10 +90,45 @@ export function PaymentForm() {
   return;
 }
 
+if (!isAddress(payer)) {
+  alert("Invalid payer wallet.");
+  return;
+}
+
+if (Number(amount) <= 0) {
+  alert("Amount must be greater than 0.");
+  return;
+}
+
+if (description.trim().length < 3) {
+  alert("Description is too short.");
+  return;
+}
+
     try {
-      const expiresAt = BigInt(
-        Math.floor(Date.now() / 1000) + 15 * 60
-      );
+   const selected = new Date(
+  `${expirationDate}T${expirationTime}`
+);
+
+if (selected <= new Date()) {
+  alert("Expiration must be in the future.");
+  return;
+}
+
+if (
+  selected.getTime() <
+  Date.now() + 5 * 60 * 1000
+) {
+  alert(
+    "Expiration must be at least 5 minutes from now."
+  );
+
+  return;
+}
+
+const expiresAt = BigInt(
+  Math.floor(selected.getTime() / 1000)
+);
 
 const hash = await mutateAsync({
   payer: payer as `0x${string}`,
@@ -80,6 +158,9 @@ alert("Payment created!");
       setPayer("");
       setAmount("");
       setDescription("");
+
+      resetExpiration();
+
     } catch (error) {
       console.error(error);
       alert("Create payment failed");
@@ -87,6 +168,7 @@ alert("Payment created!");
   }
 
   return (
+
     <div className="rounded-2xl border bg-background p-6 shadow-sm">
 
       <h2 className="mb-6 text-2xl font-bold">
@@ -171,6 +253,105 @@ alert("Payment created!");
           />
 
         </div>
+
+        <div>
+
+<div className="flex flex-wrap gap-2">
+
+  {[
+    { label: "15m", value: 15 },
+    { label: "30m", value: 30 },
+    { label: "1h", value: 60 },
+    { label: "6h", value: 360 },
+    { label: "1 Day", value: 1440 },
+    { label: "7 Days", value: 10080 },
+  ].map((preset) => (
+    <button
+      key={preset.value}
+      type="button"
+      onClick={() => applyPreset(preset.value)}
+      className={`
+        rounded-lg
+        border
+        px-3
+        py-2
+        text-sm
+        transition
+
+        ${
+          selectedPreset === preset.value
+            ? "bg-blue-600 text-white border-blue-600"
+            : "hover:bg-muted"
+        }
+      `}
+    >
+      {preset.label}
+    </button>
+  ))}
+
+  <button
+    type="button"
+    onClick={resetExpiration}
+    className="
+      rounded-lg
+      border
+      px-3
+      py-2
+      text-sm
+      hover:bg-muted
+    "
+  >
+    Reset
+  </button>
+
+</div>
+
+  <label className="mb-2 block text-sm font-medium">
+    Expiration Date
+  </label>
+
+  <input
+    type="date"
+    value={expirationDate}
+    min={new Date().toISOString().split("T")[0]}
+  onChange={(e) => {
+  setExpirationDate(e.target.value);
+  setSelectedPreset(null);
+}}
+    className="w-full rounded-lg border p-3"
+  />
+
+</div>
+
+<div>
+
+  <label className="mb-2 block text-sm font-medium">
+    Expiration Time
+  </label>
+
+  <input
+    type="time"
+    value={expirationTime}
+ onChange={(e) => {
+  setExpirationTime(e.target.value);
+  setSelectedPreset(null);
+}}
+    className="w-full rounded-lg border p-3"
+  />
+
+</div>
+
+<div className="rounded-lg border bg-muted p-4">
+  <p className="text-sm text-muted-foreground">
+    Payment Expires At
+  </p>
+
+  <p className="mt-2 font-semibold">
+    {new Date(
+      `${expirationDate}T${expirationTime}`
+    ).toLocaleString()}
+  </p>
+</div>
 
         <div className="mt-2">
 

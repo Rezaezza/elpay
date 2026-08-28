@@ -22,11 +22,11 @@ export function DashboardHero() {
         <div className="flex items-center justify-between">
           <div>
             <p className="text-indigo-100">
-              Welcome back
+              Welcome to
             </p>
 
             <h1 className="mt-2 text-4xl font-bold">
-              ElPay Dashboard
+              ElPay 
             </h1>
 
             <p className="mt-4 max-w-2xl text-indigo-100">
@@ -34,7 +34,7 @@ export function DashboardHero() {
               merchants,
               escrow,
               and USDC volume
-              directly from Arc Network.
+              in real-time.
             </p>
           </div>
 
