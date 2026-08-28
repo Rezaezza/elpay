@@ -1,6 +1,5 @@
 "use client";
 
-import { WalletChip } from "@/components/wallet/WalletChip";
 
 import { PaymentHistoryToolbar } from "./PaymentHistoryToolbar";
 import { PaymentHistoryTable } from "./PaymentHistoryTable";
@@ -13,6 +12,18 @@ import { useAccount } from "wagmi";
 import {
     useMerchantPayments,
     usePayments,
+} from "@elpay/blockchain";
+
+import {
+    useEffect,
+} from "react";
+
+import {
+    useQueryClient,
+} from "@tanstack/react-query";
+
+import {
+    watchPaymentEvents,
 } from "@elpay/blockchain";
 
 export function PaymentHistoryPage() {
@@ -46,22 +57,35 @@ const {
 } = usePayments(paymentIds);
 
 const payments: PaymentHistoryItem[] =
-    paymentDetails.map((payment: any) => ({
-        id: payment.id,
-
-        payer: payment.payer,
-
-        amount: payment.amount,
-
-        status: Number(payment.status),
-
-        createdAt: payment.createdAt,
-
-        expiresAt: payment.expiresAt,
-    }));
+    paymentDetails
+        .map((payment: any) => ({
+            id: payment.id,
+            payer: payment.payer,
+            amount: payment.amount,
+            status: Number(payment.status),
+            createdAt: payment.createdAt,
+            expiresAt: payment.expiresAt,
+        }))
+        .sort(
+            (a, b) =>
+                Number(b.createdAt) -
+                Number(a.createdAt)
+        );
 
 const isLoading =
     loadingIds || loadingPayments;
+
+    const queryClient = useQueryClient();
+
+useEffect(() => {
+    if (!address) return;
+
+  const unwatch = watchPaymentEvents(
+    queryClient
+);
+
+    return () => unwatch();
+}, [address, queryClient]);
 
 
 
@@ -92,7 +116,7 @@ const isLoading =
       {/* Header */}
       {/* ===================================================== */}
 
-      <div className="flex flex-col justify-between gap-5 md:flex-row md:items-center">
+      <div className="mb-8">
 
         <div>
 
@@ -104,11 +128,9 @@ const isLoading =
             View every payment created by your merchant account.
           </p>
 
-        </div>
+          </div>
 
-        <WalletChip />
-
-      </div>
+ </div>
 
       {/* ===================================================== */}
       {/* Toolbar */}
@@ -135,3 +157,4 @@ const isLoading =
     </div>
   );
 }
+

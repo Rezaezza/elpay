@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { formatUnits } from "viem";
 
+import { ChevronRight } from "lucide-react";
+
 import { PaymentStatusBadge } from "./PaymentStatusBadge";
 
 type Props = {
@@ -24,7 +26,7 @@ export function PaymentHistoryRow({
   payment,
 }: Props) {
   return (
-    <tr className="border-b border-slate-800 hover:bg-slate-800/40 transition">
+    <tr className="group border-b border-slate-800 transition hover:bg-slate-800/40">
 
       <td className="px-6 py-5">
         <Link
@@ -44,7 +46,9 @@ export function PaymentHistoryRow({
       </td>
 
       <td className="px-6 py-5">
-        <PaymentStatusBadge status={payment.status} />
+        <PaymentStatusBadge
+          status={payment.status}
+        />
       </td>
 
       <td className="px-6 py-5 text-slate-400">
@@ -57,6 +61,17 @@ export function PaymentHistoryRow({
         {new Date(
           Number(payment.expiresAt) * 1000
         ).toLocaleString()}
+      </td>
+
+      <td className="w-16 px-4 text-right">
+
+        <Link
+          href={`/payments/${payment.id}`}
+          className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-700 text-slate-400 transition hover:border-blue-500 hover:bg-blue-500/10 hover:text-blue-400"
+        >
+          <ChevronRight size={18} />
+        </Link>
+
       </td>
 
     </tr>

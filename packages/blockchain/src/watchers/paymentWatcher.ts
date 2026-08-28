@@ -6,37 +6,35 @@ import { CONTRACT_ADDRESSES } from "../addresses";
 import { paymentProcessorAbi } from "../abi";
 
 export function watchPaymentEvents(
-  paymentId: `0x${string}`,
-  queryClient: QueryClient
+  queryClient: QueryClient,
+  paymentId?: `0x${string}`
 ) {
-  const unwatch = watchContractEvent(
-    wagmiConfig,
-    {
-      address:
-        CONTRACT_ADDRESSES.arcTestnet.paymentProcessor,
-      abi: paymentProcessorAbi,
+  return watchContractEvent(wagmiConfig, {
+    address: CONTRACT_ADDRESSES.arcTestnet.paymentProcessor,
+    abi: paymentProcessorAbi,
 
-      onLogs(logs) {
-        for (const log of logs) {
-  const args = log.args;
+    onLogs(logs) {
+      for (const log of logs) {
+        const args = log.args;
 
-if (
-    args &&
-    "paymentId" in args &&
-    args.paymentId === paymentId
-) {
-    queryClient.invalidateQueries({
-        queryKey: ["payment", paymentId],
-    });
-} {
-            queryClient.invalidateQueries({
-              queryKey: ["payment", paymentId],
-            });
-          }
+        // refresh detail payment tertentu
+        if (
+          paymentId &&
+          args &&
+          "paymentId" in args &&
+          args.paymentId === paymentId
+        ) {
+          queryClient.invalidateQueries({
+            queryKey: ["payment", paymentId],
+          });
         }
-      },
-    }
-  );
 
-  return unwatch;
+ // refresh seluruh merchant history
+queryClient.invalidateQueries({
+  predicate: (query) =>
+    query.queryKey[0] === "merchant-payments",
+});
+      }
+    },
+  });
 }

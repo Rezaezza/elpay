@@ -51,6 +51,8 @@ export function PaymentHistoryTable({
               Expires
             </th>
 
+            <th className="w-16"></th>
+
           </tr>
 
         </thead>

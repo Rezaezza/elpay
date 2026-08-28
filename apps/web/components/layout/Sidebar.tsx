@@ -7,6 +7,7 @@ import {
   LayoutDashboard,
   Store,
   CreditCard,
+  History,
   Receipt,
   BarChart3,
   Settings,
@@ -38,6 +39,12 @@ const sections = [
         href: "/payments",
         icon: CreditCard,
       },
+       {
+  name: "Payment History",
+  href: "/payments/history",
+  icon: History,
+},
+    
       {
         name: "Invoices",
         href: "/invoices",
@@ -119,9 +126,10 @@ export function Sidebar() {
                 const Icon = item.icon;
 
                 const active =
-                  pathname === item.href ||
-                  pathname.startsWith(item.href + "/");
-
+                item.href === "/payments"
+                ? pathname === "/payments"
+                : pathname === item.href;
+                  
                 return (
                   <Link
                     key={item.name}

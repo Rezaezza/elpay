@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  ApprovePaymentButton,
   ExecutePaymentButton,
   RefundPaymentButton,
   ReleaseEscrowButton,
@@ -42,11 +41,11 @@ export function PaymentDetail({
     useQueryClient();
 
     useEffect(() => {
-    const unwatch =
-        watchPaymentEvents(
-            paymentId,
-            queryClient
-        );
+      
+ const unwatch = watchPaymentEvents(
+    queryClient,
+    paymentId
+);
 
     return () => {
         unwatch();
