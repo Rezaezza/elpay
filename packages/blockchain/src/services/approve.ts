@@ -1,4 +1,4 @@
-import type { Address } from "viem";
+import type { Address, Hash } from "viem";
 
 import {
   writeContract,
@@ -35,7 +35,7 @@ export async function approveToken(
   token: Address,
   amount: bigint,
   spender?: Address
-) {
+): Promise<Hash> {
   const paymentProcessor =
     spender ?? getPaymentProcessorAddress();
 
@@ -46,15 +46,17 @@ export async function approveToken(
     args: [paymentProcessor, amount],
   });
 
-  return waitForTransactionReceipt(wagmiConfig, {
+  await waitForTransactionReceipt(wagmiConfig, {
     hash,
   });
+
+  return hash;
 }
 
 export async function approveMax(
   token: Address,
   spender?: Address
-) {
+): Promise<Hash> {
   return approveToken(
     token,
     2n ** 256n - 1n,

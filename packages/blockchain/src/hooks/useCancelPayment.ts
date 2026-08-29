@@ -12,14 +12,14 @@ import {
 } from "../wagmi";
 
 import {
-  executePaymentService,
+  cancelPaymentService,
 } from "../services";
 
-export function useExecutePayment() {
+export function useCancelPayment() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: executePaymentService,
+    mutationFn: cancelPaymentService,
 
     async onSuccess(hash, paymentId) {
       await waitForTransactionReceipt(

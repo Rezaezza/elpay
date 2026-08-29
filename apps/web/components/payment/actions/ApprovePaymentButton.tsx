@@ -1,7 +1,13 @@
 "use client";
 
 import { useQueryClient } from "@tanstack/react-query";
-import { useApprovePayment } from "@elpay/blockchain";
+
+import {
+  useApprovePayment,
+  usePayment,
+  approveToken,
+  hasEnoughAllowance,
+} from "@elpay/blockchain";
 
 type Props = {
   paymentId: `0x${string}`;
@@ -13,16 +19,63 @@ export function ApprovePaymentButton({
   const queryClient = useQueryClient();
 
   const {
+    data: payment,
+  } = usePayment(paymentId);
+
+  const {
     mutateAsync,
     isPending,
   } = useApprovePayment();
 
   async function handleClick() {
     try {
+      if (!payment) {
+        alert("Payment not found.");
+        return;
+      }
+
+      //////////////////////////////////////////////////////
+      // Check allowance terlebih dahulu
+      //////////////////////////////////////////////////////
+
+      const allowanceEnough =
+        await hasEnoughAllowance(
+          payment.token,
+          payment.payer,
+          payment.amount
+        );
+
+      //////////////////////////////////////////////////////
+      // Approve USDC hanya jika allowance belum cukup
+      //////////////////////////////////////////////////////
+
+      if (!allowanceEnough) {
+      await approveToken(
+    payment.token,
+    payment.amount
+     );
+      }
+
+      //////////////////////////////////////////////////////
+      // Approve Payment
+      //////////////////////////////////////////////////////
+
       await mutateAsync(paymentId);
+
+      //////////////////////////////////////////////////////
+      // Refresh Query
+      //////////////////////////////////////////////////////
 
       await queryClient.invalidateQueries({
         queryKey: ["payment", paymentId],
+      });
+
+      await queryClient.invalidateQueries({
+        queryKey: ["merchant-payments"],
+      });
+
+      await queryClient.invalidateQueries({
+        queryKey: ["payer-payments"],
       });
 
       alert("Payment Approved");

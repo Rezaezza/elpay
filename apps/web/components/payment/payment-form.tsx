@@ -9,7 +9,7 @@ import { useSendPayment } from "@elpay/blockchain";
 import { parseUnits, isAddress } from "viem";
 import { useAccount } from "wagmi";
 import { useState } from "react";
-import { PaymentDetail } from "./PaymentDetail";
+
 
 
 
@@ -232,7 +232,7 @@ alert("Payment created!");
           <input
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
-            placeholder="10"
+            placeholder="0"
             className="w-full rounded-lg border p-3"
           />
 
@@ -248,7 +248,7 @@ alert("Payment created!");
             rows={4}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            placeholder="Coffee Payment"
+            placeholder="Description your Payment"
             className="w-full rounded-lg border p-3"
           />
 
@@ -388,24 +388,6 @@ alert("Payment created!");
   hash={txHash}
   paymentId={paymentId ?? undefined}
 />
-)}
-
-{paymentId && (
-  <div className="mt-4 rounded-lg border bg-muted p-4">
-    <p className="text-sm text-muted-foreground">
-      Payment ID
-    </p>
-
-    <p className="mt-2 break-all font-mono text-xs">
-      {paymentId}
-    </p>
-  </div>
-)}
-
-{paymentId && (
-    <PaymentDetail
-        paymentId={paymentId}
-    />
 )}
 
       </form>

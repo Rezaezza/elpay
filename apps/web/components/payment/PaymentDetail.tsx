@@ -1,9 +1,10 @@
 "use client";
 
 import {
+  ApprovePaymentButton,
   ExecutePaymentButton,
   RefundPaymentButton,
-  ReleaseEscrowButton,
+  CancelPaymentButton,
 } from "./actions";
 
 import {
@@ -23,6 +24,9 @@ import {
     useQueryClient,
 } from "@tanstack/react-query";
 
+import { useAccount } from "wagmi";
+import { Button } from "@/components/ui/button";
+
 
 type Props = {
   paymentId: `0x${string}`;
@@ -39,6 +43,8 @@ export function PaymentDetail({
 
   const queryClient =
     useQueryClient();
+
+   const { address } = useAccount();
 
     useEffect(() => {
       
@@ -81,6 +87,14 @@ export function PaymentDetail({
   }
 
   const status = getPaymentStatus(Number(data.status));
+
+const isPayer =
+    address?.toLowerCase() ===
+    data.payer.toLowerCase();
+
+const isMerchant =
+    address?.toLowerCase() ===
+    data.merchant.toLowerCase();
 
   return (
     <div className="mt-6 rounded-xl border bg-background p-6 shadow-sm">
@@ -186,39 +200,165 @@ export function PaymentDetail({
 
       </div>
 
+      {/* ---------------- PAYMENT LINKS ---------------- */}
+
+{isMerchant && (
+  <div className="mt-8 rounded-xl border border-slate-700 bg-slate-900 p-5">
+
+    <h3 className="mb-4 text-lg font-semibold">
+      Payment Link
+    </h3>
+
+    <div className="flex flex-wrap gap-3">
+
+      <Button
+        variant="outline"
+        onClick={() =>
+          navigator.clipboard.writeText(
+            `${window.location.origin}/pay/${paymentId}`
+          )
+        }
+      >
+        Copy Link
+      </Button>
+
+      <Button
+        onClick={() =>
+          window.open(
+            `/pay/${paymentId}`,
+            "_blank"
+          )
+        }
+      >
+        Open Checkout
+      </Button>
+
+      <Button
+        variant="secondary"
+        onClick={() =>
+          window.open(
+            `https://testnet.arcscan.app/tx/${paymentId}`,
+            "_blank"
+          )
+        }
+      >
+        View on ArcScan
+      </Button>
+
+    </div>
+
+  </div>
+)}
+
 {/* ---------------- ACTION BUTTONS ---------------- */}
 
-<div className="mt-8 flex flex-wrap gap-3">
+<div className="mt-8 space-y-4">
+
+  {/* CREATED */}
 
   {data.status === 0 && (
-    <div className="rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-4">
-      <p className="font-medium text-yellow-400">
-        Waiting Customer Approval
+    <>
+      <div className="rounded-xl border border-yellow-500/30 bg-yellow-500/10 p-4">
+        <p className="font-semibold text-yellow-400">
+          Waiting Customer Approval
+        </p>
+
+        <p className="mt-2 text-sm text-slate-400">
+          The payment has been created and is waiting for the payer to approve
+          or cancel it.
+        </p>
+      </div>
+
+      {isPayer && (
+        <div className="flex flex-wrap gap-3">
+          <ApprovePaymentButton
+            paymentId={paymentId}
+          />
+
+          <CancelPaymentButton
+            paymentId={paymentId}
+          />
+        </div>
+      )}
+    </>
+  )}
+
+  {/* APPROVED */}
+
+ {data.status === 1 && (
+  <>
+    <div className="rounded-xl border border-blue-500/30 bg-blue-500/10 p-4">
+      <p className="font-semibold text-blue-400">
+        Payment Approved
       </p>
 
       <p className="mt-2 text-sm text-slate-400">
-        Share this payment to the customer. The customer must approve the
-        payment before it can be executed.
+        The payer approved this payment.
+      </p>
+    </div>
+
+    {isPayer && (
+      <div className="flex flex-wrap gap-3">
+        <ExecutePaymentButton paymentId={paymentId} />
+      </div>
+    )}
+  </>
+)}
+
+ 
+
+  {/* PAID */}
+
+ {data.status === 3 && (
+  <>
+    <div className="rounded-xl border border-green-500/30 bg-green-500/10 p-4">
+      <p className="font-semibold text-green-400">
+        Payment Completed
+      </p>
+
+      <p className="mt-2 text-sm text-slate-400">
+        Funds have been transferred successfully.
+      </p>
+    </div>
+
+    {isMerchant && (
+      <div className="mt-4">
+        <RefundPaymentButton
+          paymentId={paymentId}
+        />
+      </div>
+    )}
+  </>
+)}
+
+  {/* REFUNDED */}
+
+  {data.status === 4 && (
+    <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-4">
+      <p className="font-semibold text-red-400">
+        Payment Refunded
       </p>
     </div>
   )}
 
-  {data.status === 1 && (
-    <ExecutePaymentButton
-      paymentId={paymentId}
-    />
+  {/* CANCELLED */}
+
+  {data.status === 5 && (
+    <div className="rounded-xl border border-slate-700 bg-slate-900 p-4">
+      <p className="font-semibold text-slate-300">
+        Payment Cancelled
+      </p>
+    </div>
   )}
 
-  {data.status === 2 && (
-    <ReleaseEscrowButton
-      paymentId={paymentId}
-    />
-  )}
+  {/* EXPIRED */}
 
-  {data.status === 1 && (
-    <RefundPaymentButton
-      paymentId={paymentId}
-    />
+  {data.status === 6 && (
+    <div className="rounded-xl border border-purple-500/30 bg-purple-500/10 p-4">
+      <p className="font-semibold text-purple-400">
+        Payment Expired
+      </p>
+    </div>
   )}
 
 </div>

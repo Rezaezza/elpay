@@ -4,7 +4,12 @@ import Image from "next/image";
 import { formatUnits } from "viem";
 
 import { WalletChip } from "@/components/wallet/WalletChip";
-import { CustomerApproveButton } from "./CustomerApproveButton";
+import { useAccount } from "wagmi";
+import {
+  ApprovePaymentButton,
+  CancelPaymentButton,
+  ExecutePaymentButton,
+} from "./actions";
 
 import { paymentLink } from "@/lib/paymentLink";
 
@@ -75,6 +80,16 @@ export function CustomerPaymentCard({
   paymentId,
 }: Props) {
   const status = statusLabel(payment.status);
+
+const { address } = useAccount();
+
+const isPayer =
+  address?.toLowerCase() ===
+  payment.payer.toLowerCase();
+
+const isMerchant =
+  address?.toLowerCase() ===
+  payment.merchant.toLowerCase();
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
@@ -204,26 +219,123 @@ export function CustomerPaymentCard({
               Copy Payment Link
             </button>
 
-            {payment.status === 0 && (
-              <CustomerApproveButton
-                paymentId={paymentId}
-              />
-            )}
+{/* CREATED */}
 
-            {payment.status !== 0 && (
-              <div className="rounded-2xl border border-green-500/20 bg-green-500/10 p-6">
+{payment.status === 0 && (
+  <>
+    {isPayer && (
+      <div className="space-y-3">
 
-                <h3 className="text-lg font-semibold text-green-400">
-                  Payment Approved
-                </h3>
+        <ApprovePaymentButton
+          paymentId={paymentId}
+        />
 
-                <p className="mt-2 text-slate-300">
-                  Merchant can now continue this payment
-                  from the Dashboard.
-                </p>
+        <CancelPaymentButton
+          paymentId={paymentId}
+        />
 
-              </div>
-            )}
+      </div>
+    )}
+
+    {isMerchant && (
+      <div className="rounded-2xl border border-yellow-500/20 bg-yellow-500/10 p-6">
+
+        <h3 className="text-lg font-semibold text-yellow-400">
+          Waiting Customer Approval
+        </h3>
+
+        <p className="mt-2 text-slate-300">
+          Waiting for the customer to approve or cancel this payment.
+        </p>
+
+      </div>
+    )}
+  </>
+)}
+
+{/* APPROVED */}
+
+{payment.status === 1 && (
+  <>
+    <div className="rounded-2xl border border-blue-500/20 bg-blue-500/10 p-6">
+
+      <h3 className="text-lg font-semibold text-blue-400">
+        Payment Approved
+      </h3>
+
+      <p className="mt-2 text-slate-300">
+        Customer has approved this payment.
+      </p>
+
+    </div>
+
+    {isPayer && (
+      <ExecutePaymentButton
+        paymentId={paymentId}
+      />
+    )}
+
+    {isMerchant && (
+      <div className="rounded-2xl border border-slate-700 bg-slate-900 p-6">
+        <p className="text-slate-300">
+          Waiting for payer to execute payment.
+        </p>
+      </div>
+    )}
+  </>
+)}
+
+{/* PROCESSING */}
+
+{payment.status === 2 && (
+  <div className="rounded-2xl border border-indigo-500/20 bg-indigo-500/10 p-6">
+
+    <h3 className="text-lg font-semibold text-indigo-400">
+      Payment Processing
+    </h3>
+
+    <p className="mt-2 text-slate-300">
+      Funds are locked in escrow.
+    </p>
+
+  </div>
+)}
+
+{/* PAID */}
+
+{payment.status === 3 && (
+  <div className="rounded-2xl border border-green-500/20 bg-green-500/10 p-6">
+
+    <h3 className="text-lg font-semibold text-green-400">
+      Payment Completed
+    </h3>
+
+  </div>
+)}
+
+{/* REFUNDED */}
+
+{payment.status === 4 && (
+  <div className="rounded-2xl border border-orange-500/20 bg-orange-500/10 p-6">
+
+    <h3 className="text-lg font-semibold text-orange-400">
+      Payment Refunded
+    </h3>
+
+  </div>
+)}
+
+{/* CANCELLED */}
+
+{payment.status === 5 && (
+  <div className="rounded-2xl border border-red-500/20 bg-red-500/10 p-6">
+
+    <h3 className="text-lg font-semibold text-red-400">
+      Payment Cancelled
+    </h3>
+
+  </div>
+)}
 
           </div>
 

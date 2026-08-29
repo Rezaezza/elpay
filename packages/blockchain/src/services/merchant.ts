@@ -1,5 +1,9 @@
 import type { Address, Hash } from "viem";
 
+import { waitForTransactionReceipt } from "wagmi/actions";
+
+import { wagmiConfig } from "../wagmi";
+
 import {
   registerMerchant,
   updateMerchant,
@@ -18,28 +22,71 @@ export async function registerMerchantService(
   name: string,
   metadataURI: string
 ): Promise<Hash> {
-  return registerMerchant(name, metadataURI);
+  const hash = await registerMerchant(
+    name,
+    metadataURI
+  );
+
+  await waitForTransactionReceipt(
+    wagmiConfig,
+    { hash }
+  );
+
+  return hash;
 }
 
 export async function updateMerchantService(
   name: string,
   metadataURI: string
 ): Promise<Hash> {
-  return updateMerchant(name, metadataURI);
+  const hash = await updateMerchant(
+    name,
+    metadataURI
+  );
+
+  await waitForTransactionReceipt(
+    wagmiConfig,
+    { hash }
+  );
+
+  return hash;
 }
 
 export async function pauseMerchantService(): Promise<Hash> {
-  return pauseMerchant();
+  const hash = await pauseMerchant();
+
+  await waitForTransactionReceipt(
+    wagmiConfig,
+    { hash }
+  );
+
+  return hash;
 }
 
 export async function activateMerchantService(): Promise<Hash> {
-  return activateMerchant();
+  const hash = await activateMerchant();
+
+  await waitForTransactionReceipt(
+    wagmiConfig,
+    { hash }
+  );
+
+  return hash;
 }
 
 export async function disableMerchantService(
   merchant: Address
 ): Promise<Hash> {
-  return disableMerchant(merchant);
+  const hash = await disableMerchant(
+    merchant
+  );
+
+  await waitForTransactionReceipt(
+    wagmiConfig,
+    { hash }
+  );
+
+  return hash;
 }
 
 //////////////////////////////////////////////////////////////

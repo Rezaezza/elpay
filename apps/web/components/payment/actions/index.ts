@@ -1,4 +1,4 @@
 export * from "./ApprovePaymentButton";
 export * from "./ExecutePaymentButton";
 export * from "./RefundPaymentButton";
-export * from "./ReleaseEscrowButton";
+export * from "./CancelPaymentButton";
