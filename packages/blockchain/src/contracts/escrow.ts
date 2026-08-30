@@ -24,13 +24,21 @@ const address =
 export async function deposit(
   paymentId: `0x${string}`,
   token: Address,
+  payer: Address,
+  merchant: Address,
   amount: bigint
 ): Promise<Hash> {
   return writeContract(wagmiConfig, {
     address,
     abi: elPayEscrowAbi,
     functionName: "deposit",
-    args: [paymentId, token, amount],
+    args: [
+      paymentId,
+      token,
+      payer,
+      merchant,
+      amount,
+    ],
   });
 }
 

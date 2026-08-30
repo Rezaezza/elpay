@@ -7,20 +7,28 @@ export const elPayEscrowAbi = [
     type: "function",
     name: "deposit",
     stateMutability: "nonpayable",
-    inputs: [
-      {
-        name: "paymentId",
-        type: "bytes32",
-      },
-      {
-        name: "token",
-        type: "address",
-      },
-      {
-        name: "amount",
-        type: "uint256",
-      },
-    ],
+   inputs: [
+  {
+    name: "paymentId",
+    type: "bytes32",
+  },
+  {
+    name: "token",
+    type: "address",
+  },
+  {
+    name: "payer",
+    type: "address",
+  },
+  {
+    name: "merchant",
+    type: "address",
+  },
+  {
+    name: "amount",
+    type: "uint256",
+  },
+],
     outputs: [],
   },
 
@@ -36,6 +44,19 @@ export const elPayEscrowAbi = [
     ],
     outputs: [],
   },
+
+  {
+  type: "function",
+  name: "refund",
+  stateMutability: "nonpayable",
+  inputs: [
+    {
+      name: "paymentId",
+      type: "bytes32",
+    },
+  ],
+  outputs: [],
+},
 
   {
     type: "function",
@@ -83,24 +104,33 @@ export const elPayEscrowAbi = [
     ],
     outputs: [
       {
-        components: [
-          {
-            name: "paymentId",
-            type: "bytes32",
-          },
-          {
-            name: "token",
-            type: "address",
-          },
-          {
-            name: "amount",
-            type: "uint256",
-          },
-          {
-            name: "released",
-            type: "bool",
-          },
-        ],
+        
+ components: [
+  {
+    name: "paymentId",
+    type: "bytes32",
+  },
+  {
+    name: "token",
+    type: "address",
+  },
+  {
+    name: "payer",
+    type: "address",
+  },
+  {
+    name: "merchant",
+    type: "address",
+  },
+  {
+    name: "amount",
+    type: "uint256",
+  },
+  {
+    name: "released",
+    type: "bool",
+  },
+],
         type: "tuple",
       },
     ],
@@ -216,4 +246,17 @@ export const elPayEscrowAbi = [
       },
     ],
   },
+
+  {
+  type: "event",
+  name: "EscrowRefunded",
+  anonymous: false,
+  inputs: [
+    {
+      indexed: true,
+      name: "paymentId",
+      type: "bytes32",
+    },
+  ],
+},
 ] as const;

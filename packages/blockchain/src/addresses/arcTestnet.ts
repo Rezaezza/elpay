@@ -1,10 +1,10 @@
 import type { Address } from "viem";
 
 export const ARC_TESTNET_ADDRESSES = {
-    factory: "0x1D75941CAdA117050E42e1CE989349894157beB2",
-    merchantRegistry: "0x0e69Df74c2eDDe718849bc76d02D06c0730acb1a",
-    paymentProcessor: "0xdAF13C85fd486D57a055461eE67A4316FA1B7a1F",
-    escrow: "0xBff8bC59C922556Eb39E79DE633656d9E2aDF2eD",
+    factory: "0x4039e4022275fceA223d8e3aEd673046E74f556C",
+    merchantRegistry: "0xE5309d3ED8dB4e761569F9eA2A9eb02d9B283973",
+    paymentProcessor: "0x34ac40bE4e6CEfd748f4b0e802Ff194798083Ae0",
+    escrow: "0x842a3eeEBf810502D12D5784573D778f5fA82d30",
 } as const;
 
 

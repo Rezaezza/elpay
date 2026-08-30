@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { formatUnits } from "viem";
 
-import { WalletChip } from "@/components/wallet/WalletChip";
 import { useAccount } from "wagmi";
 import {
   ApprovePaymentButton,
@@ -127,7 +126,7 @@ const isMerchant =
 
           <div className="space-y-8 p-8">
 
-            <WalletChip />
+            
 
             <div className="rounded-2xl border border-slate-800 bg-slate-950 p-6">
 

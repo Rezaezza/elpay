@@ -3,6 +3,7 @@
 import {
   ApprovePaymentButton,
   ExecutePaymentButton,
+  ReleasePaymentButton,
   RefundPaymentButton,
   CancelPaymentButton,
 } from "./actions";
@@ -233,18 +234,6 @@ const isMerchant =
         Open Checkout
       </Button>
 
-      <Button
-        variant="secondary"
-        onClick={() =>
-          window.open(
-            `https://testnet.arcscan.app/tx/${paymentId}`,
-            "_blank"
-          )
-        }
-      >
-        View on ArcScan
-      </Button>
-
     </div>
 
   </div>
@@ -305,6 +294,39 @@ const isMerchant =
   </>
 )}
 
+{/* PROCESSING */}
+
+{data.status === 2 && (
+  <>
+    <div className="rounded-xl border border-indigo-500/30 bg-indigo-500/10 p-4">
+
+      <p className="font-semibold text-indigo-400">
+        Funds Locked in Escrow
+      </p>
+
+      <p className="mt-2 text-sm text-slate-400">
+        Customer has deposited the USDC into escrow.
+        Merchant can release the funds or refund the customer.
+      </p>
+
+    </div>
+
+    {isMerchant && (
+      <div className="mt-4 flex flex-wrap gap-3">
+
+        <ReleasePaymentButton
+          paymentId={paymentId}
+        />
+
+        <RefundPaymentButton
+          paymentId={paymentId}
+        />
+
+      </div>
+    )}
+  </>
+)}
+
  
 
   {/* PAID */}
@@ -319,37 +341,39 @@ const isMerchant =
       <p className="mt-2 text-sm text-slate-400">
         Funds have been transferred successfully.
       </p>
+
     </div>
 
-    {isMerchant && (
-      <div className="mt-4">
-        <RefundPaymentButton
-          paymentId={paymentId}
-        />
-      </div>
-    )}
   </>
 )}
 
-  {/* REFUNDED */}
+ {/* CANCELLED */}
 
-  {data.status === 4 && (
-    <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-4">
-      <p className="font-semibold text-red-400">
-        Payment Refunded
-      </p>
-    </div>
-  )}
+{data.status === 4 && (
+<div className="rounded-xl border border-slate-700 bg-slate-900 p-4">
 
-  {/* CANCELLED */}
+<p className="font-semibold text-slate-300">
+Payment Cancelled
+</p>
 
-  {data.status === 5 && (
-    <div className="rounded-xl border border-slate-700 bg-slate-900 p-4">
-      <p className="font-semibold text-slate-300">
-        Payment Cancelled
-      </p>
-    </div>
-  )}
+</div>
+)}
+
+{/* REFUNDED */}
+
+{data.status === 5 && (
+<div className="rounded-xl border border-red-500/30 bg-red-500/10 p-4">
+
+<p className="font-semibold text-red-400">
+Payment Refunded
+</p>
+
+<p className="mt-2 text-sm text-slate-400">
+The escrow has returned the USDC to the customer.
+</p>
+
+</div>
+)}
 
   {/* EXPIRED */}
 

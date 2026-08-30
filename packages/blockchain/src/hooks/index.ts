@@ -15,3 +15,4 @@ export * from "./useMerchantInfo";
 export * from "./useMerchantPayments";
 export * from "./usePayerPayments";
 export * from "./useCancelPayment";
+export * from "./useReleasePayment";
