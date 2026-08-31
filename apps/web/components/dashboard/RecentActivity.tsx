@@ -5,6 +5,8 @@ import { Clock3, CreditCard } from "lucide-react";
 
 import { useDashboard } from "@elpay/blockchain";
 
+import { formatUnits } from "viem";
+
 function getStatusLabel(status: number) {
   switch (status) {
     case 0:
@@ -67,7 +69,7 @@ export function RecentActivity() {
 
   if (payments.length === 0) {
     return (
-      <section className="rounded-3xl border border-slate-200 bg-white p-10 shadow-sm">
+      <section className="rounded-3xl border border-slate-800 bg-slate-900 p-8 shadow-xl">
         <div className="flex flex-col items-center py-16 text-center">
           <Clock3
             size={52}
@@ -94,9 +96,9 @@ export function RecentActivity() {
   }
 
   return (
-    <section className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+    <section className="rounded-3xl border border-slate-800 bg-slate-900 p-8 shadow-xl">
       <div className="mb-6 flex items-center justify-between">
-        <h2 className="text-2xl font-bold">
+        <h2 className="text-2xl font-bold text-white">
           Recent Activity
         </h2>
       </div>
@@ -105,24 +107,24 @@ export function RecentActivity() {
         {payments.map((payment) => (
           <div
             key={payment.id}
-            className="flex items-center justify-between rounded-2xl border border-slate-100 p-5"
+            className="flex items-center justify-between rounded-2xl border border-slate-800 bg-slate-950 p-5 transition hover:border-indigo-500/40"
           >
             <div className="flex items-center gap-4">
-              <div className="rounded-xl bg-indigo-100 p-3">
+              <div className="rounded-xl bg-indigo-500/10 p-3">
                 <CreditCard
                   size={22}
-                  className="text-indigo-600"
+                  className="text-indigo-400"
                 />
               </div>
 
               <div>
-                <p className="font-semibold">
+                <p className="font-semibold text-white">
                   {payment.description || "USDC Payment"}
                 </p>
 
-                <p className="text-sm text-slate-500">
-                  {payment.amount.toString()}
-                </p>
+         <p className="text-sm text-slate-400">
+    {formatUnits(payment.amount, 6)} USDC
+</p>
               </div>
             </div>
 

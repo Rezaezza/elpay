@@ -1,7 +1,6 @@
 import {
   DashboardHero,
   RecentActivity,
-  LatestPayments,
 } from "@/components/dashboard";
 
 export default function Home() {
@@ -11,7 +10,6 @@ export default function Home() {
 
       <RecentActivity />
 
-      <LatestPayments />
     </div>
   );
 }

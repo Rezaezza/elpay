@@ -51,6 +51,7 @@ function statusLabel(status: number) {
           "bg-green-500/10 text-green-400 border-green-500/20",
       };
 
+    // ✅ Cancelled = 4
     case 4:
       return {
         text: "Cancelled",
@@ -58,11 +59,20 @@ function statusLabel(status: number) {
           "bg-red-500/10 text-red-400 border-red-500/20",
       };
 
+    // ✅ Refunded = 5
     case 5:
       return {
         text: "Refunded",
         color:
           "bg-orange-500/10 text-orange-400 border-orange-500/20",
+      };
+
+    // ✅ Expired = 6
+    case 6:
+      return {
+        text: "Expired",
+        color:
+          "bg-purple-500/10 text-purple-400 border-purple-500/20",
       };
 
     default:
@@ -312,27 +322,45 @@ const isMerchant =
   </div>
 )}
 
-{/* REFUNDED */}
-
-{payment.status === 4 && (
-  <div className="rounded-2xl border border-orange-500/20 bg-orange-500/10 p-6">
-
-    <h3 className="text-lg font-semibold text-orange-400">
-      Payment Refunded
-    </h3>
-
-  </div>
-)}
-
 {/* CANCELLED */}
 
-{payment.status === 5 && (
+{payment.status === 4 && (
   <div className="rounded-2xl border border-red-500/20 bg-red-500/10 p-6">
-
     <h3 className="text-lg font-semibold text-red-400">
       Payment Cancelled
     </h3>
 
+    <p className="mt-2 text-slate-300">
+      This payment was cancelled before funds were deposited into escrow.
+    </p>
+  </div>
+)}
+
+{/* REFUNDED */}
+
+{payment.status === 5 && (
+  <div className="rounded-2xl border border-orange-500/20 bg-orange-500/10 p-6">
+    <h3 className="text-lg font-semibold text-orange-400">
+      Payment Refunded
+    </h3>
+
+    <p className="mt-2 text-slate-300">
+      Funds have been returned from escrow to the payer.
+    </p>
+  </div>
+)}
+
+{/* EXPIRED */}
+
+{payment.status === 6 && (
+  <div className="rounded-2xl border border-purple-500/20 bg-purple-500/10 p-6">
+    <h3 className="text-lg font-semibold text-purple-400">
+      Payment Expired
+    </h3>
+
+    <p className="mt-2 text-slate-300">
+      This payment expired before completion.
+    </p>
   </div>
 )}
 

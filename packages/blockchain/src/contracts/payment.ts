@@ -88,12 +88,15 @@ export async function releaseEscrow(
 export async function getPayment(
   paymentId: `0x${string}`
 ) {
-  return readContract(wagmiConfig, {
+  const payment = await readContract(wagmiConfig, {
     address,
     abi: paymentProcessorAbi,
     functionName: "getPayment",
     args: [paymentId],
   });
+
+ 
+  return payment;
 }
 
 export async function paymentExists(

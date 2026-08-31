@@ -51,10 +51,12 @@ const {
     isLoading: loadingIds,
 } = useMerchantPayments(address);
 
+
 const {
     data: paymentDetails = [],
     isLoading: loadingPayments,
 } = usePayments(paymentIds);
+
 
 const payments: PaymentHistoryItem[] =
     paymentDetails

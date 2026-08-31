@@ -50,39 +50,53 @@ export async function getDashboardData(
         )
       );
 
-    let paid = 0;
-    let processing = 0;
-    let refunded = 0;
-    let cancelled = 0;
-    let created = 0;
+  let paid = 0;
+let processing = 0;
+let refunded = 0;
+let cancelled = 0;
+let created = 0;
 
-    let totalVolume = 0n;
+let totalVolume = 0n;
 
-    for (const payment of payments) {
+for (const payment of payments) {
+  switch (Number(payment.status)) {
+    case 0:
+      // Created
+      created++;
+      break;
+
+    case 1:
+      // Approved
+      break;
+
+    case 2:
+      // Processing
+      processing++;
       totalVolume += payment.amount;
+      break;
 
-      switch (payment.status) {
-        case 0:
-          created++;
-          break;
+    case 3:
+      // Paid
+      paid++;
+      totalVolume += payment.amount;
+      break;
 
-        case 2:
-          processing++;
-          break;
+    case 4:
+      // Cancelled
+      cancelled++;
+      break;
 
-        case 3:
-          paid++;
-          break;
+    case 5:
+      // Refunded
+      refunded++;
+      totalVolume += payment.amount;
+      break;
 
-        case 4:
-          cancelled++;
-          break;
-
-        case 5:
-          refunded++;
-          break;
-      }
-    }
+    case 6:
+      // Expired
+      break;
+  }
+}
 
     return {
       merchant,
