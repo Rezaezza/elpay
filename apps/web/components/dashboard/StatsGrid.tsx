@@ -5,6 +5,8 @@ import {
   Wallet,
   CheckCircle,
   Loader2,
+  RotateCcw,
+  XCircle,
 } from "lucide-react";
 
 import { StatCard } from "./StatCard";
@@ -14,17 +16,11 @@ interface Props {
 
   stats: {
     totalPayments: number;
-
     totalVolume: bigint;
-
     paidPayments: number;
-
     processingPayments: number;
-
     refundedPayments: number;
-
     cancelledPayments: number;
-
     createdPayments: number;
   };
 }
@@ -35,8 +31,8 @@ export function StatsGrid({
 }: Props) {
   if (loading) {
     return (
-      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-        {Array.from({ length: 4 }).map((_, i) => (
+      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+        {Array.from({ length: 6 }).map((_, i) => (
           <div
             key={i}
             className="h-40 animate-pulse rounded-3xl bg-slate-100"
@@ -47,7 +43,8 @@ export function StatsGrid({
   }
 
   return (
-    <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+    <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+
       <StatCard
         title="Payments"
         value={stats.totalPayments}
@@ -72,6 +69,19 @@ export function StatsGrid({
         value={stats.processingPayments}
         icon={Loader2}
       />
+
+      <StatCard
+        title="Cancelled"
+        value={stats.cancelledPayments}
+        icon={XCircle}
+      />
+
+      <StatCard
+        title="Refunded"
+        value={stats.refundedPayments}
+        icon={RotateCcw}
+      />
+
     </div>
   );
 }

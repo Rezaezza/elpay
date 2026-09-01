@@ -6,3 +6,4 @@ export * from "./PaymentDetailPage";
 export * from "./PaymentDetail";
 export * from "./CustomerPayment";
 export * from "./CustomerPaymentCard";
+export * from "./PaymentQRCode";

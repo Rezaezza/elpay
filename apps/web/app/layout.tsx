@@ -1,5 +1,7 @@
 import "./globals.css";
 
+import { Toaster } from "sonner";
+
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { WalletProvider } from "@/providers/WalletProvider";
 
@@ -16,6 +18,11 @@ export default function RootLayout({
             {children}
           </DashboardLayout>
         </WalletProvider>
+        <Toaster
+          richColors
+          position="top-right"
+          closeButton
+        />
       </body>
     </html>
   );

@@ -8,9 +8,9 @@ import {
   Store,
   CreditCard,
   History,
-  Receipt,
   BarChart3,
   Settings,
+  BookOpen,
   ShieldCheck,
 } from "lucide-react";
 
@@ -43,13 +43,8 @@ const sections = [
   name: "Payment History",
   href: "/payments/history",
   icon: History,
-},
-    
-      {
-        name: "Invoices",
-        href: "/invoices",
-        icon: Receipt,
       },
+    
     ],
   },
 
@@ -64,16 +59,21 @@ const sections = [
     ],
   },
 
-  {
-    title: "SYSTEM",
-    items: [
-      {
-        name: "Settings",
-        href: "/settings",
-        icon: Settings,
-      },
-    ],
-  },
+{
+  title: "SYSTEM",
+  items: [
+    {
+      name: "Settings",
+      href: "/settings",
+      icon: Settings,
+    },
+    {
+      name: "Docs",
+      href: "/docs",
+      icon: BookOpen,
+    },
+  ],
+},
 ];
 
 export function Sidebar() {

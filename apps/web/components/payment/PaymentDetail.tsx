@@ -29,6 +29,7 @@ import { useAccount } from "wagmi";
 import { Button } from "@/components/ui/button";
 
 import { formatUnits } from "viem";
+import QRCode from "react-qr-code";
 
 
 type Props = {
@@ -108,7 +109,9 @@ const isMerchant =
         Payment Detail
       </h3>
 
-      <div className="space-y-4">
+      <div className="grid gap-8 lg:grid-cols-3">
+
+        <div className="space-y-4 lg:col-span-2">
 
         <div>
           <p className="text-sm text-muted-foreground">
@@ -206,45 +209,73 @@ const isMerchant =
           </p>
         </div>
 
-      </div>
-
-      {/* ---------------- PAYMENT LINKS ---------------- */}
+        </div>
 
 {isMerchant && (
-  <div className="mt-8 rounded-xl border border-slate-700 bg-slate-900 p-5">
+    <div className="sticky top-6 rounded-2xl border border-slate-800 bg-card p-6 shadow-sm">
 
-    <h3 className="mb-4 text-lg font-semibold">
-      Payment Link
-    </h3>
+        <h4 className="text-lg font-semibold">
+            Payment QR
+        </h4>
 
-    <div className="flex flex-wrap gap-3">
+        <p className="mt-1 text-sm text-muted-foreground">
+            Customer can scan this QR code to open the checkout page.
+        </p>
 
-      <Button
-        variant="outline"
-        onClick={() =>
-          navigator.clipboard.writeText(
-            `${window.location.origin}/pay/${paymentId}`
-          )
-        }
-      >
-        Copy Link
-      </Button>
+        <div className="mt-6 flex justify-center">
 
-      <Button
-        onClick={() =>
-          window.open(
-            `/pay/${paymentId}`,
-            "_blank"
-          )
-        }
-      >
-        Open Checkout
-      </Button>
+            <div className="rounded-2xl bg-white p-4 shadow">
+
+                <QRCode
+                    value={`${window.location.origin}/pay/${paymentId}`}
+                    size={220}
+                />
+
+            </div>
+
+        </div>
+
+        <div className="mt-6 rounded-xl border bg-muted/30 p-3">
+
+            <p className="mb-2 text-xs font-medium text-muted-foreground">
+                Checkout URL
+            </p>
+
+            <p className="break-all font-mono text-xs">
+                {`${window.location.origin}/pay/${paymentId}`}
+            </p>
+
+        </div>
+
+        <Button
+            className="mt-4 w-full"
+            variant="outline"
+            onClick={() =>
+                navigator.clipboard.writeText(
+                    `${window.location.origin}/pay/${paymentId}`
+                )
+            }
+        >
+            Copy Payment Link
+        </Button>
+
+        <Button
+            className="mt-3 w-full"
+            onClick={() =>
+                window.open(
+                    `/pay/${paymentId}`,
+                    "_blank"
+                )
+            }
+        >
+            Open Checkout
+        </Button>
 
     </div>
-
-  </div>
 )}
+
+</div>
+
 
 {/* ---------------- ACTION BUTTONS ---------------- */}
 

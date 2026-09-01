@@ -1,3 +1,5 @@
+"use client";
+
 import {
   DashboardHero,
   RecentActivity,
@@ -7,9 +9,7 @@ export default function Home() {
   return (
     <div className="space-y-8">
       <DashboardHero />
-
       <RecentActivity />
-
     </div>
   );
 }

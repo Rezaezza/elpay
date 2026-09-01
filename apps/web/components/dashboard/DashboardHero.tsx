@@ -1,7 +1,6 @@
 "use client";
 
-import { Wallet, TrendingUp } from "lucide-react";
-
+import { Wallet } from "lucide-react";
 
 import {
   useDashboard,
@@ -10,11 +9,10 @@ import {
 import { StatsGrid } from "./StatsGrid";
 
 export function DashboardHero() {
- 
   const {
-  data,
-  isLoading,
-} = useDashboard();
+    data,
+    isLoading,
+  } = useDashboard();
 
   return (
     <section className="space-y-8">
@@ -26,7 +24,7 @@ export function DashboardHero() {
             </p>
 
             <h1 className="mt-2 text-4xl font-bold">
-              ElPay 
+              ElPay
             </h1>
 
             <p className="mt-4 max-w-2xl text-indigo-100">

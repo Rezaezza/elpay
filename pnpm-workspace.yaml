@@ -3,8 +3,6 @@ packages:
   - "packages/*"
   - "contracts"
 
-
-
 onlyBuiltDependencies:
   - "@reown/appkit"
   - "@prisma/client"
