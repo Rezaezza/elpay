@@ -8,7 +8,6 @@ import {
   Store,
   CreditCard,
   History,
-  BarChart3,
   Settings,
   BookOpen,
   ShieldCheck,
@@ -45,17 +44,6 @@ const sections = [
   icon: History,
       },
     
-    ],
-  },
-
-  {
-    title: "INSIGHTS",
-    items: [
-      {
-        name: "Analytics",
-        href: "/analytics",
-        icon: BarChart3,
-      },
     ],
   },
 
