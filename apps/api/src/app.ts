@@ -1,7 +1,6 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 
-import "./types/context";
 
 import { authRoute } from "./routes/auth.route";
 import { meRoute } from "./routes/me.route";
