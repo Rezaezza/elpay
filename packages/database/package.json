@@ -9,7 +9,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "prisma generate && tsup",
+    "build": "prisma generate && tsup && tsc -p tsconfig.build.json",
     "dev": "tsup --watch",
     "typecheck": "tsc --noEmit",
     "prisma:generate": "prisma generate",
