@@ -4,19 +4,17 @@ import {
   jwtVerify,
 } from "jose";
 
-const JWT_SECRET =
-  process.env.JWT_SECRET;
+function getSecret(): Uint8Array {
+  const jwtSecret = process.env.JWT_SECRET;
 
-if (!JWT_SECRET) {
-  throw new Error(
-    "JWT_SECRET environment variable is not configured",
-  );
+  if (!jwtSecret) {
+    throw new Error(
+      "JWT_SECRET environment variable is not configured",
+    );
+  }
+
+  return new TextEncoder().encode(jwtSecret);
 }
-
-const secret =
-  new TextEncoder().encode(
-    JWT_SECRET,
-  );
 
 export async function signJwt(
   payload: JWTPayload,
@@ -27,17 +25,16 @@ export async function signJwt(
     })
     .setIssuedAt()
     .setExpirationTime("7d")
-    .sign(secret);
+    .sign(getSecret());
 }
 
 export async function verifyJwt(
   token: string,
 ) {
-  const result =
-    await jwtVerify(
-      token,
-      secret,
-    );
+  const result = await jwtVerify(
+    token,
+    getSecret(),
+  );
 
   return result.payload;
 }
