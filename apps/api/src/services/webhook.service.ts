@@ -4,7 +4,7 @@ import {
 
 import type {
   PaymentWebhookInput,
-} from "../validators/webhook.validator";
+} from "../validators/webhook.validator.js";
 
 export class WebhookService {
 

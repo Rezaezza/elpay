@@ -1,5 +1,5 @@
 import { checkoutService }
-  from "../services/checkout.service";
+  from "../services/checkout.service.js";
 
 export const checkoutController = {
 

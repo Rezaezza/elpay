@@ -1,4 +1,4 @@
-import { paymentIntentService } from "../services/payment-intent.service";
+import { paymentIntentService } from "../services/payment-intent.service.js";
 
 export const paymentIntentController = {
   create: async (c: any) => {

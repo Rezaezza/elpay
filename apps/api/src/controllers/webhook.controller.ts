@@ -1,6 +1,6 @@
 import {
   webhookService,
-} from "../services/webhook.service";
+} from "../services/webhook.service.js";
 
 export const webhookController = {
 

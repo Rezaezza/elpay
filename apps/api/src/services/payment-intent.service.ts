@@ -4,7 +4,7 @@ import {
 
 import type {
   CreatePaymentIntentInput,
-} from "../validators/payment-intent.validator";
+} from "../validators/payment-intent.validator.js";
 
 export class PaymentIntentService {
   async create(

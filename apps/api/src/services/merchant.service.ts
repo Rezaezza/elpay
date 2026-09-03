@@ -5,7 +5,7 @@ import {
 import type {
   CreateMerchantInput,
   UpdateMerchantInput,
-} from "../validators/merchant.validator";
+} from "../validators/merchant.validator.js";
 
 export class MerchantService {
   async create(

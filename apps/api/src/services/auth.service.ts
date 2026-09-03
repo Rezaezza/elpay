@@ -2,7 +2,7 @@ import {
   AuthService as DatabaseAuthService,
 } from "@elpay/database";
 
-import { nonceService } from "./nonce.service";
+import { nonceService } from "./nonce.service.js";
 
 class AuthService {
   private auth =

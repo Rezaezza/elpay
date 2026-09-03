@@ -4,7 +4,7 @@ import {
 
 import type {
   CreateCheckoutInput,
-} from "../validators/checkout.validator";
+} from "../validators/checkout.validator.js";
 
 export class CheckoutService {
 

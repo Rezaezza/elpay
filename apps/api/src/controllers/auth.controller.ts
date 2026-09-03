@@ -1,5 +1,5 @@
-import { authService } from "../services/auth.service";
-import { siweService } from "../services/siwe.service";
+import { authService } from "../services/auth.service.js";
+import { siweService } from "../services/siwe.service.js";
 
 export class AuthController {
   nonce() {

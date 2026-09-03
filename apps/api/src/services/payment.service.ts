@@ -4,7 +4,7 @@ import {
 
 import type {
   CreatePaymentInput,
-} from "../validators/payment.validator";
+} from "../validators/payment.validator.js";
 
 export class PaymentService {
   async create(

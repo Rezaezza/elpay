@@ -1,4 +1,4 @@
-import { merchantService } from "../services/merchant.service";
+import { merchantService } from "../services/merchant.service.js";
 
 export const merchantController = {
   create: async (c: any) => {

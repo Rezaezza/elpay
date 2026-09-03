@@ -5,7 +5,7 @@ import {
 import type {
   CreateInvoiceInput,
   UpdateInvoiceInput,
-} from "../validators/invoice.validator";
+} from "../validators/invoice.validator.js";
 
 export class InvoiceService {
   async create(

@@ -1,4 +1,4 @@
-import { invoiceService } from "../services/invoice.service";
+import { invoiceService } from "../services/invoice.service.js";
 
 export const invoiceController = {
   create: async (c: any) => {

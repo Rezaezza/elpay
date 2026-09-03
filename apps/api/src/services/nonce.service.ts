@@ -1,4 +1,4 @@
-import { generateNonce } from "../lib/nonce";
+import { generateNonce } from "../lib/nonce.js";
 
 export class NonceService {
   create() {
