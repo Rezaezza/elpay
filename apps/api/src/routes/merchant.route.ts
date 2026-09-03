@@ -2,7 +2,7 @@ import { Hono } from "hono";
 
 import {
   merchantController,
-} from "../controllers/merchant.controller";
+} from "../controllers/merchant.controller.js";
 
 export const merchantRoute =
   new Hono();

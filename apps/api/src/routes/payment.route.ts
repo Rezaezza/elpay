@@ -2,7 +2,7 @@ import { Hono } from "hono";
 
 import {
   paymentController,
-} from "../controllers/payment.controller";
+} from "../controllers/payment.controller.js";
 
 export const paymentRoute =
   new Hono();

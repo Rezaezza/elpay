@@ -1,13 +1,13 @@
 import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
 
-import { authController } from "../controllers/auth.controller";
-import { authMiddleware } from "../middleware/auth.middleware";
+import { authController } from "../controllers/auth.controller.js";
+import { authMiddleware } from "../middleware/auth.middleware.js";
 
 import {
   createMessageSchema,
   verifySchema,
-} from "../validators/auth.validator";
+} from "../validators/auth.validator.js";
 
 export const authRoute = new Hono();
 

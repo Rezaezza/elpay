@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 
-import { authMiddleware } from "../middleware/auth.middleware";
-import { meController } from "../controllers/me.controller";
+import { authMiddleware } from "../middleware/auth.middleware.js";
+import { meController } from "../controllers/me.controller.js";
 
 export const meRoute = new Hono();
 

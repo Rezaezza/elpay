@@ -2,7 +2,7 @@ import { Hono } from "hono";
 
 import {
   paymentIntentController,
-} from "../controllers/payment-intent.controller";
+} from "../controllers/payment-intent.controller.js";
 
 export const paymentIntentRoute =
   new Hono();
