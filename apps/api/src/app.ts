@@ -2,18 +2,18 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 
 
-import { authRoute } from "./routes/auth.route";
-import { meRoute } from "./routes/me.route";
-import { userRoute } from "./routes/user.route";
-import { protectedRoute } from "./routes/protected.route";
-import { checkoutRoute } from "./routes/checkout.route";
-import { paymentRoute } from "./routes/payment.route";
-import { merchantRoute } from "./routes/merchant.route";
-import { invoiceRoute } from "./routes/invoice.route";
-import { paymentIntentRoute } from "./routes/payment-intent.route";
-import {
-  webhookRoute,
-} from "./routes/webhook.route";
+import { authRoute } from "./routes/auth.route.js";
+import { meRoute } from "./routes/me.route.js";
+import { userRoute } from "./routes/user.route.js";
+import { protectedRoute } from "./routes/protected.route.js";
+import { checkoutRoute } from "./routes/checkout.route.js";
+import { paymentRoute } from "./routes/payment.route.js";
+import { merchantRoute } from "./routes/merchant.route.js";
+import { invoiceRoute } from "./routes/invoice.route.js";
+import { paymentIntentRoute } from "./routes/payment-intent.route.js";
+import { webhookRoute } from "./routes/webhook.route.js";
+
+
 
 
 export const app = new Hono();
