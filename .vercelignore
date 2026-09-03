@@ -1,0 +1,42 @@
+# dependencies
+node_modules
+
+# turbo
+.turbo
+
+# next cache
+**/.next
+
+# dist
+**/dist
+
+# prisma cache
+**/.cache
+
+# git
+.git
+
+# vscode
+.vscode
+
+# logs
+*.log
+
+# env lokal
+.env
+**/.env
+
+# docs
+docs
+
+# old contracts
+contracts_old
+
+# coverage
+coverage
+
+# artifacts
+artifacts
+
+# cache
+cache
