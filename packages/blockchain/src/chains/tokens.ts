@@ -1,10 +1,30 @@
 export const TOKENS = {
-  USDC: {
-    symbol: "USDC",
+  arc: {
+    USDC: {
+      symbol: "USDC",
+      decimals: 6,
+      address:
+        "0x3600000000000000000000000000000000000000",
+    },
+  },
 
-    decimals: 6,
+  baseSepolia: {
+    USDC: {
+      symbol: "USDC",
+      decimals: 6,
+      address:
+        process.env.NEXT_PUBLIC_BASE_SEPOLIA_USDC ??
+        "",
+    },
+  },
 
-    address:
-      "0x3600000000000000000000000000000000000000",
+  base: {
+    USDC: {
+      symbol: "USDC",
+      decimals: 6,
+      address:
+        process.env.NEXT_PUBLIC_BASE_USDC ??
+        "",
+    },
   },
 } as const;

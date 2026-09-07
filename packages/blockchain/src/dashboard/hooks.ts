@@ -6,15 +6,19 @@ import { useAccount } from "wagmi";
 import { getDashboardData } from "./service";
 
 export function useDashboard() {
-  const { address, isConnected } = useAccount();
+  const { address, chain, isConnected } = useAccount();
 
   return useQuery({
-    queryKey: ["dashboard", address],
+    queryKey: ["dashboard", chain?.id, address],
 
     enabled: Boolean(isConnected && address),
 
     queryFn: async () => {
-      return getDashboardData(address!);
+      if (!chain?.id) {
+  throw new Error("Wallet is not connected to a supported network.");
+}
+
+return getDashboardData(chain.id, address!);
     },
 
     staleTime: 30_000,

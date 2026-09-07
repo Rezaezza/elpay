@@ -1,18 +1,23 @@
-import { createConfig, http } from "wagmi";
+import { createConfig } from "wagmi";
 
 import {
   arcTestnet,
   baseSepolia,
+  baseMainnet,
 } from "../chains";
+
+import { transports } from "../clients/transports";
 
 export const wagmiConfig = createConfig({
   chains: [
     arcTestnet,
     baseSepolia,
+    baseMainnet,
   ],
 
-  transports: {
-    [arcTestnet.id]: http(),
-    [baseSepolia.id]: http(),
-  },
+  transports,
+
+  ssr: true,
+
+  multiInjectedProviderDiscovery: true,
 });

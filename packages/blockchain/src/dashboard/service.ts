@@ -1,4 +1,5 @@
-import { publicClient } from "../clients";
+import { getPublicClient } from "../clients";
+
 
 import {
   getMerchantRegistryAddress,
@@ -18,13 +19,18 @@ import type {
   DashboardStats,
 } from "./types";
 
+
 export async function getDashboardData(
+  chainId: number,
   address: `0x${string}`
 ): Promise<DashboardStats> {
   try {
+
+    const publicClient = getPublicClient(chainId);
+    
     const merchant =
       await publicClient.readContract({
-        address: getMerchantRegistryAddress(),
+        address: getMerchantRegistryAddress(chainId),
         abi: merchantRegistryAbi,
         functionName: "getMerchant",
         args: [address],
@@ -32,7 +38,7 @@ export async function getDashboardData(
 
     const ids =
       await publicClient.readContract({
-        address: getPaymentProcessorAddress(),
+        address: getPaymentProcessorAddress(chainId),
         abi: paymentProcessorAbi,
         functionName: "getMerchantPayments",
         args: [address],
@@ -40,9 +46,9 @@ export async function getDashboardData(
 
     const payments =
       await Promise.all(
-        ids.map((id) =>
+          ids.map((id) =>
           publicClient.readContract({
-            address: getPaymentProcessorAddress(),
+            address: getPaymentProcessorAddress(chainId),
             abi: paymentProcessorAbi,
             functionName: "getPayment",
             args: [id],

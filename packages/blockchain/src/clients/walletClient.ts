@@ -4,11 +4,17 @@ import {
   type WalletClient,
 } from "viem";
 
-import { arcTestnet } from "../chains";
+import { getChain } from "./chains";
 
-export function getWalletClient(): WalletClient {
+export function getWalletClient(
+  chainId: number
+): WalletClient {
+  if (!window.ethereum) {
+    throw new Error("Ethereum provider not found.");
+  }
+
   return createWalletClient({
-    chain: arcTestnet,
-    transport: custom(window.ethereum!),
+    chain: getChain(chainId),
+    transport: custom(window.ethereum),
   });
 }

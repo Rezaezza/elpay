@@ -36,8 +36,11 @@ export async function approveToken(
   amount: bigint,
   spender?: Address
 ): Promise<Hash> {
-  const paymentProcessor =
-    spender ?? getPaymentProcessorAddress();
+ const paymentProcessor =
+  spender ??
+  getPaymentProcessorAddress(
+    wagmiConfig.state.chainId
+  );
 
   const hash = await writeContract(wagmiConfig, {
     address: token,

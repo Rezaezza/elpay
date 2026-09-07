@@ -1,12 +1,16 @@
 import {
   createPublicClient,
-  http,
   type PublicClient,
 } from "viem";
 
-import { arcTestnet } from "../chains";
+import { getChain } from "./chains";
+import { transports } from "./transports";
 
-export const publicClient: PublicClient = createPublicClient({
-  chain: arcTestnet,
-  transport: http(),
-});
+export function getPublicClient(
+  chainId: number
+): PublicClient {
+  return createPublicClient({
+    chain: getChain(chainId),
+    transport: transports[chainId],
+  });
+}

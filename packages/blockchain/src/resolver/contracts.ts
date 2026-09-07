@@ -1,42 +1,57 @@
 import type { Address } from "viem";
 
-import { CONTRACT_ADDRESSES } from "../addresses";
+import {
+  ARC_CHAIN_ID,
+  BASE_CHAIN_ID,
+  BASE_SEPOLIA_CHAIN_ID,
+} from "../chains";
+
+import { getContractAddresses } from "../addresses";
 
 //////////////////////////////////////////////////////////////
-// Sementara gunakan Arc Testnet
-// Nanti tinggal ganti ke active chain
+// Contract Resolver
 //////////////////////////////////////////////////////////////
 
-const contracts = CONTRACT_ADDRESSES.arcTestnet;
+function resolve(chainId: number) {
+  return getContractAddresses(chainId);
+}
 
 //////////////////////////////////////////////////////////////
 // Factory
 //////////////////////////////////////////////////////////////
 
-export function getFactoryAddress(): Address {
-  return contracts.factory;
+export function getFactoryAddress(
+  chainId: number
+): Address {
+  return resolve(chainId).factory;
 }
 
 //////////////////////////////////////////////////////////////
 // Merchant Registry
 //////////////////////////////////////////////////////////////
 
-export function getMerchantRegistryAddress(): Address {
-  return contracts.merchantRegistry;
+export function getMerchantRegistryAddress(
+  chainId: number
+): Address {
+  return resolve(chainId).merchantRegistry;
 }
 
 //////////////////////////////////////////////////////////////
 // Payment Processor
 //////////////////////////////////////////////////////////////
 
-export function getPaymentProcessorAddress(): Address {
-  return contracts.paymentProcessor;
+export function getPaymentProcessorAddress(
+  chainId: number
+): Address {
+  return resolve(chainId).paymentProcessor;
 }
 
 //////////////////////////////////////////////////////////////
 // Escrow
 //////////////////////////////////////////////////////////////
 
-export function getEscrowAddress(): Address {
-  return contracts.escrow;
+export function getEscrowAddress(
+  chainId: number
+): Address {
+  return resolve(chainId).escrow;
 }
