@@ -2,15 +2,17 @@ import { watchContractEvent } from "wagmi/actions";
 import { QueryClient } from "@tanstack/react-query";
 
 import { wagmiConfig } from "../wagmi";
-import { CONTRACT_ADDRESSES } from "../addresses";
 import { paymentProcessorAbi } from "../abi";
 
+import { getPaymentProcessorAddress } from "../resolver/contracts";
+
 export function watchPaymentEvents(
+  chainId: number,
   queryClient: QueryClient,
   paymentId?: `0x${string}`
 ) {
   return watchContractEvent(wagmiConfig, {
-    address: CONTRACT_ADDRESSES.arcTestnet.paymentProcessor,
+    address: getPaymentProcessorAddress(chainId),
     abi: paymentProcessorAbi,
 
     onLogs(logs) {

@@ -12,6 +12,8 @@ import { useAccount } from "wagmi";
 import {
     useMerchantPayments,
     usePayments,
+    useWalletNetwork,
+    watchPaymentEvents,
 } from "@elpay/blockchain";
 
 import {
@@ -22,9 +24,7 @@ import {
     useQueryClient,
 } from "@tanstack/react-query";
 
-import {
-    watchPaymentEvents,
-} from "@elpay/blockchain";
+
 
 export function PaymentHistoryPage() {
   /**
@@ -45,6 +45,8 @@ export function PaymentHistoryPage() {
    */
 
 const { address } = useAccount();
+
+const { chainId } = useWalletNetwork();
 
 const {
     data: paymentIds,
@@ -82,12 +84,13 @@ const isLoading =
 useEffect(() => {
     if (!address) return;
 
-  const unwatch = watchPaymentEvents(
+ const unwatch = watchPaymentEvents(
+    chainId,
     queryClient
 );
 
     return () => unwatch();
-}, [address, queryClient]);
+}, [address, chainId, queryClient]);
 
 
 

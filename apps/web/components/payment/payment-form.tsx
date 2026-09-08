@@ -2,19 +2,32 @@
 
 import { useMerchant } from "@elpay/blockchain";
 import { PaymentSuccess } from "./PaymentSuccess";
-import { publicClient } from "@elpay/blockchain";
 import { getPaymentCreatedId } from "@elpay/blockchain";
 import { useSendPayment } from "@elpay/blockchain";
 
 import { parseUnits, isAddress } from "viem";
-import { useAccount } from "wagmi";
 import { useState } from "react";
+
+import {
+  useAccount,
+  useChainId,
+} from "wagmi";
+
+import {
+  getPublicClient,
+} from "@elpay/blockchain";
 
 
 
 
 export function PaymentForm() {
   const { address, isConnected } = useAccount();
+
+  const chainId = useChainId();
+
+const publicClient =
+getPublicClient(chainId);
+
   const {
   data: merchantActive,
   isLoading: merchantLoading,

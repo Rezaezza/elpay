@@ -5,7 +5,13 @@ import { merchantRegistryAbi } from "../abi";
 import { CONTRACT_ADDRESSES } from "../addresses";
 import { wagmiConfig } from "../wagmi";
 
-const address = CONTRACT_ADDRESSES.arcTestnet.merchantRegistry;
+import {
+  getMerchantRegistryAddress,
+} from "../resolver/contracts";
+
+import {
+  getActiveChainId,
+} from "../chains";
 
 /* -------------------------------------------------------------------------- */
 /*                               WRITE FUNCTIONS                              */
@@ -16,7 +22,10 @@ export async function registerMerchant(
   metadataURI: string
 ): Promise<Hash> {
   return writeContract(wagmiConfig, {
-    address,
+    address:
+getMerchantRegistryAddress(
+    getActiveChainId()
+),
     abi: merchantRegistryAbi,
     functionName: "registerMerchant",
     args: [name, metadataURI],
@@ -28,7 +37,10 @@ export async function updateMerchant(
   metadataURI: string
 ): Promise<Hash> {
   return writeContract(wagmiConfig, {
-    address,
+    address:
+getMerchantRegistryAddress(
+    getActiveChainId()
+),
     abi: merchantRegistryAbi,
     functionName: "updateMerchant",
     args: [name, metadataURI],
@@ -37,7 +49,10 @@ export async function updateMerchant(
 
 export async function pauseMerchant(): Promise<Hash> {
   return writeContract(wagmiConfig, {
-    address,
+    address:
+getMerchantRegistryAddress(
+    getActiveChainId()
+),
     abi: merchantRegistryAbi,
     functionName: "pauseMerchant",
   });
@@ -45,7 +60,10 @@ export async function pauseMerchant(): Promise<Hash> {
 
 export async function activateMerchant(): Promise<Hash> {
   return writeContract(wagmiConfig, {
-    address,
+    address:
+getMerchantRegistryAddress(
+    getActiveChainId()
+),
     abi: merchantRegistryAbi,
     functionName: "activateMerchant",
   });
@@ -55,7 +73,9 @@ export async function disableMerchant(
   merchant: Address
 ): Promise<Hash> {
   return writeContract(wagmiConfig, {
-    address,
+    address: getMerchantRegistryAddress(
+      getActiveChainId()
+    ),
     abi: merchantRegistryAbi,
     functionName: "disableMerchant",
     args: [merchant],
@@ -70,7 +90,9 @@ export async function getMerchant(
   merchant: Address
 ) {
   return readContract(wagmiConfig, {
-    address,
+    address: getMerchantRegistryAddress(
+      getActiveChainId()
+    ),
     abi: merchantRegistryAbi,
     functionName: "getMerchant",
     args: [merchant],
@@ -81,7 +103,9 @@ export async function isActive(
   merchant: Address
 ) {
   return readContract(wagmiConfig, {
-    address,
+    address: getMerchantRegistryAddress(
+      getActiveChainId()
+    ),
     abi: merchantRegistryAbi,
     functionName: "isActive",
     args: [merchant],

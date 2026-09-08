@@ -9,11 +9,12 @@ import {
 } from "../abi";
 
 import {
-  CONTRACT_ADDRESSES,
-} from "../addresses";
+  getFactoryAddress,
+} from "../resolver/contracts";
 
-const address =
-  CONTRACT_ADDRESSES.arcTestnet.factory;
+import {
+  getActiveChainId,
+} from "../chains";
 
 /* -------------------------------------------------------------------------- */
 /*                               View Functions                               */
@@ -21,7 +22,9 @@ const address =
 
 export async function version() {
   return readContract(wagmiConfig, {
-    address,
+    address: getFactoryAddress(
+  getActiveChainId()
+),
     abi: elPayFactoryAbi,
     functionName: "version",
   });
@@ -29,7 +32,9 @@ export async function version() {
 
 export async function registryAddress() {
   return readContract(wagmiConfig, {
-    address,
+    address: getFactoryAddress(
+  getActiveChainId()
+),
     abi: elPayFactoryAbi,
     functionName: "registryAddress",
   });
@@ -37,7 +42,9 @@ export async function registryAddress() {
 
 export async function processorAddress() {
   return readContract(wagmiConfig, {
-    address,
+    address: getFactoryAddress(
+  getActiveChainId()
+),
     abi: elPayFactoryAbi,
     functionName: "processorAddress",
   });
@@ -45,7 +52,9 @@ export async function processorAddress() {
 
 export async function escrowAddress() {
   return readContract(wagmiConfig, {
-    address,
+    address: getFactoryAddress(
+  getActiveChainId()
+),
     abi: elPayFactoryAbi,
     functionName: "escrowAddress",
   });

@@ -5,7 +5,13 @@ import { paymentProcessorAbi } from "../abi";
 import { CONTRACT_ADDRESSES } from "../addresses";
 import { wagmiConfig } from "../wagmi";
 
-const address = CONTRACT_ADDRESSES.arcTestnet.paymentProcessor;
+import {
+  getPaymentProcessorAddress,
+} from "../resolver/contracts";
+
+import {
+  getActiveChainId,
+} from "../chains";
 
 /* -------------------------------------------------------------------------- */
 /*                                   WRITE                                    */
@@ -19,7 +25,9 @@ export async function createPayment(
   expiresAt: bigint
 ): Promise<Hash> {
   return writeContract(wagmiConfig, {
-    address,
+    address: getPaymentProcessorAddress(
+      getActiveChainId()
+    ),
     abi: paymentProcessorAbi,
     functionName: "createPayment",
     args: [payer, token, amount, description, expiresAt,],
@@ -30,7 +38,9 @@ export async function approvePayment(
   paymentId: `0x${string}`
 ): Promise<Hash> {
   return writeContract(wagmiConfig, {
-    address,
+    address: getPaymentProcessorAddress(
+      getActiveChainId()
+    ),
     abi: paymentProcessorAbi,
     functionName: "approvePayment",
     args: [paymentId],
@@ -41,7 +51,9 @@ export async function cancelPayment(
   paymentId: `0x${string}`
 ): Promise<Hash> {
   return writeContract(wagmiConfig, {
-    address,
+    address: getPaymentProcessorAddress(
+      getActiveChainId()
+    ),
     abi: paymentProcessorAbi,
     functionName: "cancelPayment",
     args: [paymentId],
@@ -52,7 +64,9 @@ export async function executePayment(
   paymentId: `0x${string}`
 ): Promise<Hash> {
   return writeContract(wagmiConfig, {
-    address,
+    address: getPaymentProcessorAddress(
+      getActiveChainId()
+    ),
     abi: paymentProcessorAbi,
     functionName: "executePayment",
     args: [paymentId],
@@ -63,7 +77,9 @@ export async function refundPayment(
   paymentId: `0x${string}`
 ): Promise<Hash> {
   return writeContract(wagmiConfig, {
-    address,
+    address: getPaymentProcessorAddress(
+      getActiveChainId()
+    ),
     abi: paymentProcessorAbi,
     functionName: "refundPayment",
     args: [paymentId],
@@ -74,7 +90,9 @@ export async function releaseEscrow(
   paymentId: `0x${string}`
 ): Promise<Hash> {
   return writeContract(wagmiConfig, {
-    address,
+    address: getPaymentProcessorAddress(
+      getActiveChainId()
+    ),
     abi: paymentProcessorAbi,
     functionName: "releaseEscrow",
     args: [paymentId],
@@ -89,7 +107,9 @@ export async function getPayment(
   paymentId: `0x${string}`
 ) {
   const payment = await readContract(wagmiConfig, {
-    address,
+    address: getPaymentProcessorAddress(
+      getActiveChainId()
+    ),
     abi: paymentProcessorAbi,
     functionName: "getPayment",
     args: [paymentId],
@@ -103,7 +123,9 @@ export async function paymentExists(
   paymentId: `0x${string}`
 ) {
   return readContract(wagmiConfig, {
-    address,
+    address: getPaymentProcessorAddress(
+      getActiveChainId()
+    ),
     abi: paymentProcessorAbi,
     functionName: "paymentExistsView",
     args: [paymentId],
@@ -114,7 +136,9 @@ export async function getMerchantPayments(
   merchant: Address
 ) {
   return readContract(wagmiConfig, {
-    address,
+    address: getPaymentProcessorAddress(
+      getActiveChainId()
+    ),
     abi: paymentProcessorAbi,
     functionName: "getMerchantPayments",
     args: [merchant],
@@ -125,7 +149,9 @@ export async function getPayerPayments(
   payer: Address
 ) {
   return readContract(wagmiConfig, {
-    address,
+    address: getPaymentProcessorAddress(
+      getActiveChainId()
+    ),
     abi: paymentProcessorAbi,
     functionName: "getPayerPayments",
     args: [payer],

@@ -25,7 +25,10 @@ import {
     useQueryClient,
 } from "@tanstack/react-query";
 
-import { useAccount } from "wagmi";
+import {
+  useAccount,
+  useChainId,
+} from "wagmi";
 import { Button } from "@/components/ui/button";
 
 import { formatUnits } from "viem";
@@ -50,9 +53,12 @@ export function PaymentDetail({
 
    const { address } = useAccount();
 
+   const chainId = useChainId();
+
     useEffect(() => {
       
  const unwatch = watchPaymentEvents(
+    chainId,
     queryClient,
     paymentId
 );
@@ -61,6 +67,7 @@ export function PaymentDetail({
         unwatch();
     };
 }, [
+   chainId,
     paymentId,
     queryClient,
 ]);

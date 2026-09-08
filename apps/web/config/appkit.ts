@@ -1,7 +1,10 @@
 import { WagmiAdapter } from "@reown/appkit-adapter-wagmi";
-import { mainnet, baseSepolia } from "@reown/appkit/networks";
 
-import { arcTestnet } from "./chains";
+import {
+  arcTestnet,
+  baseSepolia,
+  baseMainnet,
+} from "@elpay/blockchain";
 
 export const projectId =
   process.env.NEXT_PUBLIC_PROJECT_ID!;
@@ -16,18 +19,18 @@ if (!projectId) {
 const adapterNetworks = [
   arcTestnet,
   baseSepolia,
-  mainnet,
+  baseMainnet,
 ];
 
 // Tuple untuk createAppKit
 export const networks = [
   arcTestnet,
   baseSepolia,
-  mainnet,
+  baseMainnet,
 ] as [
   typeof arcTestnet,
   typeof baseSepolia,
-  typeof mainnet,
+  typeof baseMainnet,
 ];
 
 export const wagmiAdapter =

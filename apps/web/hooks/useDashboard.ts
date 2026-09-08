@@ -1,6 +1,9 @@
 "use client";
 
-import { useAccount } from "wagmi";
+import {
+  useAccount,
+  useChainId,
+} from "wagmi";
 import { useQuery } from "@tanstack/react-query";
 
 import {
@@ -10,8 +13,10 @@ import {
 export function useDashboard() {
   const { address } = useAccount();
 
+  const chainId = useChainId();
+
   return useQuery({
-    queryKey: ["dashboard", address],
+    queryKey: ["dashboard", address, chainId],
     enabled: !!address,
 
     queryFn: async () => {
@@ -19,7 +24,10 @@ export function useDashboard() {
         throw new Error("Wallet not connected");
       }
 
-      return getDashboardData(address);
+      return getDashboardData(
+  chainId,
+  address
+);
     },
 
     staleTime: 30_000,

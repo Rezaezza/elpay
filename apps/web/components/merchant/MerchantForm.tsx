@@ -2,7 +2,10 @@
 
 import { useState } from "react";
 import { useAccount } from "wagmi";
-import { publicClient } from "@elpay/blockchain";
+import {
+  getPublicClient,
+  useWalletNetwork,
+} from "@elpay/blockchain";
 
 import {
   useMerchant,
@@ -17,6 +20,10 @@ import { MerchantSuccess } from "./MerchantSuccess";
 
 export function MerchantForm() {
   const { address, isConnected } = useAccount();
+
+  const { chainId } = useWalletNetwork();
+
+const publicClient = getPublicClient(chainId);
 
   const {
     data: merchantActive,
