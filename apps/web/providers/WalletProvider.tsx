@@ -1,11 +1,9 @@
 "use client";
 
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-
-import { WagmiProvider } from "wagmi";
-
+import { WagmiProvider, useChainId } from "wagmi";
 import { createAppKit } from "@reown/appkit/react";
 
 import {
@@ -14,6 +12,8 @@ import {
   projectId,
   networks,
 } from "@/config/appkit";
+
+import { setActiveChainId } from "@elpay/blockchain";
 
 const queryClient = new QueryClient();
 
@@ -34,14 +34,21 @@ interface Props {
   children: ReactNode;
 }
 
-export function WalletProvider({
-  children,
-}: Props) {
-  console.log("wagmiConfig =", wagmiConfig);
+function ChainSync() {
+  const chainId = useChainId();
 
+  useEffect(() => {
+    setActiveChainId(chainId);
+  }, [chainId]);
+
+  return null;
+}
+
+export function WalletProvider({ children }: Props) {
   return (
     <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
+        <ChainSync />
         {children}
       </QueryClientProvider>
     </WagmiProvider>

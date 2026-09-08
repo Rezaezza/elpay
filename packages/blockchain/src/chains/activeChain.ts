@@ -1,11 +1,9 @@
-import { wagmiConfig } from "../wagmi";
+let activeChainId = 5042002;
 
-export function getActiveChainId(): number {
-  const chainId = wagmiConfig.state.chainId;
+export function setActiveChainId(chainId: number) {
+  activeChainId = chainId;
+}
 
-  if (!chainId) {
-    throw new Error("No active chain found.");
-  }
-
-  return chainId;
+export function getActiveChainId() {
+  return activeChainId;
 }
