@@ -1,12 +1,18 @@
-import type { Address, Hash } from "viem";
+import type {
+  Address,
+  Hash,
+} from "viem";
+
+import type { Config } from "wagmi";
 
 import {
   writeContract,
   waitForTransactionReceipt,
 } from "@wagmi/core";
 
-import { wagmiConfig } from "../wagmi";
-import { getPaymentProcessorAddress } from "../resolver/contracts";
+import {
+  getPaymentProcessorAddress,
+} from "../resolver/contracts";
 
 const erc20Abi = [
   {
@@ -32,24 +38,28 @@ const erc20Abi = [
 ] as const;
 
 export async function approveToken(
+  config: Config,
+  chainId: number,
   token: Address,
   amount: bigint,
-  spender?: Address
+  spender?: Address,
 ): Promise<Hash> {
- const paymentProcessor =
-  spender ??
-  getPaymentProcessorAddress(
-    wagmiConfig.state.chainId
-  );
 
-  const hash = await writeContract(wagmiConfig, {
+  const paymentProcessor =
+    spender ??
+    getPaymentProcessorAddress(chainId);
+
+  const hash = await writeContract(config, {
     address: token,
     abi: erc20Abi,
     functionName: "approve",
-    args: [paymentProcessor, amount],
+    args: [
+      paymentProcessor,
+      amount,
+    ],
   });
 
-  await waitForTransactionReceipt(wagmiConfig, {
+  await waitForTransactionReceipt(config, {
     hash,
   });
 
@@ -57,13 +67,17 @@ export async function approveToken(
 }
 
 export async function approveMax(
+  config: Config,
+  chainId: number,
   token: Address,
-  spender?: Address
+  spender?: Address,
 ): Promise<Hash> {
   return approveToken(
+    config,
+    chainId,
     token,
     2n ** 256n - 1n,
-    spender
+    spender,
   );
 }
 

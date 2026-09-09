@@ -4,35 +4,52 @@ import {
 } from "@tanstack/react-query";
 
 import {
-  waitForTransactionReceipt,
-} from "wagmi/actions";
+  useConfig,
+  useChainId,
+} from "wagmi";
 
 import {
-  wagmiConfig,
-} from "../wagmi";
+  waitForTransactionReceipt,
+} from "wagmi/actions";
 
 import {
   releaseEscrowService,
 } from "../services";
 
 export function useReleasePayment() {
+  const config = useConfig();
+  const chainId = useChainId();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: releaseEscrowService,
+    mutationFn: (
+      paymentId: `0x${string}`
+    ) =>
+      releaseEscrowService(
+        config,
+        chainId,
+        paymentId,
+      ),
 
     async onSuccess(hash, paymentId) {
       await waitForTransactionReceipt(
-        wagmiConfig,
-        { hash }
+        config,
+        { hash },
       );
 
       await queryClient.invalidateQueries({
-        queryKey: ["payment", paymentId],
+        queryKey: [
+          "payment",
+          chainId,
+          paymentId,
+        ],
       });
 
       await queryClient.invalidateQueries({
-        queryKey: ["merchant-payments"],
+        queryKey: [
+          "merchant-payments",
+          chainId,
+        ],
       });
     },
   });

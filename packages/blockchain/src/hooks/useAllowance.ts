@@ -1,17 +1,35 @@
 import { useQuery } from "@tanstack/react-query";
+import { useConfig, useChainId } from "wagmi";
+import type { Address } from "viem";
 
 import { getAllowance } from "../services";
 
 export function useAllowance(
-  owner?: `0x${string}`,
-  spender?: `0x${string}`,
+  token?: Address,
+  owner?: Address,
+  spender?: Address,
 ) {
-  return useQuery({
-    queryKey: ["allowance", owner, spender],
+  const config = useConfig();
+  const chainId = useChainId();
 
-    enabled: !!owner && !!spender,
+  return useQuery({
+    queryKey: [
+      "allowance",
+      chainId,
+      token,
+      owner,
+      spender,
+    ],
+
+    enabled: !!token && !!owner,
 
     queryFn: () =>
-      getAllowance(owner!, spender!),
+      getAllowance(
+        config,
+        chainId,
+        token!,
+        owner!,
+        spender,
+      ),
   });
 }

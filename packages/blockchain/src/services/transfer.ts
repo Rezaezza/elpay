@@ -1,11 +1,14 @@
-import type { Address } from "viem";
+import type {
+  Address,
+  Hash,
+} from "viem";
 
 import {
   writeContract,
   waitForTransactionReceipt,
 } from "@wagmi/core";
 
-import { wagmiConfig } from "../wagmi";
+import type { Config } from "wagmi";
 
 const erc20Abi = [
   {
@@ -31,44 +34,54 @@ const erc20Abi = [
 ] as const;
 
 export async function transferToken(
+  config: Config,
   token: Address,
   to: Address,
   amount: bigint
-) {
-  const hash = await writeContract(wagmiConfig, {
+): Promise<Hash> {
+
+  const hash = await writeContract(config, {
     address: token,
     abi: erc20Abi,
     functionName: "transfer",
     args: [to, amount],
   });
 
-  return waitForTransactionReceipt(wagmiConfig, {
+  await waitForTransactionReceipt(config, {
     hash,
   });
+
+  return hash;
 }
 
 export const transfer = transferToken;
 
 export async function batchTransfer(
+  config: Config,
   token: Address,
   recipients: Address[],
   amounts: bigint[]
-) {
+): Promise<Hash[]> {
+
   if (recipients.length !== amounts.length) {
-    throw new Error("Recipients and amounts length mismatch");
-  }
-
-  const receipts = [];
-
-  for (let i = 0; i < recipients.length; i++) {
-    receipts.push(
-      await transferToken(
-        token,
-        recipients[i],
-        amounts[i]
-      )
+    throw new Error(
+      "Recipients and amounts length mismatch"
     );
   }
 
-  return receipts;
+  const hashes: Hash[] = [];
+
+  for (let i = 0; i < recipients.length; i++) {
+
+    const hash = await transferToken(
+      config,
+      token,
+      recipients[i],
+      amounts[i]
+    );
+
+    hashes.push(hash);
+  }
+
+  return hashes;
 }

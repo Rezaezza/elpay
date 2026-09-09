@@ -1,8 +1,13 @@
-import type { Address, Hash } from "viem";
+import type {
+  Address,
+  Hash,
+} from "viem";
 
-import { waitForTransactionReceipt } from "wagmi/actions";
+import type { Config } from "wagmi";
 
-import { wagmiConfig } from "../wagmi";
+import {
+  waitForTransactionReceipt,
+} from "wagmi/actions";
 
 import {
   registerMerchant,
@@ -19,72 +24,91 @@ import {
 //////////////////////////////////////////////////////////////
 
 export async function registerMerchantService(
+  config: Config,
+  chainId: number,
   name: string,
-  metadataURI: string
+  metadataURI: string,
 ): Promise<Hash> {
   const hash = await registerMerchant(
+    config,
+    chainId,
     name,
-    metadataURI
+    metadataURI,
   );
 
-  await waitForTransactionReceipt(
-    wagmiConfig,
-    { hash }
-  );
+  await waitForTransactionReceipt(config, {
+    hash,
+  });
 
   return hash;
 }
 
 export async function updateMerchantService(
+  config: Config,
+  chainId: number,
   name: string,
-  metadataURI: string
+  metadataURI: string,
 ): Promise<Hash> {
   const hash = await updateMerchant(
+    config,
+    chainId,
     name,
-    metadataURI
+    metadataURI,
   );
 
-  await waitForTransactionReceipt(
-    wagmiConfig,
-    { hash }
-  );
+  await waitForTransactionReceipt(config, {
+    hash,
+  });
 
   return hash;
 }
 
-export async function pauseMerchantService(): Promise<Hash> {
-  const hash = await pauseMerchant();
-
-  await waitForTransactionReceipt(
-    wagmiConfig,
-    { hash }
+export async function pauseMerchantService(
+  config: Config,
+  chainId: number,
+): Promise<Hash> {
+  const hash = await pauseMerchant(
+    config,
+    chainId,
   );
+
+  await waitForTransactionReceipt(config, {
+    hash,
+  });
 
   return hash;
 }
 
-export async function activateMerchantService(): Promise<Hash> {
-  const hash = await activateMerchant();
-
-  await waitForTransactionReceipt(
-    wagmiConfig,
-    { hash }
+export async function activateMerchantService(
+  config: Config,
+  chainId: number,
+): Promise<Hash> {
+  const hash = await activateMerchant(
+    config,
+    chainId,
   );
+
+  await waitForTransactionReceipt(config, {
+    hash,
+  });
 
   return hash;
 }
 
 export async function disableMerchantService(
-  merchant: Address
+  config: Config,
+  chainId: number,
+  merchant: Address,
 ): Promise<Hash> {
   const hash = await disableMerchant(
-    merchant
+    config,
+    chainId,
+    merchant,
   );
 
-  await waitForTransactionReceipt(
-    wagmiConfig,
-    { hash }
-  );
+  await waitForTransactionReceipt(config, {
+    hash,
+  });
 
   return hash;
 }
@@ -94,15 +118,27 @@ export async function disableMerchantService(
 //////////////////////////////////////////////////////////////
 
 export async function getMerchantService(
-  merchant: Address
+  config: Config,
+  chainId: number,
+  merchant: Address,
 ) {
-  return getMerchant(merchant);
+  return getMerchant(
+    config,
+    chainId,
+    merchant,
+  );
 }
 
 export async function isMerchantActiveService(
-  merchant: Address
+  config: Config,
+  chainId: number,
+  merchant: Address,
 ) {
-  return isActive(merchant);
+  return isActive(
+    config,
+    chainId,
+    merchant,
+  );
 }
 
 //////////////////////////////////////////////////////////////

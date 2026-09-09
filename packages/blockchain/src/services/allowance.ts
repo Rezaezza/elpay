@@ -1,10 +1,14 @@
-import type { Address } from "viem";
+import type {
+  Address,
+} from "viem";
+
+import type { Config } from "wagmi";
+
 import { readContract } from "@wagmi/core";
 
-import { wagmiConfig } from "../wagmi";
-import { getPaymentProcessorAddress } from "../resolver/contracts";
-
-import { getActiveChainId } from "../chains/activeChain";
+import {
+  getPaymentProcessorAddress,
+} from "../resolver/contracts";
 
 const erc20Abi = [
   {
@@ -30,36 +34,47 @@ const erc20Abi = [
 ] as const;
 
 export async function getAllowance(
+  config: Config,
+  chainId: number,
   token: Address,
   owner: Address,
-  spender?: Address
+  spender?: Address,
 ): Promise<bigint> {
 
   const paymentProcessor =
-  spender ??
-  getPaymentProcessorAddress(getActiveChainId());
+    spender ??
+    getPaymentProcessorAddress(chainId);
 
-  return readContract(wagmiConfig, {
+  return readContract(config, {
     address: token,
     abi: erc20Abi,
     functionName: "allowance",
-    args: [owner, paymentProcessor],
+    args: [
+      owner,
+      paymentProcessor,
+    ],
   });
 }
 
 export const allowanceOf = getAllowance;
 
 export async function hasEnoughAllowance(
+  config: Config,
+  chainId: number,
   token: Address,
   owner: Address,
   amount: bigint,
-  spender?: Address
+  spender?: Address,
 ): Promise<boolean> {
-  const allowance = await getAllowance(
-    token,
-    owner,
-    spender
-  );
+
+  const allowance =
+    await getAllowance(
+      config,
+      chainId,
+      token,
+      owner,
+      spender,
+    );
 
   return allowance >= amount;
 }

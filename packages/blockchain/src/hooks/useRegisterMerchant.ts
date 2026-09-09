@@ -1,7 +1,20 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { registerMerchantService } from "../services";
+import {
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
+
+import {
+  useConfig,
+  useChainId,
+} from "wagmi";
+
+import {
+  registerMerchantService,
+} from "../services";
 
 export function useRegisterMerchant() {
+  const config = useConfig();
+  const chainId = useChainId();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -13,21 +26,32 @@ export function useRegisterMerchant() {
       metadataURI: string;
     }) =>
       registerMerchantService(
+        config,
+        chainId,
         name,
-        metadataURI
+        metadataURI,
       ),
 
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        queryKey: ["merchant"],
+        queryKey: [
+          "merchant",
+          chainId,
+        ],
       });
 
       await queryClient.invalidateQueries({
-        queryKey: ["merchant-info"],
+        queryKey: [
+          "merchant-info",
+          chainId,
+        ],
       });
 
       await queryClient.invalidateQueries({
-        queryKey: ["dashboard"],
+        queryKey: [
+          "dashboard",
+          chainId,
+        ],
       });
     },
   });

@@ -1,21 +1,34 @@
 import { useQuery } from "@tanstack/react-query";
+import { useConfig, useChainId } from "wagmi";
+
 import type { Address } from "viem";
-import { getMerchantPayments } from "../services/payment";
+
+import {
+  getMerchantPayments,
+} from "../services/payment";
 
 export function useMerchantPayments(
-    merchant?: Address
-){
-    return useQuery({
-        queryKey:[
-            "merchant-payments",
-            merchant
-        ],
+  merchant?: Address,
+) {
+  const config = useConfig();
+  const chainId = useChainId();
 
-        enabled:!!merchant,
+  return useQuery({
+    queryKey: [
+      "merchant-payments",
+      chainId,
+      merchant,
+    ],
 
-        queryFn:()=>
-            getMerchantPayments(
-                merchant!
-            )
-    });
+    enabled:
+      !!merchant &&
+      !!chainId,
+
+    queryFn: () =>
+      getMerchantPayments(
+        config,
+        chainId,
+        merchant!,
+      ),
+  });
 }

@@ -1,31 +1,33 @@
-import type { Address, Hash } from "viem";
-import { readContract, writeContract } from "wagmi/actions";
+import type {
+  Address,
+  Hash,
+} from "viem";
+
+import type { Config } from "wagmi";
+
+import {
+  readContract,
+  writeContract,
+} from "wagmi/actions";
 
 import { merchantRegistryAbi } from "../abi";
-import { CONTRACT_ADDRESSES } from "../addresses";
-import { wagmiConfig } from "../wagmi";
 
 import {
   getMerchantRegistryAddress,
 } from "../resolver/contracts";
-
-import {
-  getActiveChainId,
-} from "../chains";
 
 /* -------------------------------------------------------------------------- */
 /*                               WRITE FUNCTIONS                              */
 /* -------------------------------------------------------------------------- */
 
 export async function registerMerchant(
+  config: Config,
+  chainId: number,
   name: string,
-  metadataURI: string
+  metadataURI: string,
 ): Promise<Hash> {
-  return writeContract(wagmiConfig, {
-    address:
-getMerchantRegistryAddress(
-    getActiveChainId()
-),
+  return writeContract(config, {
+    address: getMerchantRegistryAddress(chainId),
     abi: merchantRegistryAbi,
     functionName: "registerMerchant",
     args: [name, metadataURI],
@@ -33,49 +35,48 @@ getMerchantRegistryAddress(
 }
 
 export async function updateMerchant(
+  config: Config,
+  chainId: number,
   name: string,
-  metadataURI: string
+  metadataURI: string,
 ): Promise<Hash> {
-  return writeContract(wagmiConfig, {
-    address:
-getMerchantRegistryAddress(
-    getActiveChainId()
-),
+  return writeContract(config, {
+    address: getMerchantRegistryAddress(chainId),
     abi: merchantRegistryAbi,
     functionName: "updateMerchant",
     args: [name, metadataURI],
   });
 }
 
-export async function pauseMerchant(): Promise<Hash> {
-  return writeContract(wagmiConfig, {
-    address:
-getMerchantRegistryAddress(
-    getActiveChainId()
-),
+export async function pauseMerchant(
+  config: Config,
+  chainId: number,
+): Promise<Hash> {
+  return writeContract(config, {
+    address: getMerchantRegistryAddress(chainId),
     abi: merchantRegistryAbi,
     functionName: "pauseMerchant",
   });
 }
 
-export async function activateMerchant(): Promise<Hash> {
-  return writeContract(wagmiConfig, {
-    address:
-getMerchantRegistryAddress(
-    getActiveChainId()
-),
+export async function activateMerchant(
+  config: Config,
+  chainId: number,
+): Promise<Hash> {
+  return writeContract(config, {
+    address: getMerchantRegistryAddress(chainId),
     abi: merchantRegistryAbi,
     functionName: "activateMerchant",
   });
 }
 
 export async function disableMerchant(
-  merchant: Address
+  config: Config,
+  chainId: number,
+  merchant: Address,
 ): Promise<Hash> {
-  return writeContract(wagmiConfig, {
-    address: getMerchantRegistryAddress(
-      getActiveChainId()
-    ),
+  return writeContract(config, {
+    address: getMerchantRegistryAddress(chainId),
     abi: merchantRegistryAbi,
     functionName: "disableMerchant",
     args: [merchant],
@@ -87,12 +88,12 @@ export async function disableMerchant(
 /* -------------------------------------------------------------------------- */
 
 export async function getMerchant(
-  merchant: Address
+  config: Config,
+  chainId: number,
+  merchant: Address,
 ) {
-  return readContract(wagmiConfig, {
-    address: getMerchantRegistryAddress(
-      getActiveChainId()
-    ),
+  return readContract(config, {
+    address: getMerchantRegistryAddress(chainId),
     abi: merchantRegistryAbi,
     functionName: "getMerchant",
     args: [merchant],
@@ -100,12 +101,12 @@ export async function getMerchant(
 }
 
 export async function isActive(
-  merchant: Address
+  config: Config,
+  chainId: number,
+  merchant: Address,
 ) {
-  return readContract(wagmiConfig, {
-    address: getMerchantRegistryAddress(
-      getActiveChainId()
-    ),
+  return readContract(config, {
+    address: getMerchantRegistryAddress(chainId),
     abi: merchantRegistryAbi,
     functionName: "isActive",
     args: [merchant],

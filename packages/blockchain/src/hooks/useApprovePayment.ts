@@ -4,12 +4,13 @@ import {
 } from "@tanstack/react-query";
 
 import {
-  waitForTransactionReceipt,
-} from "wagmi/actions";
+  useConfig,
+  useChainId,
+} from "wagmi";
 
 import {
-  wagmiConfig,
-} from "../wagmi";
+  waitForTransactionReceipt,
+} from "wagmi/actions";
 
 import {
   approvePaymentService,
@@ -18,21 +19,44 @@ import {
 export function useApprovePayment() {
   const queryClient = useQueryClient();
 
+  const config = useConfig();
+  const chainId = useChainId();
+
   return useMutation({
-    mutationFn: approvePaymentService,
+    mutationFn: (
+      paymentId: `0x${string}`
+    ) =>
+      approvePaymentService(
+        config,
+        chainId,
+        paymentId
+      ),
 
     async onSuccess(hash, paymentId) {
       await waitForTransactionReceipt(
-        wagmiConfig,
+        config,
         { hash }
       );
 
       await queryClient.invalidateQueries({
-        queryKey: ["payment", paymentId],
+        queryKey: [
+          "payment",
+          paymentId,
+        ],
       });
 
       await queryClient.invalidateQueries({
-        queryKey: ["merchant-payments"],
+        queryKey: [
+          "merchant-payments",
+          chainId,
+        ],
+      });
+
+      await queryClient.invalidateQueries({
+        queryKey: [
+          "payer-payments",
+          chainId,
+        ],
       });
     },
   });

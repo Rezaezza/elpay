@@ -3,12 +3,12 @@ import type {
   Hash,
 } from "viem";
 
+import type { Config } from "wagmi";
+
 import {
   readContract,
   writeContract,
 } from "wagmi/actions";
-
-import { wagmiConfig } from "../wagmi";
 
 import { elPayEscrowAbi } from "../abi";
 
@@ -16,25 +16,21 @@ import {
   getEscrowAddress,
 } from "../resolver/contracts";
 
-import {
-  getActiveChainId,
-} from "../chains";
-
 /* -------------------------------------------------------------------------- */
-/*                                   WRITE                                    */
+/* WRITE */
 /* -------------------------------------------------------------------------- */
 
 export async function deposit(
+  config: Config,
+  chainId: number,
   paymentId: `0x${string}`,
   token: Address,
   payer: Address,
   merchant: Address,
-  amount: bigint
+  amount: bigint,
 ): Promise<Hash> {
-  return writeContract(wagmiConfig, {
-    address: getEscrowAddress(
-      getActiveChainId()
-    ),
+  return writeContract(config, {
+    address: getEscrowAddress(chainId),
     abi: elPayEscrowAbi,
     functionName: "deposit",
     args: [
@@ -48,12 +44,12 @@ export async function deposit(
 }
 
 export async function release(
-  paymentId: `0x${string}`
+  config: Config,
+  chainId: number,
+  paymentId: `0x${string}`,
 ): Promise<Hash> {
-  return writeContract(wagmiConfig, {
-    address: getEscrowAddress(
-      getActiveChainId()
-    ),
+  return writeContract(config, {
+    address: getEscrowAddress(chainId),
     abi: elPayEscrowAbi,
     functionName: "release",
     args: [paymentId],
@@ -61,12 +57,12 @@ export async function release(
 }
 
 export async function setPaymentProcessor(
-  processor: Address
+  config: Config,
+  chainId: number,
+  processor: Address,
 ): Promise<Hash> {
-  return writeContract(wagmiConfig, {
-    address: getEscrowAddress(
-      getActiveChainId()
-    ),
+  return writeContract(config, {
+    address: getEscrowAddress(chainId),
     abi: elPayEscrowAbi,
     functionName: "setPaymentProcessor",
     args: [processor],
@@ -74,16 +70,16 @@ export async function setPaymentProcessor(
 }
 
 /* -------------------------------------------------------------------------- */
-/*                                    READ                                    */
+/* READ */
 /* -------------------------------------------------------------------------- */
 
 export async function getEscrow(
-  paymentId: `0x${string}`
+  config: Config,
+  chainId: number,
+  paymentId: `0x${string}`,
 ) {
-  return readContract(wagmiConfig, {
-    address: getEscrowAddress(
-      getActiveChainId()
-    ),
+  return readContract(config, {
+    address: getEscrowAddress(chainId),
     abi: elPayEscrowAbi,
     functionName: "getEscrow",
     args: [paymentId],
@@ -91,12 +87,12 @@ export async function getEscrow(
 }
 
 export async function escrowExists(
-  paymentId: `0x${string}`
+  config: Config,
+  chainId: number,
+  paymentId: `0x${string}`,
 ) {
-  return readContract(wagmiConfig, {
-    address: getEscrowAddress(
-      getActiveChainId()
-    ),
+  return readContract(config, {
+    address: getEscrowAddress(chainId),
     abi: elPayEscrowAbi,
     functionName: "escrowExists",
     args: [paymentId],
@@ -104,12 +100,12 @@ export async function escrowExists(
 }
 
 export async function isReleased(
-  paymentId: `0x${string}`
+  config: Config,
+  chainId: number,
+  paymentId: `0x${string}`,
 ) {
-  return readContract(wagmiConfig, {
-    address: getEscrowAddress(
-      getActiveChainId()
-    ),
+  return readContract(config, {
+    address: getEscrowAddress(chainId),
     abi: elPayEscrowAbi,
     functionName: "isReleased",
     args: [paymentId],
@@ -117,31 +113,31 @@ export async function isReleased(
 }
 
 export async function canRelease(
-  paymentId: `0x${string}`
+  config: Config,
+  chainId: number,
+  paymentId: `0x${string}`,
 ) {
-  return readContract(wagmiConfig, {
-    address:
-getEscrowAddress(
-    getActiveChainId()
-),
+  return readContract(config, {
+    address: getEscrowAddress(chainId),
     abi: elPayEscrowAbi,
     functionName: "canRelease",
     args: [paymentId],
   });
 }
 
-export async function paymentProcessor() {
-  return readContract(wagmiConfig, {
-    address: getEscrowAddress(
-      getActiveChainId()
-    ),
+export async function paymentProcessor(
+  config: Config,
+  chainId: number,
+) {
+  return readContract(config, {
+    address: getEscrowAddress(chainId),
     abi: elPayEscrowAbi,
     functionName: "paymentProcessor",
   });
 }
 
 /* -------------------------------------------------------------------------- */
-/*                                   EXPORT                                   */
+/* EXPORT */
 /* -------------------------------------------------------------------------- */
 
 export const escrow = {

@@ -3,36 +3,36 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 
-import {
-  waitForTransactionReceipt,
-} from "wagmi/actions";
-
-import {
-  wagmiConfig,
-} from "../wagmi";
+import type { Config } from "wagmi";
 
 import {
   executePaymentService,
 } from "../services";
 
-export function useExecutePayment() {
+export function useExecutePayment(
+  config: Config,
+  chainId: number,
+) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: executePaymentService,
+    mutationFn: (paymentId: `0x${string}`) =>
+      executePaymentService(
+        config,
+        chainId,
+        paymentId,
+      ),
 
-    async onSuccess(hash, paymentId) {
-      await waitForTransactionReceipt(
-        wagmiConfig,
-        { hash }
-      );
-
+    async onSuccess(_, paymentId) {
       await queryClient.invalidateQueries({
-        queryKey: ["payment", paymentId],
+        queryKey: ["payment", chainId, paymentId],
       });
 
       await queryClient.invalidateQueries({
-        queryKey: ["merchant-payments"],
+        queryKey: [
+          "merchant-payments",
+          chainId,
+        ],
       });
     },
   });

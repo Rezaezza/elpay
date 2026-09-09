@@ -1,7 +1,15 @@
-import type { Address, Hash } from "viem";
-import { readContract, writeContract } from "wagmi/actions";
+import type {
+  Address,
+  Hash,
+} from "viem";
 
-import { wagmiConfig } from "../wagmi";
+import type { Config } from "wagmi";
+
+import {
+  readContract,
+  writeContract,
+} from "wagmi/actions";
+
 import { erc20Abi } from "../abi";
 
 /* -------------------------------------------------------------------------- */
@@ -9,10 +17,11 @@ import { erc20Abi } from "../abi";
 /* -------------------------------------------------------------------------- */
 
 export async function erc20BalanceOf(
+  config: Config,
   token: Address,
   account: Address,
 ) {
-  return readContract(wagmiConfig, {
+  return readContract(config, {
     address: token,
     abi: erc20Abi,
     functionName: "balanceOf",
@@ -21,11 +30,12 @@ export async function erc20BalanceOf(
 }
 
 export async function erc20Allowance(
+  config: Config,
   token: Address,
   owner: Address,
   spender: Address,
 ) {
-  return readContract(wagmiConfig, {
+  return readContract(config, {
     address: token,
     abi: erc20Abi,
     functionName: "allowance",
@@ -38,11 +48,12 @@ export async function erc20Allowance(
 /* -------------------------------------------------------------------------- */
 
 export async function erc20Approve(
+  config: Config,
   token: Address,
   spender: Address,
   amount: bigint,
 ): Promise<Hash> {
-  return writeContract(wagmiConfig, {
+  return writeContract(config, {
     address: token,
     abi: erc20Abi,
     functionName: "approve",
@@ -51,17 +62,22 @@ export async function erc20Approve(
 }
 
 export async function erc20Transfer(
+  config: Config,
   token: Address,
   to: Address,
   amount: bigint,
 ): Promise<Hash> {
-  return writeContract(wagmiConfig, {
+  return writeContract(config, {
     address: token,
     abi: erc20Abi,
     functionName: "transfer",
     args: [to, amount],
   });
 }
+
+/* -------------------------------------------------------------------------- */
+/* EXPORT */
+/* -------------------------------------------------------------------------- */
 
 export const erc20 = {
   balanceOf: erc20BalanceOf,

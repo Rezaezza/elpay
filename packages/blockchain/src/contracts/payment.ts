@@ -1,47 +1,55 @@
-import type { Address, Hash } from "viem";
-import { readContract, writeContract } from "wagmi/actions";
+import type {
+  Address,
+  Hash,
+} from "viem";
+
+import type { Config } from "wagmi";
+
+import {
+  readContract,
+  writeContract,
+} from "wagmi/actions";
 
 import { paymentProcessorAbi } from "../abi";
-import { wagmiConfig } from "../wagmi";
 
 import {
   getPaymentProcessorAddress,
 } from "../resolver/contracts";
 
-import {
-  getActiveChainId,
-} from "../chains";
-
-
-
 /* -------------------------------------------------------------------------- */
-/*                                   WRITE                                    */
+/* WRITE */
 /* -------------------------------------------------------------------------- */
 
 export async function createPayment(
+  config: Config,
+  chainId: number,
   payer: Address,
   token: Address,
   amount: bigint,
   description: string,
-  expiresAt: bigint
+  expiresAt: bigint,
 ): Promise<Hash> {
-  return writeContract(wagmiConfig, {
-    address: getPaymentProcessorAddress(
-  getActiveChainId()
-),
+  return writeContract(config, {
+    address: getPaymentProcessorAddress(chainId),
     abi: paymentProcessorAbi,
     functionName: "createPayment",
-    args: [payer, token, amount, description, expiresAt,],
+    args: [
+      payer,
+      token,
+      amount,
+      description,
+      expiresAt,
+    ],
   });
 }
 
 export async function approvePayment(
-  paymentId: `0x${string}`
+  config: Config,
+  chainId: number,
+  paymentId: Hash,
 ): Promise<Hash> {
-  return writeContract(wagmiConfig, {
-    address: getPaymentProcessorAddress(
-  getActiveChainId()
-),
+  return writeContract(config, {
+    address: getPaymentProcessorAddress(chainId),
     abi: paymentProcessorAbi,
     functionName: "approvePayment",
     args: [paymentId],
@@ -49,12 +57,12 @@ export async function approvePayment(
 }
 
 export async function cancelPayment(
-  paymentId: `0x${string}`
+  config: Config,
+  chainId: number,
+  paymentId: Hash,
 ): Promise<Hash> {
-  return writeContract(wagmiConfig, {
-    address: getPaymentProcessorAddress(
-  getActiveChainId()
-),
+  return writeContract(config, {
+    address: getPaymentProcessorAddress(chainId),
     abi: paymentProcessorAbi,
     functionName: "cancelPayment",
     args: [paymentId],
@@ -62,12 +70,12 @@ export async function cancelPayment(
 }
 
 export async function executePayment(
-  paymentId: `0x${string}`
+  config: Config,
+  chainId: number,
+  paymentId: Hash,
 ): Promise<Hash> {
-  return writeContract(wagmiConfig, {
-    address: getPaymentProcessorAddress(
-  getActiveChainId()
-),
+  return writeContract(config, {
+    address: getPaymentProcessorAddress(chainId),
     abi: paymentProcessorAbi,
     functionName: "executePayment",
     args: [paymentId],
@@ -75,12 +83,12 @@ export async function executePayment(
 }
 
 export async function refundPayment(
-  paymentId: `0x${string}`
+  config: Config,
+  chainId: number,
+  paymentId: Hash,
 ): Promise<Hash> {
-  return writeContract(wagmiConfig, {
-    address: getPaymentProcessorAddress(
-  getActiveChainId()
-),
+  return writeContract(config, {
+    address: getPaymentProcessorAddress(chainId),
     abi: paymentProcessorAbi,
     functionName: "refundPayment",
     args: [paymentId],
@@ -88,12 +96,12 @@ export async function refundPayment(
 }
 
 export async function releaseEscrow(
-  paymentId: `0x${string}`
+  config: Config,
+  chainId: number,
+  paymentId: Hash,
 ): Promise<Hash> {
-  return writeContract(wagmiConfig, {
-    address: getPaymentProcessorAddress(
-  getActiveChainId()
-),
+  return writeContract(config, {
+    address: getPaymentProcessorAddress(chainId),
     abi: paymentProcessorAbi,
     functionName: "releaseEscrow",
     args: [paymentId],
@@ -101,32 +109,29 @@ export async function releaseEscrow(
 }
 
 /* -------------------------------------------------------------------------- */
-/*                                    READ                                    */
+/* READ */
 /* -------------------------------------------------------------------------- */
 
 export async function getPayment(
-  paymentId: `0x${string}`
+  config: Config,
+  chainId: number,
+  paymentId: Hash,
 ) {
-  const payment = await readContract(wagmiConfig, {
-    address: getPaymentProcessorAddress(
-  getActiveChainId()
-),
+  return readContract(config, {
+    address: getPaymentProcessorAddress(chainId),
     abi: paymentProcessorAbi,
     functionName: "getPayment",
     args: [paymentId],
   });
-
- 
-  return payment;
 }
 
 export async function paymentExists(
-  paymentId: `0x${string}`
+  config: Config,
+  chainId: number,
+  paymentId: Hash,
 ) {
-  return readContract(wagmiConfig, {
-    address: getPaymentProcessorAddress(
-  getActiveChainId()
-),
+  return readContract(config, {
+    address: getPaymentProcessorAddress(chainId),
     abi: paymentProcessorAbi,
     functionName: "paymentExistsView",
     args: [paymentId],
@@ -134,12 +139,12 @@ export async function paymentExists(
 }
 
 export async function getMerchantPayments(
-  merchant: Address
+  config: Config,
+  chainId: number,
+  merchant: Address,
 ) {
-  return readContract(wagmiConfig, {
-    address: getPaymentProcessorAddress(
-  getActiveChainId()
-),
+  return readContract(config, {
+    address: getPaymentProcessorAddress(chainId),
     abi: paymentProcessorAbi,
     functionName: "getMerchantPayments",
     args: [merchant],
@@ -147,12 +152,12 @@ export async function getMerchantPayments(
 }
 
 export async function getPayerPayments(
-  payer: Address
+  config: Config,
+  chainId: number,
+  payer: Address,
 ) {
-  return readContract(wagmiConfig, {
-    address: getPaymentProcessorAddress(
-  getActiveChainId()
-),
+  return readContract(config, {
+    address: getPaymentProcessorAddress(chainId),
     abi: paymentProcessorAbi,
     functionName: "getPayerPayments",
     args: [payer],
@@ -160,7 +165,7 @@ export async function getPayerPayments(
 }
 
 /* -------------------------------------------------------------------------- */
-/*                                   EXPORT                                   */
+/* EXPORT */
 /* -------------------------------------------------------------------------- */
 
 export const payment = {
@@ -172,7 +177,6 @@ export const payment = {
   releaseEscrow,
   getPayment,
   paymentExists,
-
   getMerchantPayments,
   getPayerPayments,
 };

@@ -1,15 +1,33 @@
 import { useQuery } from "@tanstack/react-query";
-import { getPaymentService } from "../services";
+import { useConfig, useChainId } from "wagmi";
+
+import {
+  getPaymentService,
+} from "../services";
 
 export function usePayment(
   paymentId?: `0x${string}`
 ) {
+  const config = useConfig();
+  const chainId = useChainId();
+
   return useQuery({
-    queryKey: ["payment", paymentId],
+    queryKey: [
+      "payment",
+      chainId,
+      paymentId,
+    ],
 
-    queryFn: () => getPaymentService(paymentId!),
+    enabled:
+      !!paymentId &&
+      !!chainId,
 
-    enabled: !!paymentId,
+    queryFn: () =>
+      getPaymentService(
+        config,
+        chainId,
+        paymentId!,
+      ),
 
     refetchInterval: 3000,
 

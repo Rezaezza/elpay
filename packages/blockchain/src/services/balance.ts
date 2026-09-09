@@ -1,7 +1,10 @@
-import type { Address } from "viem";
-import { readContract } from "@wagmi/core";
+import type {
+  Address,
+} from "viem";
 
-import { wagmiConfig } from "../wagmi";
+import type { Config } from "wagmi";
+
+import { readContract } from "@wagmi/core";
 
 const erc20Abi = [
   {
@@ -23,10 +26,11 @@ const erc20Abi = [
 ] as const;
 
 export async function getTokenBalance(
+  config: Config,
   token: Address,
-  owner: Address
+  owner: Address,
 ): Promise<bigint> {
-  return await readContract(wagmiConfig, {
+  return readContract(config, {
     address: token,
     abi: erc20Abi,
     functionName: "balanceOf",
@@ -37,13 +41,15 @@ export async function getTokenBalance(
 export const balanceOf = getTokenBalance;
 
 export async function hasEnoughBalance(
+  config: Config,
   token: Address,
   owner: Address,
-  amount: bigint
+  amount: bigint,
 ): Promise<boolean> {
   const balance = await getTokenBalance(
+    config,
     token,
-    owner
+    owner,
   );
 
   return balance >= amount;

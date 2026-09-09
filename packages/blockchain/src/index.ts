@@ -12,4 +12,5 @@ export * from "./utils";
 export * from "./watchers";
 export * from "./dashboard";
 export * from "./resolver";
-export * from "./wagmi";
+
+export * from "./client";

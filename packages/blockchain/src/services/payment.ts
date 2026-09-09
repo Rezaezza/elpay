@@ -1,8 +1,13 @@
-import { Address, Hash } from "viem";
+import type {
+  Address,
+  Hash,
+} from "viem";
 
-import { waitForTransactionReceipt } from "wagmi/actions";
+import type { Config } from "wagmi";
 
-import { wagmiConfig } from "../wagmi";
+import {
+  waitForTransactionReceipt,
+} from "wagmi/actions";
 
 import {
   createPayment,
@@ -12,7 +17,6 @@ import {
   releaseEscrow,
   getPayment,
   cancelPayment,
-
   getMerchantPayments as getMerchantPaymentsContract,
   getPayerPayments as getPayerPaymentsContract,
 } from "../contracts/payment";
@@ -22,21 +26,26 @@ import {
 //////////////////////////////////////////////////////////////
 
 export async function createPaymentService(
+  config: Config,
+  chainId: number,
   payer: Address,
   token: Address,
   amount: bigint,
   description: string,
-  expiresAt: bigint
+  expiresAt: bigint,
 ): Promise<Hash> {
+
   const hash = await createPayment(
+    config,
+    chainId,
     payer,
     token,
     amount,
     description,
-    expiresAt
+    expiresAt,
   );
 
-  await waitForTransactionReceipt(wagmiConfig, {
+  await waitForTransactionReceipt(config, {
     hash,
   });
 
@@ -48,11 +57,18 @@ export async function createPaymentService(
 //////////////////////////////////////////////////////////////
 
 export async function approvePaymentService(
-  paymentId: Hash
+  config: Config,
+  chainId: number,
+  paymentId: Hash,
 ): Promise<Hash> {
-  const hash = await approvePayment(paymentId);
 
-  await waitForTransactionReceipt(wagmiConfig, {
+  const hash = await approvePayment(
+    config,
+    chainId,
+    paymentId,
+  );
+
+  await waitForTransactionReceipt(config, {
     hash,
   });
 
@@ -64,11 +80,18 @@ export async function approvePaymentService(
 //////////////////////////////////////////////////////////////
 
 export async function executePaymentService(
-  paymentId: Hash
+  config: Config,
+  chainId: number,
+  paymentId: Hash,
 ): Promise<Hash> {
-  const hash = await executePayment(paymentId);
 
-  await waitForTransactionReceipt(wagmiConfig, {
+  const hash = await executePayment(
+    config,
+    chainId,
+    paymentId,
+  );
+
+  await waitForTransactionReceipt(config, {
     hash,
   });
 
@@ -80,11 +103,18 @@ export async function executePaymentService(
 //////////////////////////////////////////////////////////////
 
 export async function refundPaymentService(
-  paymentId: Hash
+  config: Config,
+  chainId: number,
+  paymentId: Hash,
 ): Promise<Hash> {
-  const hash = await refundPayment(paymentId);
 
-  await waitForTransactionReceipt(wagmiConfig, {
+  const hash = await refundPayment(
+    config,
+    chainId,
+    paymentId,
+  );
+
+  await waitForTransactionReceipt(config, {
     hash,
   });
 
@@ -96,11 +126,18 @@ export async function refundPaymentService(
 //////////////////////////////////////////////////////////////
 
 export async function releaseEscrowService(
-  paymentId: Hash
+  config: Config,
+  chainId: number,
+  paymentId: Hash,
 ): Promise<Hash> {
-  const hash = await releaseEscrow(paymentId);
 
-  await waitForTransactionReceipt(wagmiConfig, {
+  const hash = await releaseEscrow(
+    config,
+    chainId,
+    paymentId,
+  );
+
+  await waitForTransactionReceipt(config, {
     hash,
   });
 
@@ -112,11 +149,18 @@ export async function releaseEscrowService(
 //////////////////////////////////////////////////////////////
 
 export async function cancelPaymentService(
-  paymentId: Hash
+  config: Config,
+  chainId: number,
+  paymentId: Hash,
 ): Promise<Hash> {
-  const hash = await cancelPayment(paymentId);
 
-  await waitForTransactionReceipt(wagmiConfig, {
+  const hash = await cancelPayment(
+    config,
+    chainId,
+    paymentId,
+  );
+
+  await waitForTransactionReceipt(config, {
     hash,
   });
 
@@ -128,9 +172,15 @@ export async function cancelPaymentService(
 //////////////////////////////////////////////////////////////
 
 export async function getPaymentService(
-  paymentId: Hash
+  config: Config,
+  chainId: number,
+  paymentId: Hash,
 ) {
-  return getPayment(paymentId);
+  return getPayment(
+    config,
+    chainId,
+    paymentId,
+  );
 }
 
 //////////////////////////////////////////////////////////////
@@ -138,15 +188,31 @@ export async function getPaymentService(
 //////////////////////////////////////////////////////////////
 
 export async function getMerchantPayments(
-  merchant: Address
+  config: Config,
+  chainId: number,
+  merchant: Address,
 ) {
-  return getMerchantPaymentsContract(merchant);
+  return getMerchantPaymentsContract(
+    config,
+    chainId,
+    merchant,
+  );
 }
 
+//////////////////////////////////////////////////////////////
+// GET PAYER PAYMENTS
+//////////////////////////////////////////////////////////////
+
 export async function getPayerPayments(
-  payer: Address
+  config: Config,
+  chainId: number,
+  payer: Address,
 ) {
-  return getPayerPaymentsContract(payer);
+  return getPayerPaymentsContract(
+    config,
+    chainId,
+    payer,
+  );
 }
 
 //////////////////////////////////////////////////////////////
@@ -161,7 +227,6 @@ export const paymentService = {
   release: releaseEscrowService,
   cancel: cancelPaymentService,
   get: getPaymentService,
-
   getMerchantPayments,
   getPayerPayments,
 };
