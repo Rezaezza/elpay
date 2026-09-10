@@ -3,10 +3,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 
-import {
-  useConfig,
-  useChainId,
-} from "wagmi";
+import type { Config } from "wagmi";
 
 import {
   waitForTransactionReceipt,
@@ -16,14 +13,15 @@ import {
   releaseEscrowService,
 } from "../services";
 
-export function useReleasePayment() {
-  const config = useConfig();
-  const chainId = useChainId();
+export function useReleasePayment(
+  config: Config,
+  chainId: number,
+) {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: (
-      paymentId: `0x${string}`
+      paymentId: `0x${string}`,
     ) =>
       releaseEscrowService(
         config,
@@ -48,6 +46,13 @@ export function useReleasePayment() {
       await queryClient.invalidateQueries({
         queryKey: [
           "merchant-payments",
+          chainId,
+        ],
+      });
+
+      await queryClient.invalidateQueries({
+        queryKey: [
+          "payer-payments",
           chainId,
         ],
       });

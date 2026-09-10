@@ -1,5 +1,6 @@
 "use client";
 
+import { wagmiConfig } from "@/config/appkit";
 
 import { PaymentHistoryToolbar } from "./PaymentHistoryToolbar";
 import { PaymentHistoryTable } from "./PaymentHistoryTable";
@@ -84,7 +85,8 @@ const isLoading =
 useEffect(() => {
     if (!address) return;
 
- const unwatch = watchPaymentEvents(
+const unwatch = watchPaymentEvents(
+    wagmiConfig,
     chainId,
     queryClient
 );

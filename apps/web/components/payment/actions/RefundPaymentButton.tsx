@@ -1,7 +1,10 @@
 "use client";
 
 import { useQueryClient } from "@tanstack/react-query";
-import { useRefundPayment } from "@elpay/blockchain";
+
+import {
+  useRefundPayment,
+} from "@elpay/blockchain";
 
 type Props = {
   paymentId: `0x${string}`;
@@ -22,7 +25,22 @@ export function RefundPaymentButton({
       await mutateAsync(paymentId);
 
       await queryClient.invalidateQueries({
-        queryKey: ["payment", paymentId],
+        queryKey: [
+          "payment",
+          paymentId,
+        ],
+      });
+
+      await queryClient.invalidateQueries({
+        queryKey: [
+          "merchant-payments",
+        ],
+      });
+
+      await queryClient.invalidateQueries({
+        queryKey: [
+          "payer-payments",
+        ],
       });
 
       alert("Refund Success");
@@ -38,7 +56,9 @@ export function RefundPaymentButton({
       disabled={isPending}
       className="rounded-lg bg-red-600 px-4 py-2 text-white"
     >
-      {isPending ? "Refunding..." : "Refund"}
+      {isPending
+        ? "Refunding..."
+        : "Refund"}
     </button>
   );
 }

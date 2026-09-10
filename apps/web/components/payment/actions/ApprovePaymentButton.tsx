@@ -9,6 +9,11 @@ import {
   hasEnoughAllowance,
 } from "@elpay/blockchain";
 
+import {
+  useConfig,
+  useChainId,
+} from "wagmi";
+
 type Props = {
   paymentId: `0x${string}`;
 };
@@ -17,6 +22,10 @@ export function ApprovePaymentButton({
   paymentId,
 }: Props) {
   const queryClient = useQueryClient();
+
+  const config = useConfig();
+
+const chainId = useChainId();
 
   const {
     data: payment,
@@ -38,29 +47,33 @@ export function ApprovePaymentButton({
       // Check allowance terlebih dahulu
       //////////////////////////////////////////////////////
 
-      const allowanceEnough =
-        await hasEnoughAllowance(
-          payment.token,
-          payment.payer,
-          payment.amount
-        );
+    const allowanceEnough =
+  await hasEnoughAllowance(
+    config,
+    chainId,
+    payment.token,
+    payment.payer,
+    payment.amount,
+  );
 
       //////////////////////////////////////////////////////
       // Approve USDC hanya jika allowance belum cukup
       //////////////////////////////////////////////////////
 
       if (!allowanceEnough) {
-      await approveToken(
-    payment.token,
-    payment.amount
-     );
+ await approveToken(
+  config,
+  chainId,
+  payment.token,
+  payment.amount,
+);
       }
 
       //////////////////////////////////////////////////////
       // Approve Payment
       //////////////////////////////////////////////////////
 
-      await mutateAsync(paymentId);
+ await mutateAsync(paymentId);
 
       //////////////////////////////////////////////////////
       // Refresh Query

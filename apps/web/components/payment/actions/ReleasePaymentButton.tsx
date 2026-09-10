@@ -1,7 +1,15 @@
 "use client";
 
 import { useQueryClient } from "@tanstack/react-query";
-import { useReleasePayment } from "@elpay/blockchain";
+
+import {
+  useConfig,
+  useChainId,
+} from "wagmi";
+
+import {
+  useReleasePayment,
+} from "@elpay/blockchain";
 
 type Props = {
   paymentId: `0x${string}`;
@@ -12,17 +20,42 @@ export function ReleasePaymentButton({
 }: Props) {
   const queryClient = useQueryClient();
 
+  const config = useConfig();
+
+  const chainId = useChainId();
+
   const {
     mutateAsync,
     isPending,
-  } = useReleasePayment();
+  } = useReleasePayment(
+    config,
+    chainId,
+  );
 
   async function handleClick() {
     try {
       await mutateAsync(paymentId);
 
       await queryClient.invalidateQueries({
-        queryKey: ["payment", paymentId],
+        queryKey: [
+          "payment",
+          chainId,
+          paymentId,
+        ],
+      });
+
+      await queryClient.invalidateQueries({
+        queryKey: [
+          "merchant-payments",
+          chainId,
+        ],
+      });
+
+      await queryClient.invalidateQueries({
+        queryKey: [
+          "payer-payments",
+          chainId,
+        ],
       });
 
       alert("Payment Released");

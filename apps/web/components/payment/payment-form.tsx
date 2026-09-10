@@ -28,10 +28,15 @@ export function PaymentForm() {
 const publicClient =
 getPublicClient(chainId);
 
-  const {
+ const {
   data: merchantActive,
   isLoading: merchantLoading,
-} = useMerchant(address);
+} = useMerchant(
+  address,
+  chainId,
+);
+
+
 
   const [txHash, setTxHash] =
   useState<`0x${string}` | null>(null);

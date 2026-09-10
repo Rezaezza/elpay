@@ -28,7 +28,9 @@ import {
 import {
   useAccount,
   useChainId,
+  useConfig,
 } from "wagmi";
+
 import { Button } from "@/components/ui/button";
 
 import { formatUnits } from "viem";
@@ -55,21 +57,25 @@ export function PaymentDetail({
 
    const chainId = useChainId();
 
+   const config = useConfig();
+
     useEffect(() => {
       
  const unwatch = watchPaymentEvents(
-    chainId,
-    queryClient,
-    paymentId
+  config,
+  chainId,
+  queryClient,
+  paymentId
 );
 
     return () => {
         unwatch();
     };
 }, [
+   config,
    chainId,
-    paymentId,
-    queryClient,
+   paymentId,
+   queryClient,
 ]);
 
   if (isLoading) {

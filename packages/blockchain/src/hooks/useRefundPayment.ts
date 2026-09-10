@@ -17,9 +17,11 @@ import {
 } from "../services";
 
 export function useRefundPayment() {
-  const config = useConfig();
-  const chainId = useChainId();
   const queryClient = useQueryClient();
+
+  const config = useConfig();
+
+  const chainId = useChainId();
 
   return useMutation({
     mutationFn: (
@@ -32,15 +34,13 @@ export function useRefundPayment() {
       ),
 
     async onSuccess(hash, paymentId) {
-      await waitForTransactionReceipt(
-        config,
-        { hash },
-      );
+      await waitForTransactionReceipt(config, {
+        hash,
+      });
 
       await queryClient.invalidateQueries({
         queryKey: [
           "payment",
-          chainId,
           paymentId,
         ],
       });
@@ -48,6 +48,13 @@ export function useRefundPayment() {
       await queryClient.invalidateQueries({
         queryKey: [
           "merchant-payments",
+          chainId,
+        ],
+      });
+
+      await queryClient.invalidateQueries({
+        queryKey: [
+          "payer-payments",
           chainId,
         ],
       });
