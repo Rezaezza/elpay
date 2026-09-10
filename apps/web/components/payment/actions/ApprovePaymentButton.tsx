@@ -79,17 +79,27 @@ const chainId = useChainId();
       // Refresh Query
       //////////////////////////////////////////////////////
 
-      await queryClient.invalidateQueries({
-        queryKey: ["payment", paymentId],
-      });
+   await queryClient.invalidateQueries({
+  queryKey: [
+    "payment",
+    chainId,
+    paymentId,
+  ],
+});
 
-      await queryClient.invalidateQueries({
-        queryKey: ["merchant-payments"],
-      });
+await queryClient.invalidateQueries({
+  queryKey: [
+    "merchant-payments",
+    chainId,
+  ],
+});
 
-      await queryClient.invalidateQueries({
-        queryKey: ["payer-payments"],
-      });
+await queryClient.invalidateQueries({
+  queryKey: [
+    "payer-payments",
+    chainId,
+  ],
+});
 
       alert("Payment Approved");
     } catch (err) {

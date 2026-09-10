@@ -15,6 +15,14 @@ export * from "./baseSepolia";
 export * from "./baseMainnet";
 export * from "./types";
 
+/* ========================================================== */
+/* NEW */
+/* ========================================================== */
+
+export * from "./tokens";
+
+/* ========================================================== */
+
 export const CONTRACT_ADDRESSES = {
   arcTestnet: ARC_TESTNET_ADDRESSES,
   baseSepolia: BASE_SEPOLIA_ADDRESSES,
@@ -22,7 +30,7 @@ export const CONTRACT_ADDRESSES = {
 } as const;
 
 export function getContractAddresses(
-  chainId: number
+  chainId: number,
 ): ContractAddresses {
   switch (chainId) {
     case ARC_CHAIN_ID:
@@ -36,7 +44,7 @@ export function getContractAddresses(
 
     default:
       throw new Error(
-        `Unsupported chain: ${chainId}`
+        `Unsupported chain: ${chainId}`,
       );
   }
 }

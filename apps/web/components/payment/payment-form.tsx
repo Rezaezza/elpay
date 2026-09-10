@@ -15,6 +15,7 @@ import {
 
 import {
   getPublicClient,
+  getUSDCAddress,
 } from "@elpay/blockchain";
 
 
@@ -24,6 +25,9 @@ export function PaymentForm() {
   const { address, isConnected } = useAccount();
 
   const chainId = useChainId();
+
+  const usdcAddress =
+  getUSDCAddress(chainId);
 
 const publicClient =
 getPublicClient(chainId);
@@ -150,8 +154,7 @@ const expiresAt = BigInt(
 
 const hash = await mutateAsync({
   payer: payer as `0x${string}`,
-  token: process.env
-    .NEXT_PUBLIC_USDC_ADDRESS as `0x${string}`,
+  token: usdcAddress,
   amount: parseUnits(amount, 6),
   description,
   expiresAt,
@@ -280,7 +283,6 @@ alert("Payment created!");
     { label: "15m", value: 15 },
     { label: "30m", value: 30 },
     { label: "1h", value: 60 },
-    { label: "6h", value: 360 },
     { label: "1 Day", value: 1440 },
     { label: "7 Days", value: 10080 },
   ].map((preset) => (
@@ -307,20 +309,6 @@ alert("Payment created!");
     </button>
   ))}
 
-  <button
-    type="button"
-    onClick={resetExpiration}
-    className="
-      rounded-lg
-      border
-      px-3
-      py-2
-      text-sm
-      hover:bg-muted
-    "
-  >
-    Reset
-  </button>
 
 </div>
 

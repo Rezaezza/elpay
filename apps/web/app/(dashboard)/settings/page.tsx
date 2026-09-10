@@ -186,12 +186,13 @@ export default function SettingsPage() {
 
                 <div className="mt-2 space-y-1 text-sm text-muted-foreground">
 
-                  <p>• Arc</p>
+                  <p>• Arc Testnet</p>
+
+                  <p>• Base Sepolia</p>
+
+                  <p>• Base Mainnet</p>
 
                   
-
-                  
-
                   <p className="text-xs">
                     More coming soon...
                   </p>
