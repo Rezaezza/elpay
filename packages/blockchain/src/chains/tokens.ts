@@ -8,6 +8,16 @@ export const TOKENS = {
     },
   },
 
+  arcMainnet: {
+    USDC: {
+      symbol: "USDC",
+      decimals: 6,
+      address:
+        process.env.NEXT_PUBLIC_ARC_MAINNET_USDC ??
+        "",
+    },
+  },
+
   baseSepolia: {
     USDC: {
       symbol: "USDC",

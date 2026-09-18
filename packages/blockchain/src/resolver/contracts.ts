@@ -1,11 +1,5 @@
 import type { Address } from "viem";
 
-import {
-  ARC_CHAIN_ID,
-  BASE_CHAIN_ID,
-  BASE_SEPOLIA_CHAIN_ID,
-} from "../chains";
-
 import { getContractAddresses } from "../addresses";
 
 //////////////////////////////////////////////////////////////
@@ -21,7 +15,7 @@ function resolve(chainId: number) {
 //////////////////////////////////////////////////////////////
 
 export function getFactoryAddress(
-  chainId: number
+  chainId: number,
 ): Address {
   return resolve(chainId).factory;
 }
@@ -31,7 +25,7 @@ export function getFactoryAddress(
 //////////////////////////////////////////////////////////////
 
 export function getMerchantRegistryAddress(
-  chainId: number
+  chainId: number,
 ): Address {
   return resolve(chainId).merchantRegistry;
 }
@@ -41,7 +35,7 @@ export function getMerchantRegistryAddress(
 //////////////////////////////////////////////////////////////
 
 export function getPaymentProcessorAddress(
-  chainId: number
+  chainId: number,
 ): Address {
   return resolve(chainId).paymentProcessor;
 }
@@ -51,7 +45,7 @@ export function getPaymentProcessorAddress(
 //////////////////////////////////////////////////////////////
 
 export function getEscrowAddress(
-  chainId: number
+  chainId: number,
 ): Address {
   return resolve(chainId).escrow;
 }

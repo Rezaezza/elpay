@@ -1,4 +1,5 @@
 export * from "./arc";
+export * from "./arcMainnet";
 export * from "./baseSepolia";
 export * from "./baseMainnet";
 export * from "./tokens";
