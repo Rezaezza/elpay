@@ -20,6 +20,7 @@ import { useAppKit } from "@reown/appkit/react";
 
 import {
   arcTestnet,
+  arcMainnet,
   baseSepolia,
   baseMainnet,
 } from "@elpay/blockchain";
@@ -35,23 +36,27 @@ export function WalletChip() {
 
   const [openMenu, setOpenMenu] = useState(false);
 
-  const chain =
-    chainId === arcTestnet.id
-      ? arcTestnet
-      : chainId === baseSepolia.id
-      ? baseSepolia
-      : chainId === baseMainnet.id
-      ? baseMainnet
-      : undefined;
+ const chain =
+  chainId === arcTestnet.id
+    ? arcTestnet
+    : chainId === arcMainnet.id
+    ? arcMainnet
+    : chainId === baseSepolia.id
+    ? baseSepolia
+    : chainId === baseMainnet.id
+    ? baseMainnet
+    : undefined;
 
-  const explorer =
-    chainId === arcTestnet.id
-      ? "https://testnet.arcscan.app"
-      : chainId === baseSepolia.id
-      ? "https://sepolia.basescan.org"
-      : chainId === baseMainnet.id
-      ? "https://basescan.org"
-      : "#";
+ const explorer =
+  chainId === arcTestnet.id
+    ? "https://testnet.arcscan.app"
+    : chainId === arcMainnet.id
+    ? "https://explorer.arc.io"
+    : chainId === baseSepolia.id
+    ? "https://sepolia.basescan.org"
+    : chainId === baseMainnet.id
+    ? "https://basescan.org"
+    : "#";
 
   if (!isConnected) {
     return (

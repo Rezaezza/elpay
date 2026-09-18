@@ -7,6 +7,8 @@ import {
   baseMainnet,
 } from "@elpay/blockchain";
 
+
+
 export const projectId =
   process.env.NEXT_PUBLIC_PROJECT_ID!;
 
@@ -38,6 +40,8 @@ export const networks = [
   typeof baseSepolia,
   typeof baseMainnet,
 ];
+
+console.log("NETWORKS =", networks);
 
 //////////////////////////////////////////////////////////////
 // Wagmi

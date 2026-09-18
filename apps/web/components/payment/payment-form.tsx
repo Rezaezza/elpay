@@ -5,6 +5,8 @@ import { PaymentSuccess } from "./PaymentSuccess";
 import { getPaymentCreatedId } from "@elpay/blockchain";
 import { useSendPayment } from "@elpay/blockchain";
 
+import { DateTimePicker } from "@/components/ui/DateTimePicker";
+
 import { parseUnits, isAddress } from "viem";
 import { useState } from "react";
 
@@ -54,47 +56,26 @@ getPublicClient(chainId);
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
 
-const tomorrow = new Date();
-tomorrow.setDate(tomorrow.getDate() + 1);
+const [expiration, setExpiration] = useState(() => {
+  const d = new Date();
 
-const [expirationDate, setExpirationDate] = useState(
-  tomorrow.toISOString().split("T")[0]
-);
+  d.setDate(d.getDate() + 1);
 
-const [expirationTime, setExpirationTime] = useState("12:00");
+  d.setHours(12, 0, 0, 0);
 
-const [selectedPreset, setSelectedPreset] = useState<number | null>(1440);
+  return d;
+});
 
-function applyPreset(minutes: number) {
-  const date = new Date();
 
-  date.setMinutes(date.getMinutes() + minutes);
-
-  setExpirationDate(
-    date.toISOString().split("T")[0]
-  );
-
-  setExpirationTime(
-    date.toTimeString().slice(0, 5)
-  );
-
-  setSelectedPreset(minutes);
-}
 
 function resetExpiration() {
-  const tomorrow = new Date();
+  const d = new Date();
 
-  tomorrow.setDate(
-    tomorrow.getDate() + 1
-  );
+  d.setDate(d.getDate() + 1);
 
-  setExpirationDate(
-    tomorrow.toISOString().split("T")[0]
-  );
+  d.setHours(12, 0, 0, 0);
 
-  setExpirationTime("12:00");
-
-  setSelectedPreset(1440);
+  setExpiration(d);
 }
 
   async function handleSubmit(
@@ -128,9 +109,7 @@ if (description.trim().length < 3) {
 }
 
     try {
-   const selected = new Date(
-  `${expirationDate}T${expirationTime}`
-);
+ const selected = expiration;
 
 if (selected <= new Date()) {
   alert("Expiration must be in the future.");
@@ -275,75 +254,16 @@ alert("Payment created!");
 
         </div>
 
-        <div>
-
-<div className="flex flex-wrap gap-2">
-
-  {[
-    { label: "15m", value: 15 },
-    { label: "30m", value: 30 },
-    { label: "1h", value: 60 },
-    { label: "1 Day", value: 1440 },
-    { label: "7 Days", value: 10080 },
-  ].map((preset) => (
-    <button
-      key={preset.value}
-      type="button"
-      onClick={() => applyPreset(preset.value)}
-      className={`
-        rounded-lg
-        border
-        px-3
-        py-2
-        text-sm
-        transition
-
-        ${
-          selectedPreset === preset.value
-            ? "bg-blue-600 text-white border-blue-600"
-            : "hover:bg-muted"
-        }
-      `}
-    >
-      {preset.label}
-    </button>
-  ))}
-
-
-</div>
-
-  <label className="mb-2 block text-sm font-medium">
-    Expiration Date
-  </label>
-
-  <input
-    type="date"
-    value={expirationDate}
-    min={new Date().toISOString().split("T")[0]}
-  onChange={(e) => {
-  setExpirationDate(e.target.value);
-  setSelectedPreset(null);
-}}
-    className="w-full rounded-lg border p-3"
-  />
-
-</div>
-
 <div>
 
-  <label className="mb-2 block text-sm font-medium">
-    Expiration Time
-  </label>
+ <label className="mb-2 block text-sm font-medium">
+  Payment Expiration
+</label>
 
-  <input
-    type="time"
-    value={expirationTime}
- onChange={(e) => {
-  setExpirationTime(e.target.value);
-  setSelectedPreset(null);
-}}
-    className="w-full rounded-lg border p-3"
-  />
+<DateTimePicker
+  value={expiration}
+  onChange={setExpiration}
+/>
 
 </div>
 
@@ -353,9 +273,7 @@ alert("Payment created!");
   </p>
 
   <p className="mt-2 font-semibold">
-    {new Date(
-      `${expirationDate}T${expirationTime}`
-    ).toLocaleString()}
+    {expiration.toLocaleString()}
   </p>
 </div>
 

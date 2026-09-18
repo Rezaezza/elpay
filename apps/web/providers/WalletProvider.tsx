@@ -38,6 +38,7 @@ function ChainSync() {
   const chainId = useChainId();
 
   useEffect(() => {
+
     setActiveChainId(chainId);
   }, [chainId]);
 
