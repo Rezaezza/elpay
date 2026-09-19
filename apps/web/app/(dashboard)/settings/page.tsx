@@ -85,10 +85,6 @@ export default function SettingsPage() {
                   USDC
                 </p>
 
-                <p className="text-sm text-muted-foreground">
-                  Stablecoin Payments
-                </p>
-
               </div>
 
               <DollarSign className="h-6 w-6 text-emerald-600" />
@@ -188,14 +184,13 @@ export default function SettingsPage() {
 
                   <p>• Arc Testnet</p>
 
+                  <p>• Arc Mainnet</p>
+
                   <p>• Base Sepolia</p>
 
                   <p>• Base Mainnet</p>
 
-                  
-                  <p className="text-xs">
-                    More coming soon...
-                  </p>
+        
 
                 </div>
 
