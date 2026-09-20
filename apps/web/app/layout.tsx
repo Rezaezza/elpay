@@ -18,6 +18,7 @@ export default function RootLayout({
             {children}
           </DashboardLayout>
         </WalletProvider>
+
         <Toaster
           richColors
           position="top-right"

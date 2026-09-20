@@ -9,7 +9,6 @@ import {
   CreditCard,
   History,
   Settings,
-  BookOpen,
   ShieldCheck,
 } from "lucide-react";
 
@@ -54,11 +53,6 @@ const sections = [
       name: "Settings",
       href: "/settings",
       icon: Settings,
-    },
-    {
-      name: "Docs",
-      href: "/docs",
-      icon: BookOpen,
     },
   ],
 },
